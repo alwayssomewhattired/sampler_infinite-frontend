@@ -5,26 +5,39 @@ const homeApi = api.injectEndpoints({
     getUsers: builder.query({
       query: (token) => ({
         url: "/api/users/allUsers",
-        methods: "GET",
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
         },
       }),
-      //might need to add 'providesTags' here
+      providesTags: ["User"],
     }),
-    //definitely need to provide tags for delete
+    aboutMe: builder.query({
+      query: (token) => ({
+        url: "/api/users/aboutMe",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
     delete: builder.mutation({
       query: ({ token, id }) => ({
         url: `/api/users/${id}`,
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const { useGetUsersQuery, useDeleteMutation } = homeApi;
+export const { useGetUsersQuery, useAboutMeQuery, useDeleteMutation } = homeApi;

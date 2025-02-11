@@ -1,33 +1,45 @@
 import { useState, useEffect } from "react";
-import { useGetUsersQuery, useDeleteMutation } from "./HomeSlice";
+import {
+  useGetUsersQuery,
+  useAboutMeQuery,
+  useDeleteMutation,
+} from "./HomeSlice";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function Home() {
+export default function Home({ setUserId }) {
   const { data: myData, isSuccess } = useGetUsersQuery();
+  const { data: myOwnData, isSuccess: done } = useAboutMeQuery();
   const [createDeleteMutation, { isLoading, error }] = useDeleteMutation();
   const [users, setUsers] = useState([]);
   const [id, setId] = useState("");
   const navigate = useNavigate();
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
-      setUsers(myData.User); //I don't know what myData exactly returns so this might be a problem
+      console.log(myData);
+      setUsers(myData);
       console.log(users);
     }
   }, [myData]);
 
-  //This delete function just may be terrible and is not finished.
-  const deleteUser = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    console.log(`is this done ${done}`);
+    if (done) {
+      console.log(myOwnData.email);
+    }
+  }, [myOwnData]);
+
+  function deleteUser(id) {
     try {
-      const response = await createDeleteMutation({
-        id,
-      });
+      console.log(token);
+      console.log(id);
+      createDeleteMutation({ token, id });
     } catch (error) {
       console.error(error);
     }
-  };
+  }
 
   return (
     <>
@@ -41,15 +53,19 @@ export default function Home() {
             <h3>{user.email}</h3>
             <button
               onClick={() => {
-                setId(user.id);
-                navigate("/single_user");
+                setUserId(user.id);
+                navigate("/singleUser");
               }}
             >
               Update
             </button>
             <button
               onClick={() => {
-                //add delete logic here
+                user.email != myOwnData.email ? (
+                  deleteUser(user.id)
+                ) : (
+                  <h3>Cannot Delete Self</h3>
+                );
               }}
             >
               Delete

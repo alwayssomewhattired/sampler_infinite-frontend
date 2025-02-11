@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAddUserMutation } from "./RegistrationSlice";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function Registration() {
+export default function Registration({ setMe }) {
   const [first_name, setFirst_Name] = useState("");
   const [last_name, setLast_Name] = useState("");
   const [email, setEmail] = useState("");
@@ -20,8 +20,11 @@ export default function Registration() {
         email,
         normal_password,
       }); //might need to '.unwrap()'
-      console.log(response.token);
-      sessionStorage.setItem("token", response.token);
+
+      console.log(response.data);
+      console.log(response.data.token);
+      setMe(response.data.id);
+      sessionStorage.setItem("token", response.data.token);
       navigate("/home");
     } catch (error) {
       console.error(error);

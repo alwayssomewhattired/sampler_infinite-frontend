@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAddLoginMutation } from "./LoginSlice";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login(setMe) {
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
   const [createLoginMutation, { isLoading, error }] = useAddLoginMutation();
@@ -16,8 +16,8 @@ export default function Login() {
         email,
         normal_password,
       }); //might need to add '.unwrap()' here
-      console.log(response.token);
-      sessionStorage.setItem("token", response.token);
+      console.log(response.data.token);
+      sessionStorage.setItem("token", response.data.token);
       navigate("/home");
     } catch (error) {
       console.error(error);

@@ -3,11 +3,14 @@ import api from "../../store/api";
 const loginApi = api.injectEndpoints({
   endpoints: (builder) => ({
     addLogin: builder.mutation({
-      //I got rid of "first_name, last_name" in query because I don't think it's necessary
-      query: ({ email, password }) => ({
+      query: ({ email, normal_password }) => ({
         url: "api/users/login",
         method: "POST",
-        body: { email, password },
+        body: { email, normal_password },
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
       }),
     }),
   }),

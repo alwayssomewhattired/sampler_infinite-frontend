@@ -5,9 +5,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const api = createApi({
   reducerPath: "apiOne",
   baseQuery: fetchBaseQuery({
-    baseUrl:
-      "postgresql://bridge_qg3l_user:hn2XrSnQEePgpLfS8QztgF5T59ss0XxX@dpg-cui0g5dds78s73drk4ug-a.oregon-postgres.render.com/bridge_qg3l",
-
+    baseUrl: "https://bridge-backend-l1z7.onrender.com",
     prepareHeaders: (headers) => {
       const token = sessionStorage.getItem("token");
       if (token) {

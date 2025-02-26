@@ -3,7 +3,7 @@ import {
   useGetUsersQuery,
   useAboutMeQuery,
   useDeleteMutation,
-} from "./HomeSlice";
+} from "./UsersSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Home({ setUserId }) {

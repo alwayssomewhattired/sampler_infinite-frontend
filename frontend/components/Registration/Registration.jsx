@@ -3,8 +3,7 @@ import { useAddUserMutation } from "./RegistrationSlice";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Registration({ setMe }) {
-  const [first_name, setFirst_Name] = useState("");
-  const [last_name, setLast_Name] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
   //might need to destructure 'isLoading, error'
@@ -15,8 +14,7 @@ export default function Registration({ setMe }) {
     e.preventDefault();
     try {
       const response = await createRegisterMutation({
-        first_name,
-        last_name,
+        username,
         email,
         normal_password,
       }); //might need to '.unwrap()'
@@ -25,7 +23,7 @@ export default function Registration({ setMe }) {
       console.log(response.data.token);
       setMe(response.data.id);
       sessionStorage.setItem("token", response.data.token);
-      navigate("/home");
+      navigate("/audioCreator");
     } catch (error) {
       console.error(error);
     }
@@ -39,19 +37,11 @@ export default function Registration({ setMe }) {
       </div>
       <form onSubmit={registerInfo}>
         <label>
-          First Name
+          Username
           <input
-            name="FirstName"
-            value={first_name}
-            onChange={(e) => setFirst_Name(e.target.value)}
-          />
-        </label>
-        <label>
-          Last Name
-          <input
-            name="LastName"
-            value={last_name}
-            onChange={(e) => setLast_Name(e.target.value)}
+            name="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </label>
         <label>

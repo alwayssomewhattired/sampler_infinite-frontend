@@ -5,12 +5,18 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const api = createApi({
   reducerPath: "apiOne",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://bridge-backend-l1z7.onrender.com",
+    baseUrl: "http://localhost:3000",
     prepareHeaders: (headers) => {
       const token = sessionStorage.getItem("token");
+      // const username = "postgres";
+      // const password = "palestinedeathcircle";
+      // const basicAuth = `Basic ${btoa(username + ":" + password)}`;
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
+      headers.set("Content-Type", "application/json");
+      headers.set("Access-Control-Allow-Origin", "*");
+      // headers.set("Authorization", basicAuth);
       return headers;
     },
   }),

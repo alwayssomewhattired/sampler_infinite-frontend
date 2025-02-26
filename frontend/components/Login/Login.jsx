@@ -18,7 +18,7 @@ export default function Login(setMe) {
       }); //might need to add '.unwrap()' here
       console.log(response.data.token);
       sessionStorage.setItem("token", response.data.token);
-      navigate("/home");
+      navigate("/audioCreator");
     } catch (error) {
       console.error(error);
     }

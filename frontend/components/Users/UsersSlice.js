@@ -1,6 +1,6 @@
 import api from "../../store/api";
 
-const homeApi = api.injectEndpoints({
+const usersApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: (token) => ({
@@ -40,4 +40,4 @@ const homeApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetUsersQuery, useAboutMeQuery, useDeleteMutation } = homeApi;
+export const { useGetUsersQuery, useAboutMeQuery, useDeleteMutation } = usersApi;

@@ -1,6 +1,6 @@
 import { useGetSongsQuery } from "./AudioSlice";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Audio({ setAudioId }) {
   const { data: myData, isSuccess } = useGetSongsQuery();
@@ -33,6 +33,7 @@ export default function Audio({ setAudioId }) {
             </button>
           </li>
         ))}
+        <Link to="/audioCreator">Create Audio</Link>
       </div>
     </>
   );

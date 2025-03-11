@@ -1,20 +1,28 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useGetUserQuery, useUpdateMutation } from "./SingleUserSlice";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  useGetUserQuery,
+  useUpdateMutation,
+  useGetMyReviewsQuery,
+  useGetMyCommentsQuery,
+} from "./SingleUserSlice";
 
-export default function SingleUser(userId) {
+export default function SingleUser({ me }) {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
 
-  const id = userId.userId;
-  console.log(id);
-  console.log(userId);
+  const id = me;
+  console.log(me);
 
   const { data: myData, isLoading, isSuccess } = useGetUserQuery({ token, id });
   const [createUpdateMutation, error] = useUpdateMutation();
 
-  const [first_name, setFirst_Name] = useState("");
-  const [last_name, setLast_Name] = useState("");
+  const { data: reviewData, isSuccess: isFinished } = useGetMyReviewsQuery();
+
+  const { data: commentData, isSuccess: isReady } = useGetMyCommentsQuery();
+
+  const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
 
@@ -25,18 +33,32 @@ export default function SingleUser(userId) {
     }
   }, [myData]);
 
+  useEffect(() => {
+    console.log(`is this finished ${isFinished}`);
+    if (isSuccess) {
+      setReviews(reviewData);
+      console.log(reviews);
+    }
+  }, [reviewData]);
+
+  useEffect(() => {
+    console.log(`is this read ${isReady}`);
+    if (isReady) {
+      setComments(commentData);
+      console.log(commentData);
+    }
+  }, [commentData]);
+
   const changeInfo = async (e) => {
     e.preventDefault();
     try {
       const response = await createUpdateMutation({
         id,
-        first_name,
-        last_name,
         email,
         normal_password,
       }); //might need to '.unwrap()'
       console.log(response);
-      navigate("/home");
+      navigate("/singleUser");
     } catch (error) {
       console.error(error);
     }
@@ -53,10 +75,6 @@ export default function SingleUser(userId) {
       <>
         <div>
           <li key={myData.id}>
-            <h4>Old First Name</h4>
-            <h3>{myData.first_name}</h3>
-            <h4>Old Last Name</h4>
-            <h3>{myData.last_name}</h3>
             <h4>Old Email</h4>
             <h3>{myData.email}</h3>
             <h4>Old Password</h4>
@@ -64,25 +82,6 @@ export default function SingleUser(userId) {
           </li>
         </div>
         <form onSubmit={changeInfo}>
-          <label>
-            New First Name
-            <input
-              name="FirstName"
-              value={first_name}
-              onChange={(e) => setFirst_Name(e.target.value)}
-              required
-            />
-          </label>
-          <div></div>
-          <label>
-            New Last Name
-            <input
-              name="LastName"
-              value={last_name}
-              onChange={(e) => setLast_Name(e.target.value)}
-              required
-            />
-          </label>
           <div></div>
           <label>
             New Email
@@ -114,7 +113,29 @@ export default function SingleUser(userId) {
   return (
     <>
       <h1>SingleUser</h1>
-      {$details}
+      <div>
+        <Link to="/audio">Published Audio</Link>
+      </div>
+      <div>
+        <Link to="/audioCreator">SamplerInfinite</Link>
+      </div>
+      <div>{$details}</div>
+      <div>
+        <h2>Reviews</h2>
+      </div>
+      {reviews.map((review) => (
+        <ul key={review.id}>
+          <h3>{review.reviewText}</h3>
+        </ul>
+      ))}
+      <div>
+        <h2>Comments</h2>
+      </div>
+      {comments.map((comment) => (
+        <ul key={comment.id}>
+          <h3>{comment.commentText}</h3>
+        </ul>
+      ))}
     </>
   );
 }

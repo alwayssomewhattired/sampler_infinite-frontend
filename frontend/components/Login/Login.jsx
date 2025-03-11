@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useAddLoginMutation } from "./LoginSlice";
 import { useNavigate } from "react-router-dom";
 
-export default function Login(setMe) {
+export default function Login({ setMe }) {
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
   const [createLoginMutation, { isLoading, error }] = useAddLoginMutation();
@@ -17,6 +17,7 @@ export default function Login(setMe) {
         normal_password,
       }); //might need to add '.unwrap()' here
       console.log(response.data.token);
+      setMe(response.data.me);
       sessionStorage.setItem("token", response.data.token);
       navigate("/audioCreator");
     } catch (error) {

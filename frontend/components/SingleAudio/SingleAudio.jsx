@@ -33,12 +33,12 @@ export default function SingleItem({ audioId, setReviewId }) {
     }
   }, [reviewData]);
 
-
   const reviewInfo = async (e) => {
     e.preventDefault();
     try {
       const response = await createReviewMutation({ itemId, reviewText });
       console.log(response.data);
+      navigate("/singleAudio");
     } catch (error) {
       console.error(error);
     }

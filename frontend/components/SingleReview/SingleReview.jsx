@@ -9,6 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 export default function SingleReview({ audioId, reviewId }) {
   console.log(audioId);
   console.log(reviewId);
+  const navigate = useNavigate();
 
   const { data: myData, isSuccess } = useGetReviewQuery({ audioId, reviewId });
   const [review, setReview] = useState("");
@@ -46,6 +47,7 @@ export default function SingleReview({ audioId, reviewId }) {
         commentText,
       });
       console.log(response.data);
+      navigate("/singleReview");
     } catch (error) {
       console.error(error);
     }

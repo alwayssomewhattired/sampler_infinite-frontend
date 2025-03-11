@@ -16,14 +16,7 @@ const singleUserApi = api.injectEndpoints({
     }),
     update: builder.mutation({
       //I don't know if all of these things belong in the query
-      query: ({
-        token,
-        id,
-        first_name,
-        last_name,
-        email,
-        normal_password,
-      }) => ({
+      query: ({ token, id, email, normal_password }) => ({
         url: `/api/users/${id}`,
         method: "PUT",
         headers: {
@@ -33,8 +26,6 @@ const singleUserApi = api.injectEndpoints({
         },
         body: JSON.stringify({
           id,
-          first_name,
-          last_name,
           email,
           normal_password,
         }),
@@ -49,7 +40,32 @@ const singleUserApi = api.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    getMyReviews: builder.query({
+      query: () => ({
+        url: "/api/reviews/me",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
+    getMyComments: builder.query({
+      query: () => ({
+        url: `api/comments/me`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useUpdateMutation, useGetUserQuery } = singleUserApi;
+export const {
+  useUpdateMutation,
+  useGetUserQuery,
+  useGetMyReviewsQuery,
+  useGetMyCommentsQuery,
+} = singleUserApi;

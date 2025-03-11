@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
@@ -14,9 +14,39 @@ import SingleReview from "../components/SingleReview/SingleReview";
 //
 function App() {
   const [userId, setUserId] = useState();
-  const [me, setMe] = useState();
-  const [audioId, setAudioId] = useState();
-  const [reviewId, setReviewId] = useState();
+
+  // const [me, setMe] = useState();
+
+  const [me, setMe] = useState(() => {
+    const storedMe = sessionStorage.getItem("me");
+    return storedMe ? JSON.parse(storedMe) : 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("me", JSON.stringify(me));
+  }, [me]);
+
+  const [audioId, setAudioId] = useState(() => {
+    // Retrieve from sessionStorage or default to 0
+    const saved = sessionStorage.getItem("audioId");
+    return saved ? JSON.parse(saved) : 0;
+  });
+
+  useEffect(() => {
+    // Save to sessionStorage
+    sessionStorage.setItem("audioId", JSON.stringify(audioId));
+  }, [audioId]);
+
+  // const [reviewId, setReviewId] = useState();
+
+  const [reviewId, setReviewId] = useState(() => {
+    const storedReview = sessionStorage.getItem("reviewId");
+    return storedReview ? JSON.parse(storedReview) : 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("reviewId", JSON.stringify(reviewId));
+  }, [reviewId]);
 
   return (
     <Provider store={store}>
@@ -35,7 +65,7 @@ function App() {
               <SingleAudio audioId={audioId} setReviewId={setReviewId} />
             }
           />
-          <Route path="/singleUser" element={<SingleUser userId={userId} />} />
+          <Route path="/singleUser" element={<SingleUser me={me} />} />
           <Route path="/audioCreator" element={<AudioCreator />} />
           <Route
             path="/singleReview"

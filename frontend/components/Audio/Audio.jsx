@@ -33,7 +33,12 @@ export default function Audio({ setAudioId }) {
             </button>
           </li>
         ))}
+        <div>
         <Link to="/audioCreator">Create Audio</Link>
+        </div>
+        <div>
+        <Link to="/singleUser">My Account</Link>
+        </div>
       </div>
     </>
   );

@@ -21,7 +21,7 @@ export default function Registration({ setMe }) {
 
       console.log(response.data);
       console.log(response.data.token);
-      setMe(response.data.id);
+      setMe(response.data.me);
       sessionStorage.setItem("token", response.data.token);
       navigate("/audioCreator");
     } catch (error) {

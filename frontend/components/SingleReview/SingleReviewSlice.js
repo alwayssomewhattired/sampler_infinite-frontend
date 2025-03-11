@@ -12,7 +12,24 @@ const singleReviewApi = api.injectEndpoints({
         },
       }),
     }),
+    getComments: builder.query({
+      query: (audioId) => ({
+        url: `api/comments/${audioId}/comments`,
+        method: "GET",
+      }),
+    }),
+    postComment: builder.mutation({
+      query: ({ audioId, reviewId, commentText }) => ({
+        url: `api/comments/${audioId}/reviews/${reviewId}/comments`,
+        method: "POST",
+        body: { commentText },
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetReviewQuery } = singleReviewApi;
+export const { useGetReviewQuery, useGetCommentsQuery, usePostCommentMutation } = singleReviewApi;

@@ -1,7 +1,6 @@
 import {
   useGetSingleAudioQuery,
   useGetReviewsQuery,
-  useGetCommentsQuery,
   useCreateReviewMutation,
 } from "./SingleAudioSlice";
 import { useState, useEffect } from "react";
@@ -11,10 +10,8 @@ export default function SingleItem({ audioId, setReviewId }) {
   const { data: myData, isSuccess } = useGetSingleAudioQuery(audioId);
   const { data: reviewData, isSuccess: finished } = useGetReviewsQuery(audioId);
   const [createReviewMutation, isLoading, error] = useCreateReviewMutation();
-  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(audioId);
   const [song, setSong] = useState("");
   const [reviews, setReviews] = useState([]);
-  const [comments, setComments] = useState([]);
   const [reviewText, setReviewText] = useState("");
   const itemId = audioId;
   const navigate = useNavigate();
@@ -22,7 +19,6 @@ export default function SingleItem({ audioId, setReviewId }) {
   useEffect(() => {
     console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
-      console.log(myData);
       setSong(myData);
       console.log(song);
     }
@@ -37,14 +33,6 @@ export default function SingleItem({ audioId, setReviewId }) {
     }
   }, [reviewData]);
 
-  useEffect(() => {
-    console.log(`is this loaded ${loaded}`);
-    if (loaded) {
-      console.log(commentData);
-      setComments(commentData);
-      console.log(comments);
-    }
-  }, [commentData]);
 
   const reviewInfo = async (e) => {
     e.preventDefault();
@@ -55,8 +43,6 @@ export default function SingleItem({ audioId, setReviewId }) {
       console.error(error);
     }
   };
-
-
 
   return (
     <>
@@ -83,17 +69,11 @@ export default function SingleItem({ audioId, setReviewId }) {
             <h3>{review.reviewText}</h3>
             <button
               onClick={() => {
-                setReviewId(review.id), navigate("/singleReview");;
+                setReviewId(review.id), navigate("/singleReview");
               }}
             >
               View review
             </button>
-          </ul>
-        ))}
-        {comments.map((comment) => (
-          <ul key={comment.id}>
-            <h6>{comment.commentID}</h6>
-            <h5>{comment.commentText}</h5>
           </ul>
         ))}
       </div>

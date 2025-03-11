@@ -14,12 +14,6 @@ const singleAudioApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
-    getComments: builder.query({
-      query: (itemId) => ({
-        url: `api/comments/${itemId}/comments`,
-        method: "GET",
-      }),
-    }),
     createReview: builder.mutation({
       query: ({ itemId, reviewText }) => ({
         url: `api/reviews/${itemId}/reviews`,
@@ -37,6 +31,5 @@ const singleAudioApi = api.injectEndpoints({
 export const {
   useGetSingleAudioQuery,
   useGetReviewsQuery,
-  useGetCommentsQuery,
   useCreateReviewMutation,
 } = singleAudioApi;

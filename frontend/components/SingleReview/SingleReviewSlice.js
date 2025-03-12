@@ -13,8 +13,8 @@ const singleReviewApi = api.injectEndpoints({
       }),
     }),
     getComments: builder.query({
-      query: (audioId) => ({
-        url: `api/comments/${audioId}/comments`,
+      query: (reviewId) => ({
+        url: `api/comments/${reviewId}/comments`,
         method: "GET",
       }),
     }),

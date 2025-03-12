@@ -14,7 +14,7 @@ export default function SingleReview({ audioId, reviewId }) {
   const { data: myData, isSuccess } = useGetReviewQuery({ audioId, reviewId });
   const [review, setReview] = useState("");
 
-  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(audioId);
+  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(reviewId);
   const [comments, setComments] = useState([]);
 
   const [createCommentMutation, isLoading, error] = usePostCommentMutation();

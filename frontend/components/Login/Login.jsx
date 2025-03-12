@@ -42,6 +42,7 @@ export default function Login({ setMe }) {
         <label>
           Password
           <input
+          type="password"
             name="Password"
             value={normal_password}
             onChange={(e) => setNormal_Password(e.target.value)}

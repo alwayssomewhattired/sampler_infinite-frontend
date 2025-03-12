@@ -11,33 +11,29 @@ import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
 import SingleReview from "../components/SingleReview/SingleReview";
-//
+
 function App() {
   const [userId, setUserId] = useState();
 
-  // const [me, setMe] = useState();
-
   const [me, setMe] = useState(() => {
+    // Retrieve from sessionStorage or default to 0
     const storedMe = sessionStorage.getItem("me");
     return storedMe ? JSON.parse(storedMe) : 0;
   });
 
   useEffect(() => {
+    // Save to sessionStorage
     sessionStorage.setItem("me", JSON.stringify(me));
   }, [me]);
 
   const [audioId, setAudioId] = useState(() => {
-    // Retrieve from sessionStorage or default to 0
     const saved = sessionStorage.getItem("audioId");
     return saved ? JSON.parse(saved) : 0;
   });
 
   useEffect(() => {
-    // Save to sessionStorage
     sessionStorage.setItem("audioId", JSON.stringify(audioId));
   }, [audioId]);
-
-  // const [reviewId, setReviewId] = useState();
 
   const [reviewId, setReviewId] = useState(() => {
     const storedReview = sessionStorage.getItem("reviewId");

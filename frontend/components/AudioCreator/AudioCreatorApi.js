@@ -5,11 +5,11 @@ export const triggerBackend = async () => {
     const response = await fetch(
       "https://s1w15x1qoc.execute-api.us-east-2.amazonaws.com/test",
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify({ message: "User would like to start" }),
+        // body: JSON.stringify({ message: "User would like to start" }),
       }
     );
     const data = await response.json();

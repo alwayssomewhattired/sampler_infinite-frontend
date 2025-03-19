@@ -5,7 +5,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const api = createApi({
   reducerPath: "apiOne",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000",
+    // baseUrl: "http://localhost:3000", // dev
+    baseUrl: "http://0.0.0.0:3000",
     prepareHeaders: (headers) => {
       const token = sessionStorage.getItem("token");
       // const username = "postgres";

@@ -86,3 +86,20 @@ export default function SingleReview({ audioId, reviewId }) {
     </>
   );
 }
+
+
+
+
+//shhh
+/*
+<>
+<div>
+  <Link to="/audio">Published Audio</Link>
+</div>
+<div>
+  <Link to="/audioCreator">Sampler Infinite</Link>
+</div>
+<div>
+  <Link to="/singleUser">Your Account</Link>
+</div>
+*/

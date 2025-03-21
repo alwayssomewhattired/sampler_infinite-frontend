@@ -11,6 +11,8 @@ import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
 import SingleReview from "../components/SingleReview/SingleReview";
+import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
+import AudioUploader from "../components/AudioUploader/AudioUploader";
 
 function App() {
   const [userId, setUserId] = useState();
@@ -34,6 +36,15 @@ function App() {
   useEffect(() => {
     sessionStorage.setItem("audioId", JSON.stringify(audioId));
   }, [audioId]);
+
+  const [newAudio, setNewAudio] = useState(() => {
+    const saved = sessionStorage.getItem("newAudio");
+    return saved ? JSON.parse(saved) : 0;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("newAudio", JSON.stringify(newAudio));
+  }, [newAudio]);
 
   const [reviewId, setReviewId] = useState(() => {
     const storedReview = sessionStorage.getItem("reviewId");
@@ -62,11 +73,18 @@ function App() {
             }
           />
           <Route path="/singleUser" element={<SingleUser me={me} />} />
-          <Route path="/audioCreator" element={<AudioCreator />} />
+          <Route
+            path="/audioCreator"
+            element={
+              <AudioCreator setNewAudio={setNewAudio} newAudio={newAudio} />
+            }
+          />
           <Route
             path="/singleReview"
             element={<SingleReview audioId={audioId} reviewId={reviewId} />}
           />
+          <Route path="/granularSynth" element={<GranularSynthComponent />} />
+          <Route path="/audioUploader" element={<AudioUploader />} />
         </Routes>
       </BrowserRouter>
     </Provider>

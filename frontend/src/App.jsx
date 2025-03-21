@@ -15,8 +15,6 @@ import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
 import AudioUploader from "../components/AudioUploader/AudioUploader";
 
 function App() {
-  const [userId, setUserId] = useState();
-
   const [me, setMe] = useState(() => {
     // Retrieve from sessionStorage or default to 0
     const storedMe = sessionStorage.getItem("me");
@@ -62,10 +60,7 @@ function App() {
           <Route path="/" element={<Login setMe={setMe} />} />
           <Route path="/register" element={<Registration setMe={setMe} />} />
           <Route path="/audio" element={<Audio setAudioId={setAudioId} />} />
-          <Route
-            path="/users"
-            element={<Users setUserId={setUserId} me={me} />}
-          />
+          <Route path="/users" element={<Users me={me} />} />
           <Route
             path="singleAudio"
             element={
@@ -84,7 +79,10 @@ function App() {
             element={<SingleReview audioId={audioId} reviewId={reviewId} />}
           />
           <Route path="/granularSynth" element={<GranularSynthComponent />} />
-          <Route path="/audioUploader" element={<AudioUploader />} />
+          <Route
+            path="/audioUploader"
+            element={<AudioUploader newAudio={newAudio} me={me} />}
+          />
         </Routes>
       </BrowserRouter>
     </Provider>

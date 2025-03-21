@@ -32,4 +32,8 @@ const singleReviewApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetReviewQuery, useGetCommentsQuery, usePostCommentMutation } = singleReviewApi;
+export const {
+  useGetReviewQuery,
+  useGetCommentsQuery,
+  usePostCommentMutation,
+} = singleReviewApi;

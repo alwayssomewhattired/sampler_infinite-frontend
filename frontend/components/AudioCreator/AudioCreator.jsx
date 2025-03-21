@@ -88,12 +88,7 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
         </button>
         <div>
           {newAudio ? (
-            <a
-              href={`https://firstdemoby.s3.us-east-2.amazonaws.com/${newAudio}`}
-              download
-            >
-              Your sampled infinite!
-            </a>
+            sample
           ) : (
             <p>Processing...</p>
           )}

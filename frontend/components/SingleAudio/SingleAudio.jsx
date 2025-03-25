@@ -46,7 +46,19 @@ export default function SingleItem({ audioId, setReviewId }) {
 
   return (
     <>
-      <h1>File</h1>
+      <h1>Single Audio</h1>
+      <div>
+        <Link to="/audio">Published Audio</Link>
+      </div>
+      <div>
+        <Link to="/singleUser">Your Account</Link>
+      </div>
+      <div>
+        <Link to="/granularSynth">Granular Synth</Link>
+      </div>
+      <div>
+        <Link to="/audioCreator">SamplerInfinite</Link>
+      </div>
       <div>
         <ul key={song.id}>
           <h2>{song.name}</h2>

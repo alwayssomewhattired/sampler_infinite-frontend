@@ -9,6 +9,7 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
+  const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,12 +59,18 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
         >
           Your sampled infinite!
         </a>
-        <button onClick={navigate("/audioUploader")}>
+        <button onClick={() => navigate("/audioUploader")}>
           Upload to your account
         </button>
       </>
     );
   }
+
+  useEffect(() => {
+    if (newAudio) {
+      setWhileLoading(false);
+    }
+  }, [newAudio, setWhileLoading]);
 
   return (
     <>
@@ -78,21 +85,19 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
         <h1>Sampler Infinite</h1>
+        <h2>Press Start button to begin processor</h2>
+        <h2>May take up to 5 minutes</h2>
         <button
           onClick={() => {
             triggerBackend();
             setNewAudio(null);
+            setWhileLoading(true);
           }}
         >
           Start
         </button>
-        <div>
-          {newAudio ? (
-            sample
-          ) : (
-            <p>Processing...</p>
-          )}
-        </div>
+        <div>{newAudio ? sample() : null}</div>
+        <div>{whileLoading ? <output>Processing...</output> : null}</div>
       </div>
     </>
   );

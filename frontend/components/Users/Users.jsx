@@ -46,7 +46,7 @@ export default function Home({ setUserId }) {
       <h1>Home</h1>
       <div>
         {users.map((user) => (
-          <li key={user.id}>
+          <ul key={user.id}>
             <h3>
               {user.first_name} {user.last_name}
             </h3>
@@ -70,7 +70,7 @@ export default function Home({ setUserId }) {
             >
               Delete
             </button>
-          </li>
+          </ul>
         ))}
       </div>
     </>

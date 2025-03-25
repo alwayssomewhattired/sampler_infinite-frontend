@@ -45,8 +45,9 @@ export default function AudioUploader({ newAudio, me }) {
             onChange={(e) => setDescription(e.target.value)}
           />
         </label>
-        <button>Upload your sampled infinite</button>
-        {isSuccess ? navigate("/audio") : <output>Finished</output>}
+        <button onClick={() => navigate("/audio")}>
+          Upload your sampled infinite
+        </button>
         {error && <output>Error uploading {error.message}</output>}
       </form>
     </>

@@ -47,6 +47,7 @@ const GranularSynthComponent = () => {
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
         <h1>🎛️ Granular Synth</h1>
+        <h2>play your sampled infinites or any other audio file!</h2>
 
         <input type="file" accept="audio/*" onChange={handleFileUpload} />
 

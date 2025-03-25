@@ -14,7 +14,8 @@ export default function SingleReview({ audioId, reviewId }) {
   const { data: myData, isSuccess } = useGetReviewQuery({ audioId, reviewId });
   const [review, setReview] = useState("");
 
-  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(reviewId);
+  const { data: commentData, isSuccess: loaded } =
+    useGetCommentsQuery(reviewId);
   const [comments, setComments] = useState([]);
 
   const [createCommentMutation, isLoading, error] = usePostCommentMutation();
@@ -56,6 +57,18 @@ export default function SingleReview({ audioId, reviewId }) {
   return (
     <>
       <h1>Review</h1>
+      <div>
+        <Link to="/audio">Published Audio</Link>
+      </div>
+      <div>
+        <Link to="/singleUser">Your Account</Link>
+      </div>
+      <div>
+        <Link to="/granularSynth">Granular Synth</Link>
+      </div>
+      <div>
+        <Link to="/audioCreator">SamplerInfinite</Link>
+      </div>
       <ul key={review.id}>
         <h4>{review.userID}</h4>
         <h3>{review.reviewText}</h3>
@@ -86,9 +99,6 @@ export default function SingleReview({ audioId, reviewId }) {
     </>
   );
 }
-
-
-
 
 //shhh
 /*

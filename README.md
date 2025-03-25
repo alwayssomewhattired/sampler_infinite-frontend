@@ -1,1 +1,1 @@
-npm run dev to start the erver
+npm run dev to start the server

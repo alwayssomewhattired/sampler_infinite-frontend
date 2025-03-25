@@ -37,6 +37,7 @@ export default function Audio({ setAudioId }) {
     console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
       console.log(myData);
+      console.log(myData.id);
       setSongs(myData);
       console.log(songs);
     }
@@ -60,22 +61,25 @@ export default function Audio({ setAudioId }) {
     <>
       <h1>Sampled Infinites</h1>
       <div>
-          <Link to="/audioCreator">Create Audio</Link>
-        </div>
-        <div>
-          <Link to="/singleUser">My Account</Link>
-        </div>
+        <Link to="/audioCreator">SamplerInfinite</Link>
+      </div>
+      <div>
+        <Link to="/granularSynth">Granular Synth</Link>
+      </div>
+      <div>
+        <Link to="/singleUser">My Account</Link>
+      </div>
       <div>
         {songs.map((song) => (
           <ul key={song.id}>
-            <h3>{song.name}</h3>
+            <h2>{song.name}</h2>
             <audio controls>
-                <source
-                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.name}.wav`}
-                  type="audio/wav"
-                />
-                Your browser does not support the audio element
-              </audio>
+              <source
+                src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}.wav`}
+                type="audio/wav"
+              />
+              Your browser does not support the audio element
+            </audio>
             <button
               onClick={() => {
                 setAudioId(song.id);
@@ -84,11 +88,11 @@ export default function Audio({ setAudioId }) {
             >
               View
             </button>
+            <h3>{song.description}</h3>
           </ul>
         ))}
       </div>
-      <div>
-      </div>
+      <div></div>
     </>
   );
 }

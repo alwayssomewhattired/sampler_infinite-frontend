@@ -74,12 +74,12 @@ export default function SingleUser({ me }) {
     $details = (
       <>
         <div>
-          <li key={myData.id}>
+          <ul key={myData.id}>
             <h4>Old Email</h4>
             <h3>{myData.email}</h3>
             <h4>Old Password</h4>
             <h3>{myData.password}</h3>
-          </li>
+          </ul>
         </div>
         <form onSubmit={changeInfo}>
           <div></div>

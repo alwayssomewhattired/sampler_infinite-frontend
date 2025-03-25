@@ -75,7 +75,7 @@ export default function Audio({ setAudioId }) {
             <h2>{song.name}</h2>
             <audio controls>
               <source
-                src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}.wav`}
+                src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
                 type="audio/wav"
               />
               Your browser does not support the audio element

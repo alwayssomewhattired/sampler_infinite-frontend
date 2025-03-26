@@ -2,6 +2,8 @@ import { useGetSongsQuery } from "./AudioSlice";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
+import "./../../styles/styles.css";
+
 export default function Audio({ setAudioId }) {
   const { data: myData, isSuccess } = useGetSongsQuery();
   const [songs, setSongs] = useState([]);
@@ -59,20 +61,21 @@ export default function Audio({ setAudioId }) {
 
   return (
     <>
-      <h1>Sampled Infinites</h1>
       <div>
-        <Link to="/audioCreator">SamplerInfinite</Link>
+        <Link className="text" to="/audioCreator">SamplerInfinite</Link>
       </div>
       <div>
-        <Link to="/granularSynth">Granular Synth</Link>
+        <Link className="text" to="/granularSynth">Granular Synth</Link>
       </div>
       <div>
-        <Link to="/singleUser">My Account</Link>
+        <Link className="text" to="/singleUser">My Account</Link>
       </div>
+      <div style={{ textAlign: "center", padding: "20px" }}>
+      <h1 className="text">Sampled Infinites</h1>
       <div>
         {songs.map((song) => (
           <ul key={song.id}>
-            <h2>{song.name}</h2>
+            <h2 className="text">{song.name}</h2>
             <audio controls>
               <source
                 src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
@@ -81,6 +84,7 @@ export default function Audio({ setAudioId }) {
               Your browser does not support the audio element
             </audio>
             <button
+            className="button"
               onClick={() => {
                 setAudioId(song.id);
                 navigate("/singleAudio");
@@ -88,11 +92,12 @@ export default function Audio({ setAudioId }) {
             >
               View
             </button>
-            <h3>{song.description}</h3>
+            <h3 className="text">{song.description}</h3>
           </ul>
         ))}
       </div>
       <div></div>
+      </div>
     </>
   );
 }

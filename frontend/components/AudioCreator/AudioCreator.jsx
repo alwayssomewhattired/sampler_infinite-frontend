@@ -2,6 +2,8 @@ import { triggerBackend } from "./AudioCreatorApi";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import "./../../styles/styles.css";
+
 export default function AudioCreator({ setNewAudio, newAudio }) {
   // const [newAudio, setNewAudio] = useState(null);
   // State for managing WebSocket connection and messages
@@ -75,19 +77,26 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
   return (
     <>
       <div>
-        <Link to="/audio">Published Audio</Link>
+        <Link className="text" to="/audio">
+          Published Audio
+        </Link>
       </div>
       <div>
-        <Link to="/singleUser">Your Account</Link>
+        <Link className="text" to="/granularSynth">
+          Granular Synth
+        </Link>
       </div>
       <div>
-        <Link to="/granularSynth">Granular Synth</Link>
+        <Link className="text" to="/singleUser">
+          Your Account
+        </Link>
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
-        <h1>Sampler Infinite</h1>
-        <h2>Press Start button to begin processor</h2>
-        <h2>May take up to 5 minutes</h2>
+        <h1 className="text">Sampler Infinite</h1>
+        <h2 className="text">Press Start button to begin processor</h2>
+        <h2 className="text">May take up to 5 minutes</h2>
         <button
+        className="button"
           onClick={() => {
             triggerBackend();
             setNewAudio(null);
@@ -97,7 +106,11 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
           Start
         </button>
         <div>{newAudio ? sample() : null}</div>
-        <div>{whileLoading ? <output>Processing...</output> : null}</div>
+        <div>
+          {whileLoading ? (
+            <output className="text">Processing...</output>
+          ) : null}
+        </div>
       </div>
     </>
   );

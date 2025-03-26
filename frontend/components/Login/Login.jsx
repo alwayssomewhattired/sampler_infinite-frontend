@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useAddLoginMutation } from "./LoginSlice";
 import { useNavigate } from "react-router-dom";
 
+import "./../../styles/styles.css";
+
 export default function Login({ setMe }) {
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
@@ -26,32 +28,42 @@ export default function Login({ setMe }) {
   };
   return (
     <>
-      <h1>Login</h1>
-      <div>
-        <Link to="/register">Register</Link>
+      <h1 className="text">Login</h1>
+      <Link className="text" to="/register">
+        Register
+      </Link>
+      <div className="container">
+        <div className="item">
+          <form onSubmit={loginInfo}>
+            <div className="item">
+              <label className="text">
+                Email
+                <input
+                  className="border"
+                  name="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+            </div>
+            <div className="item">
+              <label className="text">
+                Password
+                <input
+                  className="border"
+                  type="password"
+                  name="Password"
+                  value={normal_password}
+                  onChange={(e) => setNormal_Password(e.target.value)}
+                />
+              </label>
+            </div>
+            <button className="button">Login</button>
+            {isLoading && <output>Logging in...</output>}
+            {error && <output>Invalid credentials{error.message}</output>}
+          </form>
+        </div>
       </div>
-      <form onSubmit={loginInfo}>
-        <label>
-          Email
-          <input
-            name="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Password
-          <input
-          type="password"
-            name="Password"
-            value={normal_password}
-            onChange={(e) => setNormal_Password(e.target.value)}
-          />
-        </label>
-        <button>Login</button>
-        {isLoading && <output>Logging in...</output>}
-        {error && <output>Invalid credentials{error.message}</output>}
-      </form>
     </>
   );
 }

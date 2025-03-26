@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { GranularSynth } from "./GranularSynthClass";
 import { Link } from "react-router-dom";
 
+
 const GranularSynthComponent = () => {
   const audioContextRef = useRef(
     new (window.AudioContext || window.webkitAudioContext)()
@@ -12,7 +13,7 @@ const GranularSynthComponent = () => {
   const [grainSize, setGrainSize] = useState(0.1);
   const [overlap, setOverlap] = useState(0.05);
   const [playbackRate, setPlaybackRate] = useState(1.0);
-  const [loop, setLoop] = useState(false); // ✅ Loop state
+  const [loop, setLoop] = useState(false); // Loop state
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -28,7 +29,7 @@ const GranularSynthComponent = () => {
       synthRef.current.grainSize = grainSize;
       synthRef.current.overlap = overlap;
       synthRef.current.playbackRate = playbackRate;
-      synthRef.current.setLoop(loop); // ✅ Apply looping state
+      synthRef.current.setLoop(loop); // Apply looping state
       synthRef.current.play();
     }
     setIsPlaying(!isPlaying);
@@ -37,22 +38,35 @@ const GranularSynthComponent = () => {
   return (
     <>
       <div>
-        <Link to="/audio">Published Audio</Link>
+        <Link className="text" to="/audio">
+          Published Audio
+        </Link>
       </div>
       <div>
-        <Link to="/audioCreator">Sampler Infinite</Link>
+        <Link className="text" to="/audioCreator">
+          Sampler Infinite
+        </Link>
       </div>
       <div>
-        <Link to="/singleUser">Your Account</Link>
+        <Link className="text" to="/singleUser">
+          Your Account
+        </Link>
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
-        <h1>🎛️ Granular Synth</h1>
-        <h2>play your sampled infinites or any other audio file!</h2>
+        <h1 className="text">Granular Synth</h1>
+        <h2 className="text">
+          play your sampled infinites or any other audio file!
+        </h2>
 
-        <input type="file" accept="audio/*" onChange={handleFileUpload} />
+        <input
+          className="text"
+          type="file"
+          accept="audio/*"
+          onChange={handleFileUpload}
+        />
 
         <div>
-          <label>Grain Size: {grainSize.toFixed(2)}s</label>
+          <label className="text">Grain Size: {grainSize.toFixed(2)}s</label>
           <input
             type="range"
             min="0.01"
@@ -64,7 +78,7 @@ const GranularSynthComponent = () => {
         </div>
 
         <div>
-          <label>Overlap: {overlap.toFixed(2)}s</label>
+          <label className="text">Overlap: {overlap.toFixed(2)}s</label>
           <input
             type="range"
             min="0"
@@ -76,7 +90,9 @@ const GranularSynthComponent = () => {
         </div>
 
         <div>
-          <label>Playback Rate: {playbackRate.toFixed(2)}x</label>
+          <label className="text">
+            Playback Rate: {playbackRate.toFixed(2)}x
+          </label>
           <input
             type="range"
             min="0.5"
@@ -88,7 +104,7 @@ const GranularSynthComponent = () => {
         </div>
 
         <div>
-          <label>Loop: </label>
+          <label className="text">Loop: </label>
           <input
             type="checkbox"
             checked={loop}
@@ -101,6 +117,7 @@ const GranularSynthComponent = () => {
         </div>
 
         <button
+          className="button"
           onClick={togglePlayback}
           style={{ marginTop: "20px", padding: "10px", fontSize: "16px" }}
         >

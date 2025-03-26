@@ -1,0 +1,37 @@
+.button {
+  background-color: hsl(116, 100%, 50%);
+  color: black;
+  cursor: pointer;
+}
+
+.text {
+  color: hsl(119, 100%, 50%);
+}
+
+.border {
+  color: hsl(0, 0%, 0%);
+  border: 2px solid hsl(116, 100%, 50%);
+}
+
+body {
+  background-color: black;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 400px;
+  width: 975px;
+}
+
+.item {
+  margin-left: auto;
+  width: 60px;
+  height: 60px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+}

@@ -7,6 +7,8 @@ import {
   useGetMyCommentsQuery,
 } from "./SingleUserSlice";
 
+import "./../../styles/styles.css";
+
 export default function SingleUser({ me }) {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
@@ -69,23 +71,24 @@ export default function SingleUser({ me }) {
   if (!token) {
     navigate("/");
   } else if (isLoading) {
-    $details = <p>Loading User</p>;
+    $details = <p className="text">Loading User</p>;
   } else {
     $details = (
       <>
         <div>
           <ul key={myData.id}>
-            <h4>Old Email</h4>
-            <h3>{myData.email}</h3>
-            <h4>Old Password</h4>
-            <h3>{myData.password}</h3>
+            <h4 className="text">Old Email</h4>
+            <h3 className="text">{myData.email}</h3>
+            <h4 className="text">Old Password</h4>
+            <h3 className="text">{myData.password}</h3>
           </ul>
         </div>
         <form onSubmit={changeInfo}>
           <div></div>
-          <label>
+          <label className="text">
             New Email
             <input
+              className="border"
               name="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -93,9 +96,10 @@ export default function SingleUser({ me }) {
             />
           </label>
           <div></div>
-          <label>
+          <label className="text">
             New Password
             <input
+              className="border"
               name="Password"
               value={normal_password}
               onChange={(e) => setNormal_Password(e.target.value)}
@@ -103,8 +107,8 @@ export default function SingleUser({ me }) {
             />
           </label>
           <div></div>
-          <button>Register</button>
-          {isLoading && <output>Creating user...</output>}
+          <button className="button">Register</button>
+          {isLoading && <output className="text">Creating user...</output>}
         </form>
       </>
     );
@@ -112,30 +116,41 @@ export default function SingleUser({ me }) {
 
   return (
     <>
-      <h1>SingleUser</h1>
       <div>
-        <Link to="/audio">Published Audio</Link>
+        <Link className="text" to="/audio">
+          Published Audio
+        </Link>
       </div>
       <div>
-        <Link to="/audioCreator">SamplerInfinite</Link>
+        <Link className="text" to="/audioCreator">
+          SamplerInfinite
+        </Link>
       </div>
-      <div>{$details}</div>
       <div>
-        <h2>Reviews</h2>
+        <Link className="text" to="/granularSynth">
+          Granular Synth
+        </Link>
       </div>
-      {reviews.map((review) => (
-        <ul key={review.id}>
-          <h3>{review.reviewText}</h3>
-        </ul>
-      ))}
-      <div>
-        <h2>Comments</h2>
+      <div style={{ textAlign: "center", padding: "20px" }}>
+        <h1 className="text">Your Account</h1>
+        <div>{$details}</div>
+        <div>
+          <h2 className="text">Reviews</h2>
+        </div>
+        {reviews.map((review) => (
+          <ul key={review.id}>
+            <h3 className="text">{review.reviewText}</h3>
+          </ul>
+        ))}
+        <div>
+          <h2 className="text">Comments</h2>
+        </div>
+        {comments.map((comment) => (
+          <ul key={comment.id}>
+            <h3 className="text">{comment.commentText}</h3>
+          </ul>
+        ))}
       </div>
-      {comments.map((comment) => (
-        <ul key={comment.id}>
-          <h3>{comment.commentText}</h3>
-        </ul>
-      ))}
     </>
   );
 }

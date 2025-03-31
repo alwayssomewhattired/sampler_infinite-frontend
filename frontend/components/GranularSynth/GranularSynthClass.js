@@ -7,7 +7,7 @@ export class GranularSynth {
     this.playbackRate = 1.0;
     this.position = 0.0;
     this.running = false;
-    this.loop = false; // ✅ New: Looping flag
+    this.loop = false; // Looping flag
   }
 
   async loadSample(file) {
@@ -54,7 +54,7 @@ export class GranularSynth {
       (this.grainSize - this.overlap) * 1000
     );
 
-    // ✅ Looping: Wrap around when reaching the end
+    // Looping: Wrap around when reaching the end
     this.position += this.grainSize;
     if (this.loop) {
       if (this.position >= this.buffer.duration - this.grainSize) {

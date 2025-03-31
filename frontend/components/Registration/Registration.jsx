@@ -8,8 +8,7 @@ export default function Registration({ setMe }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [normal_password, setNormal_Password] = useState("");
-  //might need to destructure 'isLoading, error'
-  const [createRegisterMutation, isLoading, error] = useAddUserMutation();
+  const [createRegisterMutation, { isLoading, error }] = useAddUserMutation();
   const navigate = useNavigate();
 
   const registerInfo = async (e) => {
@@ -19,8 +18,7 @@ export default function Registration({ setMe }) {
         username,
         email,
         normal_password,
-      }); //might need to '.unwrap()'
-
+      });
       console.log(response.data);
       console.log(response.data.token);
       setMe(response.data.me);

@@ -13,9 +13,9 @@
   border: 2px solid hsl(116, 100%, 50%);
 }
 
-body {
+/* body {
   background-color: black;
-}
+} */
 
 .container {
   display: flex;

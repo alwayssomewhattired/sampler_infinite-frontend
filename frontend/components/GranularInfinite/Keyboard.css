@@ -1,0 +1,60 @@
+.key-container {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+
+.key-name {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: black;
+  white-space: nowrap;
+  max-width: 60px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.keyboard {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.key {
+  width: 60px;
+  height: 120px;
+  background: white;
+  border: 2px solid black;
+  text-align: center;
+  line-height: 120px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s, transform 0.1s;
+}
+
+.key.active {
+  background: lightblue;
+  transform: scale(0.95);
+}
+
+.key.assigned {
+  border-color: green;
+}
+
+.sample-name {
+  font-size: 10px; /* Reduce font size */
+  color: #777; /* Keep a subtle color */
+  text-align: center; /* Center the text under the key */
+  margin: 0; /* Remove any margins */
+  padding: 2px; /* Reduce padding around the text */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: clip; /* Hide anything that overflows */
+  text-overflow: ellipsis; /* Add ellipsis for long filenames */
+}

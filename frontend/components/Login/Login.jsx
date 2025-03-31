@@ -17,7 +17,7 @@ export default function Login({ setMe }) {
       const response = await createLoginMutation({
         email,
         normal_password,
-      }); //might need to add '.unwrap()' here
+      });
       console.log(response.data.token);
       setMe(response.data.me);
       sessionStorage.setItem("token", response.data.token);
@@ -59,8 +59,12 @@ export default function Login({ setMe }) {
               </label>
             </div>
             <button className="button">Login</button>
-            {isLoading && <output>Logging in...</output>}
-            {error && <output>Invalid credentials{error.message}</output>}
+            {isLoading && <output className="text">Logging in...</output>}
+            {error && (
+              <output className="text">
+                Invalid credentials{error.message}
+              </output>
+            )}
           </form>
         </div>
       </div>

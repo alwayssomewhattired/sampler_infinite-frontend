@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { GranularSynth } from "./GranularSynthClass";
 import { Link } from "react-router-dom";
 
-
 const GranularSynthComponent = () => {
   const audioContextRef = useRef(
     new (window.AudioContext || window.webkitAudioContext)()
@@ -45,6 +44,11 @@ const GranularSynthComponent = () => {
       <div>
         <Link className="text" to="/audioCreator">
           Sampler Infinite
+        </Link>
+      </div>
+      <div>
+        <Link className="text" to="/granularInfinite">
+          Granular Infinite
         </Link>
       </div>
       <div>

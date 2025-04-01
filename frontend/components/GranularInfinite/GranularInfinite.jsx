@@ -1,1186 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [sampleMap, setSampleMap] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-
-//   useEffect(() => {
-//     setGrainPlayers({});
-//   }, []);
-
-//   //   const loadSample = (key, file) => {
-//   //     const url = URL.createObjectURL(file);
-//   //     const grainPlayer = new Tone.GrainPlayer(url, {
-//   //       grainSize: 0.05,
-//   //       overlap: 0.1,
-//   //       speed: 1,
-//   //       loop: true,
-//   //     }).toDestination();
-
-//   //     // Store the grainPlayer and sample details
-//   //     setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//   //     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   //   };
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert(
-//         "Invalid file type. Please upload a valid audio file (MP3, WAV, OGG)."
-//       );
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05,
-//       overlap: 0.1,
-//       speed: 1,
-//       loop: true,
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key]) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Calculate a random start position within the sample's duration
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-
-//       // Start the sample from the random position
-//       grainPlayer.start(randomStartPosition);
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop();
-//     }
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//         setActiveKeys((prev) => new Set(prev).add(key));
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//       setActiveKeys((prev) => {
-//         const newSet = new Set(prev);
-//         newSet.delete(key);
-//         return newSet;
-//       });
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, sampleMap, activeKeys]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>
-//         Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with
-//         granular synthesis.
-//       </p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard
-//         activeKeys={activeKeys}
-//         sampleMap={sampleMap}
-//         playSample={playSample}
-//       />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*",
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div
-//       {...getRootProps()}
-//       style={{
-//         border: "2px dashed #ccc",
-//         padding: 20,
-//         textAlign: "center",
-//         marginBottom: 20,
-//       }}
-//     >
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div className="key-name">{sampleMap[key]?.name}</div>
-//           <div
-//             className={classNames("key", {
-//               active: activeKeys.has(key),
-//               assigned: sampleMap[key],
-//             })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
-/*
-
-
-
-maybe note
-*/
-
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [sampleMap, setSampleMap] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-
-//   useEffect(() => {
-//     setGrainPlayers({});
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert("Invalid file type. Please upload a valid audio file (MP3, WAV, OGG).");
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Try to load the file into GrainPlayer and handle errors
-//     try {
-//       const grainPlayer = new Tone.GrainPlayer(url, {
-//         grainSize: 0.05,
-//         overlap: 0.1,
-//         speed: 1,
-//         loop: true,
-//       }).toDestination();
-
-//       // Store the grainPlayer and sample details
-//       setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//       setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//     } catch (error) {
-//       console.error("Error loading sample:", error);
-//       alert("There was an error loading the audio sample. Please try again.");
-//     }
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key]) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Calculate a random start position within the sample's duration
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-
-//       // Start the sample from the random position
-//       grainPlayer.start(randomStartPosition);
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop();
-//     }
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//         setActiveKeys((prev) => new Set(prev).add(key));
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//       setActiveKeys((prev) => {
-//         const newSet = new Set(prev);
-//         newSet.delete(key);
-//         return newSet;
-//       });
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, sampleMap, activeKeys]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with granular synthesis.</p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard activeKeys={activeKeys} sampleMap={sampleMap} playSample={playSample} />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div {...getRootProps()} style={{ border: "2px dashed #ccc", padding: 20, textAlign: "center", marginBottom: 20 }}>
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div className="key-name">{sampleMap[key]?.name}</div>
-//           <div
-//             className={classNames("key", { active: activeKeys.has(key), assigned: sampleMap[key] })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
-//
-//
-//
-//oh boy
-
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [sampleMap, setSampleMap] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-
-//   useEffect(() => {
-//     setGrainPlayers({});
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert("Invalid file type. Please upload a valid audio file (MP3, WAV, OGG).");
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Create a new GrainPlayer for the sample
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05,   // Grain size in seconds
-//       overlap: 0.1,      // Overlap between grains
-//       speed: 1,          // Speed of the grain playback
-//       loop: true,        // Loop the grains
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key]) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Calculate a random start position within the sample's duration
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-
-//       // Calculate a random grain size (between 0.05 and 0.2 seconds for example)
-//       const randomGrainSize = 0.05 + Math.random() * 0.15;
-
-//       // Start the grain at the random position with a random grain size
-//       grainPlayer.start(randomStartPosition, 0, randomGrainSize);
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop();
-//     }
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//         setActiveKeys((prev) => new Set(prev).add(key));
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//       setActiveKeys((prev) => {
-//         const newSet = new Set(prev);
-//         newSet.delete(key);
-//         return newSet;
-//       });
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, sampleMap, activeKeys]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with granular synthesis.</p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard activeKeys={activeKeys} sampleMap={sampleMap} playSample={playSample} />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div {...getRootProps()} style={{ border: "2px dashed #ccc", padding: 20, textAlign: "center", marginBottom: 20 }}>
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div className="key-name">{sampleMap[key]?.name}</div>
-//           <div
-//             className={classNames("key", { active: activeKeys.has(key), assigned: sampleMap[key] })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-////
-//
-//
-//
-//not good
-
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [sampleMap, setSampleMap] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-
-//   // Create a Tone.js Audio Context when the component mounts
-//   useEffect(() => {
-//     Tone.start().then(() => {
-//       console.log("Audio context started");
-//     });
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert(
-//         "Invalid file type. Please upload a valid audio file (MP3, WAV, OGG)."
-//       );
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Create a new GrainPlayer for the sample
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05, // Grain size in seconds
-//       overlap: 0.1, // Overlap between grains
-//       speed: 1, // Speed of the grain playback
-//       loop: true, // Loop the grains
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key]) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Calculate a random start position within the sample's duration
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-
-//       // Calculate a random grain size (between 0.05 and 0.2 seconds for example)
-//       const randomGrainSize = 0.05 + Math.random() * 0.15;
-
-//       // Start the grain at the random position with a random grain size
-//       grainPlayer.start(randomStartPosition, 0, randomGrainSize);
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop();
-//     }
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//         setActiveKeys((prev) => new Set(prev).add(key));
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//       setActiveKeys((prev) => {
-//         const newSet = new Set(prev);
-//         newSet.delete(key);
-//         return newSet;
-//       });
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, sampleMap, activeKeys]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>
-//         Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with
-//         granular synthesis.
-//       </p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard
-//         activeKeys={activeKeys}
-//         sampleMap={sampleMap}
-//         playSample={playSample}
-//       />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div
-//       {...getRootProps()}
-//       style={{
-//         border: "2px dashed #ccc",
-//         padding: 20,
-//         textAlign: "center",
-//         marginBottom: 20,
-//       }}
-//     >
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div className="key-name">{sampleMap[key]?.name}</div>
-//           <div
-//             className={classNames("key", {
-//               active: activeKeys.has(key),
-//               assigned: sampleMap[key],
-//             })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
-//
-//
-//
-//eh
-
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [sampleMap, setSampleMap] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-//   const [audioContextStarted, setAudioContextStarted] = useState(false);
-
-//   // Create a Tone.js Audio Context when the component mounts
-//   useEffect(() => {
-//     Tone.start().then(() => {
-//       setAudioContextStarted(true);
-//       console.log("Audio context started");
-//     });
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     console.log("Loading sample for key:", key, file);
-
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert("Invalid file type. Please upload a valid audio file (MP3, WAV, OGG).");
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Create a new GrainPlayer for the sample
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05,   // Grain size in seconds
-//       overlap: 0.1,      // Overlap between grains
-//       speed: 1,          // Speed of the grain playback
-//       loop: true,        // Loop the grains
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setSampleMap((prev) => ({ ...prev, [key]: { url, name: file.name } }));
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (!audioContextStarted) {
-//       console.log("Audio context not started yet.");
-//       return;
-//     }
-
-//     if (grainPlayers[key]) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Calculate a random start position within the sample's duration
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-
-//       // Calculate a random grain size (between 0.05 and 0.2 seconds for example)
-//       const randomGrainSize = 0.05 + Math.random() * 0.15;
-
-//       console.log("Playing sample from position", randomStartPosition, "with grain size", randomGrainSize);
-
-//       // Start the grain at the random position with a random grain size
-//       grainPlayer.start(randomStartPosition, 0, randomGrainSize);
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop();
-//     }
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//         setActiveKeys((prev) => new Set(prev).add(key));
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//       setActiveKeys((prev) => {
-//         const newSet = new Set(prev);
-//         newSet.delete(key);
-//         return newSet;
-//       });
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, sampleMap, activeKeys]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with granular synthesis.</p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard activeKeys={activeKeys} sampleMap={sampleMap} playSample={playSample} />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div {...getRootProps()} style={{ border: "2px dashed #ccc", padding: 20, textAlign: "center", marginBottom: 20 }}>
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div className="key-name">{sampleMap[key]?.name}</div>
-//           <div
-//             className={classNames("key", { active: activeKeys.has(key), assigned: sampleMap[key] })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
-//
-// not good
-//
-//
-//
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-//   const [grainInterval, setGrainInterval] = useState({});
-
-//   // Initialize Tone.js Audio Context when the component mounts
-//   useEffect(() => {
-//     Tone.start().then(() => {
-//       console.log("Audio context started");
-//     });
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert(
-//         "Invalid file type. Please upload a valid audio file (MP3, WAV, OGG)."
-//       );
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Create a new GrainPlayer for the sample
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05, // Grain size in seconds
-//       overlap: 0.1, // Overlap between grains
-//       speed: 1, // Speed of the grain playback
-//       loop: true, // Loop the grains
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key] && !activeKeys.has(key)) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Start the grain player if it hasn't been started yet
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-//       grainPlayer.start(randomStartPosition);
-
-//       // Set up a loop to continuously play grains while the key is pressed
-//       const interval = setInterval(() => {
-//         const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-//         const randomGrainSize = 0.05 + Math.random() * 0.15; // Random grain size between 0.05s and 0.2s
-//         grainPlayer.start(randomStartPosition, 0, randomGrainSize);
-//       }, 100); // Trigger new grains every 100ms
-
-//       // Store the interval to clear it when the key is released
-//       setGrainInterval((prev) => ({ ...prev, [key]: interval }));
-
-//       setActiveKeys((prev) => new Set(prev).add(key));
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop(); // Stop the grain player
-//     }
-//     if (grainInterval[key]) {
-//       clearInterval(grainInterval[key]); // Clear the interval to stop continuous grain playback
-//       setGrainInterval((prev) => {
-//         const newInterval = { ...prev };
-//         delete newInterval[key]; // Remove the interval for the released key
-//         return newInterval;
-//       });
-//     }
-//     setActiveKeys((prev) => {
-//       const newSet = new Set(prev);
-//       newSet.delete(key);
-//       return newSet;
-//     });
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, activeKeys, grainInterval]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>
-//         Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with
-//         granular synthesis.
-//       </p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard
-//         activeKeys={activeKeys}
-//         sampleMap={grainPlayers}
-//         playSample={playSample}
-//       />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div
-//       {...getRootProps()}
-//       style={{
-//         border: "2px dashed #ccc",
-//         padding: 20,
-//         textAlign: "center",
-//         marginBottom: 20,
-//       }}
-//     >
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div
-//             className={classNames("key", {
-//               active: activeKeys.has(key),
-//               assigned: sampleMap[key],
-//             })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
-// much better
-//
-//
-//
-//
-
-// import React, { useState, useEffect } from "react";
-// import * as Tone from "tone";
-// import { useDropzone } from "react-dropzone";
-// import classNames from "classnames";
-// import "./Keyboard.css";
-
-// const keyToNote = {
-//   a: "C4",
-//   s: "D4",
-//   d: "E4",
-//   f: "F4",
-//   g: "G4",
-//   h: "A4",
-//   j: "B4",
-//   k: "C5",
-// };
-
-// const SamplerApp = () => {
-//   const [grainPlayers, setGrainPlayers] = useState({});
-//   const [activeKeys, setActiveKeys] = useState(new Set());
-//   const [grainInterval, setGrainInterval] = useState({});
-
-//   // Initialize Tone.js Audio Context when the component mounts
-//   useEffect(() => {
-//     Tone.start().then(() => {
-//       console.log("Audio context started");
-//     });
-//   }, []);
-
-//   const loadSample = (key, file) => {
-//     // Check if the file is a valid audio file
-//     const validExtensions = ["audio/mpeg", "audio/wav", "audio/ogg"];
-//     if (!validExtensions.includes(file.type)) {
-//       alert(
-//         "Invalid file type. Please upload a valid audio file (MP3, WAV, OGG)."
-//       );
-//       return;
-//     }
-
-//     const url = URL.createObjectURL(file);
-
-//     // Create a new GrainPlayer for the sample
-//     const grainPlayer = new Tone.GrainPlayer(url, {
-//       grainSize: 0.05, // Grain size in seconds
-//       overlap: 0.1, // Overlap between grains
-//       speed: 1, // Speed of the grain playback
-//       loop: true, // Loop the grains
-//     }).toDestination();
-
-//     // Store the grainPlayer and sample details
-//     setGrainPlayers((prev) => ({ ...prev, [key]: grainPlayer }));
-//   };
-
-//   const playSample = (key) => {
-//     if (grainPlayers[key] && !activeKeys.has(key)) {
-//       const grainPlayer = grainPlayers[key];
-
-//       // Start the grain player if it hasn't been started yet
-//       const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-//       grainPlayer.start(Tone.now() + 0.1, randomStartPosition);
-
-//       // Set up a loop to continuously play grains while the key is pressed
-//       const interval = setInterval(() => {
-//         const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-//         const randomGrainSize = 0.05 + Math.random() * 0.15; // Random grain size between 0.05s and 0.2s
-//         grainPlayer.start(
-//           Tone.now() + 0.1,
-//           randomStartPosition,
-//           randomGrainSize
-//         );
-//       }, 100); // Trigger new grains every 100ms
-
-//       // Store the interval to clear it when the key is released
-//       setGrainInterval((prev) => ({ ...prev, [key]: interval }));
-
-//       setActiveKeys((prev) => new Set(prev).add(key));
-//     }
-//   };
-
-//   const stopSample = (key) => {
-//     if (grainPlayers[key]) {
-//       grainPlayers[key].stop(); // Stop the grain player
-//     }
-//     if (grainInterval[key]) {
-//       clearInterval(grainInterval[key]); // Clear the interval to stop continuous grain playback
-//       setGrainInterval((prev) => {
-//         const newInterval = { ...prev };
-//         delete newInterval[key]; // Remove the interval for the released key
-//         return newInterval;
-//       });
-//     }
-//     setActiveKeys((prev) => {
-//       const newSet = new Set(prev);
-//       newSet.delete(key);
-//       return newSet;
-//     });
-//   };
-
-//   useEffect(() => {
-//     const handleKeyDown = (event) => {
-//       const key = event.key.toLowerCase();
-//       if (key in keyToNote && !activeKeys.has(key)) {
-//         playSample(key);
-//       }
-//     };
-
-//     const handleKeyUp = (event) => {
-//       const key = event.key.toLowerCase();
-//       stopSample(key);
-//     };
-
-//     window.addEventListener("keydown", handleKeyDown);
-//     window.addEventListener("keyup", handleKeyUp);
-//     return () => {
-//       window.removeEventListener("keydown", handleKeyDown);
-//       window.removeEventListener("keyup", handleKeyUp);
-//     };
-//   }, [grainPlayers, activeKeys, grainInterval]);
-
-//   return (
-//     <div>
-//       <h2>Granular Keyboard Sampler</h2>
-//       <p>
-//         Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with
-//         granular synthesis.
-//       </p>
-//       <DropZone onFileDrop={loadSample} />
-//       <VisualKeyboard
-//         activeKeys={activeKeys}
-//         sampleMap={grainPlayers}
-//         playSample={playSample}
-//       />
-//     </div>
-//   );
-// };
-
-// const DropZone = ({ onFileDrop }) => {
-//   const { getRootProps, getInputProps } = useDropzone({
-//     accept: "audio/*", // Ensure it accepts audio files only
-//     onDrop: (files) => {
-//       const key = prompt("Press the key you want to assign this sample to:");
-//       if (key) onFileDrop(key.toLowerCase(), files[0]);
-//     },
-//   });
-
-//   return (
-//     <div
-//       {...getRootProps()}
-//       style={{
-//         border: "2px dashed #ccc",
-//         padding: 20,
-//         textAlign: "center",
-//         marginBottom: 20,
-//       }}
-//     >
-//       <input {...getInputProps()} />
-//       <p>Drag & Drop an Audio File or Click to Upload</p>
-//     </div>
-//   );
-// };
-
-// const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
-//   return (
-//     <div className="keyboard">
-//       {Object.keys(keyToNote).map((key) => (
-//         <div key={key} className="key-container">
-//           <div
-//             className={classNames("key", {
-//               active: activeKeys.has(key),
-//               assigned: sampleMap[key],
-//             })}
-//             onClick={() => playSample(key)}
-//           >
-//             {key.toUpperCase()}
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default SamplerApp;
-
 import React, { useState, useEffect } from "react";
 import * as Tone from "tone";
 import { useDropzone } from "react-dropzone";
@@ -1203,6 +20,11 @@ const SamplerApp = () => {
   const [activeKeys, setActiveKeys] = useState(new Set());
   const [grainInterval, setGrainInterval] = useState({});
 
+  // Granular synth parameters
+  const [grainSize, setGrainSize] = useState(0.05); // Grain size in seconds
+  const [overlap, setOverlap] = useState(0.1); // Overlap between grains
+  const [speed, setSpeed] = useState(1); // Speed of grain playback
+
   // Initialize Tone.js Audio Context when the component mounts
   useEffect(() => {
     Tone.start().then(() => {
@@ -1224,40 +46,67 @@ const SamplerApp = () => {
 
     // Create a new GrainPlayer for the sample
     const grainPlayer = new Tone.GrainPlayer(url, {
-      grainSize: 0.05, // Grain size in seconds
-      overlap: 0.1, // Overlap between grains
-      speed: 1, // Speed of the grain playback
+      grainSize: grainSize, // Use the state value for grain size
+      overlap: overlap, // Use the state value for overlap
+      speed: speed, // Use the state value for speed
       loop: true, // Loop the grains
     }).toDestination();
 
     // Store the grainPlayer and sample details
-    setGrainPlayers((prev) => ({
-      ...prev,
-      [key]: { player: grainPlayer, name: file.name },
-    }));
+    setGrainPlayers((prev) => {
+      const updatedGrainPlayers = { ...prev };
+      updatedGrainPlayers[key] = updatedGrainPlayers[key] || [];
+      updatedGrainPlayers[key].push({ player: grainPlayer, name: file.name });
+      return updatedGrainPlayers;
+    });
   };
+
+  //
+  //
+  //
+  //
+  //bad
+  // does not stop when key is unpressed
+
+  const grainIntervalIds = {}; // Store interval IDs for each key
 
   const playSample = (key) => {
     if (grainPlayers[key] && !activeKeys.has(key)) {
-      const grainPlayer = grainPlayers[key].player;
+      grainPlayers[key].forEach(({ player }) => {
+        // Slightly stagger the start time for each player by adding an offset based on the index
+        const startTime = Tone.now() + 0.1; // Start immediately for the first grain
 
-      // Start the grain player if it hasn't been started yet
-      const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-      grainPlayer.start(Tone.now() + 0.1, randomStartPosition);
+        // Trigger the first grain at a random position
+        const randomStartPosition = Math.random() * player.buffer.duration;
+        player.start(startTime, randomStartPosition);
 
-      // Set up a loop to continuously play grains while the key is pressed
-      const interval = setInterval(() => {
-        const randomStartPosition = Math.random() * grainPlayer.buffer.duration;
-        const randomGrainSize = 0.05 + Math.random() * 0.15; // Random grain size between 0.05s and 0.2s
-        grainPlayer.start(
-          Tone.now() + 0.1,
-          randomStartPosition,
-          randomGrainSize
-        );
-      }, 100); // Trigger new grains every 100ms
+        // Schedule random grains continuously
+        const grainInterval = Math.random() * 0.2 + 0.05; // Random grain interval between 0.05s to 0.25s
 
-      // Store the interval to clear it when the key is released
-      setGrainInterval((prev) => ({ ...prev, [key]: interval }));
+        // Keep track of when the next grain should be scheduled
+        let nextGrainTime = startTime + grainInterval;
+
+        // Function to trigger grains continuously at random intervals
+        const triggerGrain = () => {
+          const randomStartPosition = Math.random() * player.buffer.duration;
+          player.start(nextGrainTime, randomStartPosition);
+
+          // Update the next grain time with a random interval
+          nextGrainTime += Math.random() * 0.2 + 0.05; // Add a random interval for the next grain
+        };
+
+        // Start the grain triggering loop
+        const repeatGrain = () => {
+          triggerGrain();
+          grainIntervalIds[key] = setTimeout(
+            repeatGrain,
+            (nextGrainTime - Tone.now()) * 1000
+          ); // Schedule the next grain
+        };
+
+        // Start the grain triggering loop
+        repeatGrain();
+      });
 
       setActiveKeys((prev) => new Set(prev).add(key));
     }
@@ -1265,16 +114,19 @@ const SamplerApp = () => {
 
   const stopSample = (key) => {
     if (grainPlayers[key]) {
-      grainPlayers[key].player.stop(); // Stop the grain player
-    }
-    if (grainInterval[key]) {
-      clearInterval(grainInterval[key]); // Clear the interval to stop continuous grain playback
-      setGrainInterval((prev) => {
-        const newInterval = { ...prev };
-        delete newInterval[key]; // Remove the interval for the released key
-        return newInterval;
+      // Stop all grain players associated with the key
+      grainPlayers[key].forEach(({ player }) => {
+        player.stop(); // Stop each grain player
       });
+
+      // Stop all grain triggering intervals
+      if (grainIntervalIds[key]) {
+        clearTimeout(grainIntervalIds[key]); // Stop the grain triggering loop
+        grainIntervalIds[key] = null; // Clear the timeout ID for this key
+      }
     }
+
+    // Remove the key from the active keys set
     setActiveKeys((prev) => {
       const newSet = new Set(prev);
       newSet.delete(key);
@@ -1282,6 +134,7 @@ const SamplerApp = () => {
     });
   };
 
+  // Handle key press
   useEffect(() => {
     const handleKeyDown = (event) => {
       const key = event.key.toLowerCase();
@@ -1292,23 +145,24 @@ const SamplerApp = () => {
 
     const handleKeyUp = (event) => {
       const key = event.key.toLowerCase();
-      stopSample(key);
+      stopSample(key); // Stop the sample when the key is released
     };
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [grainPlayers, activeKeys, grainInterval]);
+  }, [grainPlayers, activeKeys]);
 
   return (
     <div>
       <h2>Granular Keyboard Sampler</h2>
       <p>
-        Press <strong>A, S, D, F, G, H, J, K</strong> to play samples with
-        granular synthesis.
+        Press <strong>A, S, D, F, G, H, J, K</strong> to play multiple samples
+        with granular synthesis.
       </p>
       <DropZone onFileDrop={loadSample} />
       <VisualKeyboard
@@ -1316,6 +170,46 @@ const SamplerApp = () => {
         sampleMap={grainPlayers}
         playSample={playSample}
       />
+
+      {/* Granular Synth Controls */}
+      <div className="controls">
+        <div className="control-group">
+          <label>Grain Size (s):</label>
+          <input
+            type="range"
+            min="0.01"
+            max="0.2"
+            step="0.01"
+            value={grainSize}
+            onChange={(e) => setGrainSize(parseFloat(e.target.value))}
+          />
+          <span>{grainSize.toFixed(2)}</span>
+        </div>
+        <div className="control-group">
+          <label>Overlap:</label>
+          <input
+            type="range"
+            min="0.01"
+            max="0.5"
+            step="0.01"
+            value={overlap}
+            onChange={(e) => setOverlap(parseFloat(e.target.value))}
+          />
+          <span>{overlap.toFixed(2)}</span>
+        </div>
+        <div className="control-group">
+          <label>Speed:</label>
+          <input
+            type="range"
+            min="0.1"
+            max="3"
+            step="0.1"
+            value={speed}
+            onChange={(e) => setSpeed(parseFloat(e.target.value))}
+          />
+          <span>{speed.toFixed(1)}</span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -1358,9 +252,12 @@ const VisualKeyboard = ({ activeKeys, sampleMap, playSample }) => {
             onClick={() => playSample(key)}
           >
             {key.toUpperCase()}
-            {sampleMap[key] && (
-              <div className="sample-name">{sampleMap[key].name}</div>
-            )}
+            {sampleMap[key] &&
+              sampleMap[key].map((sample, idx) => (
+                <div key={idx} className="sample-name">
+                  {sample.name}
+                </div>
+              ))}
           </div>
         </div>
       ))}

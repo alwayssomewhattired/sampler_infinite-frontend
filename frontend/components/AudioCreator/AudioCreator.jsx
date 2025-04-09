@@ -34,7 +34,7 @@ bin 27 = d to d
 bin 28 = d# to d#
 */
 
-import { triggerBackend } from "./AudioCreatorApi";
+import { triggerBackend, startInstance, stopInstance } from "./AudioCreatorApi";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -226,8 +226,16 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
   useEffect(() => {
     if (newAudio) {
       setWhileLoading(false);
+      stopInstance();
     }
   }, [newAudio, setWhileLoading]);
+
+  async function start() {
+    setNewAudio(null);
+    setWhileLoading(true);
+    await startInstance();
+    triggerBackend();
+  }
 
   return (
     <>
@@ -253,9 +261,7 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
         <button
           className="button"
           onClick={() => {
-            triggerBackend();
-            setNewAudio(null);
-            setWhileLoading(true);
+            start();
           }}
         >
           Start
@@ -281,7 +287,7 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
         <div>{newAudio ? sample() : null}</div>
         <div>
           {whileLoading ? (
-            <output className="text">Processing...</output>
+            <output className="text">Processing... pls stay</output>
           ) : null}
         </div>
       </div>

@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import * as Tone from "tone";
 import { useDropzone } from "react-dropzone";
 import classNames from "classnames";
 import "./Keyboard.css";
+
+// when two samples are on one midi note, two of the processor can't stop when stopped.
+// I implemented a 'block' to make it useable, but it is a very inefficient way.
 
 const keyToNote = {
   a: "C4",
@@ -19,6 +22,9 @@ const SamplerApp = () => {
   const [grainPlayers, setGrainPlayers] = useState({});
   const [activeKeys, setActiveKeys] = useState(new Set());
   const [grainInterval, setGrainInterval] = useState({});
+
+  const block1 = useRef(false); // This persists across renders
+  console.log(block1);
 
   // Granular synth parameters
   const [grainSize, setGrainSize] = useState(0.05); // Grain size in seconds
@@ -44,6 +50,19 @@ const SamplerApp = () => {
 
     const url = URL.createObjectURL(file);
 
+    // Check if a processor with the same file name already exists for this key
+
+    console.log(file.name);
+    if (
+      grainPlayers[key] &&
+      grainPlayers[key].some(({ name }) => name === file.name)
+    ) {
+      console.log(
+        `Duplicate grain processor detected for ${file.name}. Skipping.`
+      );
+      return; // Prevent duplicate
+    }
+
     // Create a new GrainPlayer for the sample
     const grainPlayer = new Tone.GrainPlayer(url, {
       grainSize: grainSize, // Use the state value for grain size
@@ -57,88 +76,158 @@ const SamplerApp = () => {
       const updatedGrainPlayers = { ...prev };
       updatedGrainPlayers[key] = updatedGrainPlayers[key] || [];
       updatedGrainPlayers[key].push({ player: grainPlayer, name: file.name });
+      console.log(updatedGrainPlayers[key]);
       return updatedGrainPlayers;
     });
   };
 
-  //
-  //
-  //
-  //
-  //bad
-  // does not stop when key is unpressed
 
-  const grainIntervalIds = {}; // Store interval IDs for each key
 
-  const playSample = (key) => {
-    if (grainPlayers[key] && !activeKeys.has(key)) {
-      grainPlayers[key].forEach(({ player }) => {
-        // Slightly stagger the start time for each player by adding an offset based on the index
-        const startTime = Tone.now() + 0.1; // Start immediately for the first grain
+  const playSample = useCallback(
+    (key) => {
+      console.log("playSample grainPlayers:", grainPlayers[key]);
+      console.log("playSample activeKeys: ", activeKeys);
 
-        // Trigger the first grain at a random position
-        const randomStartPosition = Math.random() * player.buffer.duration;
-        player.start(startTime, randomStartPosition);
+      if (grainPlayers[key] && !activeKeys.has(key)) {
+        grainPlayers[key].forEach(({ player }, index) => {
+          // Stagger start times
+          const startTime = Tone.now() + index + 0.1; // Start immediately for the first grain
 
-        // Schedule random grains continuously
-        const grainInterval = Math.random() * 0.2 + 0.05; // Random grain interval between 0.05s to 0.25s
-
-        // Keep track of when the next grain should be scheduled
-        let nextGrainTime = startTime + grainInterval;
-
-        // Function to trigger grains continuously at random intervals
-        const triggerGrain = () => {
+          // Trigger the first grain at a random position
           const randomStartPosition = Math.random() * player.buffer.duration;
-          player.start(nextGrainTime, randomStartPosition);
+          player.start(startTime, randomStartPosition);
 
-          // Update the next grain time with a random interval
-          nextGrainTime += Math.random() * 0.2 + 0.05; // Add a random interval for the next grain
-        };
+          // Schedule random grains continuously
+          const grainInterval = Math.random() * 0.2 + 0.05; // Random grain interval between 0.05s to 0.25s
 
-        // Start the grain triggering loop
-        const repeatGrain = () => {
-          triggerGrain();
-          grainIntervalIds[key] = setTimeout(
-            repeatGrain,
-            (nextGrainTime - Tone.now()) * 1000
-          ); // Schedule the next grain
-        };
+          // Keep track of when the next grain should be scheduled
+          let nextGrainTime = startTime + grainInterval;
 
-        // Start the grain triggering loop
-        repeatGrain();
-      });
+          // Function to trigger grains continuously at random intervals
+          const triggerGrain = () => {
+            console.log(grainPlayers[key]);
+            console.log("triggerGrain active keys: ", activeKeys);
 
-      setActiveKeys((prev) => new Set(prev).add(key));
-    }
-  };
+            if (!block1.current) {
+              console.log("exiting trigger grain");
+              return;
+            }
 
-  const stopSample = (key) => {
-    if (grainPlayers[key]) {
-      // Stop all grain players associated with the key
-      grainPlayers[key].forEach(({ player }) => {
-        player.stop(); // Stop each grain player
-      });
+            // Ensure nextGrainTime is always strictly increasing
+            nextGrainTime = Math.max(nextGrainTime, Tone.now() + 0.01);
 
-      // Stop all grain triggering intervals
-      if (grainIntervalIds[key]) {
-        clearTimeout(grainIntervalIds[key]); // Stop the grain triggering loop
-        grainIntervalIds[key] = null; // Clear the timeout ID for this key
+            const randomStartPosition = Math.random() * player.buffer.duration;
+            player.start(nextGrainTime, randomStartPosition);
+            console.log(
+              `playing grain at: ${nextGrainTime} for player ${index}`
+            );
+
+            // Update the next grain time with a random interval
+            nextGrainTime += Math.random() * 0.2 + 0.05; // Add a random interval for the next grain
+          };
+
+          const repeatGrain = () => {
+            // Important conditional
+            if (activeKeys.has(key)) {
+              console.log(" repeat grain exit 1");
+              return;
+            }
+
+            // Clear any existing timeout for this key before setting a new one
+            if (grainInterval[key]) {
+              console.log("repeat grain exit 2");
+              clearTimeout(grainInterval[key]);
+            }
+
+            if (block1 == false) {
+              console.log("exiting repeat grain");
+              return;
+            }
+
+            console.log("I am repeating");
+
+            if (nextGrainTime <= Tone.now()) {
+              nextGrainTime = Tone.now() + 0.05;
+            }
+
+            triggerGrain();
+
+            const timeoutId = setTimeout(
+              repeatGrain,
+              (nextGrainTime - Tone.now()) * 1000
+            );
+
+            setGrainInterval((prev) => ({ ...prev, [key]: timeoutId }));
+          };
+          // Start the grain triggering loop
+
+          repeatGrain();
+        });
+        console.log("play sample activekeys: ", activeKeys);
+
+        // old and works
+        // setActiveKeys((prev) => new Set(prev).add(key));
+
+        //new and works
+        // setActiveKeys((prev) => {
+        //   const newSet = new Set(prev);
+        //   newSet.add(key);
+        //   return newSet;
+        // });
+
+        // newer and works
+        setActiveKeys((prev) => {
+          if (prev.has(key)) {
+            return prev; // Stop scheduling grains
+          }
+          return new Set(prev).add(key);
+        });
       }
-    }
+      console.log("the outer edge");
+    },
+    [grainPlayers, activeKeys]
+  );
 
-    // Remove the key from the active keys set
-    setActiveKeys((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(key);
-      return newSet;
-    });
-  };
+  const stopSample = useCallback(
+    (key) => {
+      console.log(grainPlayers);
+      if (grainPlayers[key]) {
+        // Stop all grain players associated with the key
+        grainPlayers[key].forEach(({ player }, index) => {
+          console.log(`stopping grain player ${index} for key ${key}`);
+          // Stop and disconnect the player
+          player.stop();
+          // player.disconnect();
+        });
+        console.log("grain interval: ", grainInterval);
+
+        // Clear all scheduled grains for that key
+        setGrainInterval((prev) => {
+          if (prev[key]) {
+            clearTimeout(prev[key]); // Stop the scheduled grains
+          }
+          return { ...prev, [key]: null }; // Remove the timeout from tracking
+        });
+        console.log("stop sample active keys: ", activeKeys);
+      }
+
+      // // Remove the key from the active keys set
+      setActiveKeys((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(key);
+        return newSet;
+      });
+      console.log(grainPlayers);
+    },
+    [grainPlayers, grainInterval, activeKeys]
+  );
 
   // Handle key press
   useEffect(() => {
     const handleKeyDown = (event) => {
       const key = event.key.toLowerCase();
       if (key in keyToNote && !activeKeys.has(key)) {
+        block1.current = true; //.current is the way to access a useRef.
         playSample(key);
       }
     };
@@ -146,6 +235,10 @@ const SamplerApp = () => {
     const handleKeyUp = (event) => {
       const key = event.key.toLowerCase();
       stopSample(key); // Stop the sample when the key is released
+      console.log("stopped sample");
+      if (key in keyToNote && activeKeys.has(key)) {
+        block1.current = false;
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -155,7 +248,7 @@ const SamplerApp = () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [grainPlayers, activeKeys]);
+  }, [grainPlayers, activeKeys, playSample, stopSample]);
 
   return (
     <div>

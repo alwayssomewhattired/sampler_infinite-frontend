@@ -1,4 +1,4 @@
-import { usePostAudioMutation } from "./AudioUploaderSlice";
+import { usePostAudioMutation, tagStripper } from "./AudioUploaderSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -26,6 +26,12 @@ export default function AudioUploader({ newAudio, me }) {
       console.error(error);
     }
   };
+
+  async function uploadTrigger() {
+    await tagStripper(newAudio);
+    navigate("/audio");
+  }
+
   return (
     <>
       <form onSubmit={uploadInfo}>
@@ -45,7 +51,11 @@ export default function AudioUploader({ newAudio, me }) {
             onChange={(e) => setDescription(e.target.value)}
           />
         </label>
-        <button onClick={() => navigate("/audio")}>
+        <button
+          onClick={() => {
+            uploadTrigger();
+          }}
+        >
           Upload your sampled infinite
         </button>
         {error && <output>Error uploading {error.message}</output>}

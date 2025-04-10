@@ -1,3 +1,7 @@
+.text {
+  color: hsl(119, 100%, 50%);
+}
+
 .key-container {
   position: relative;
   display: inline-block;
@@ -10,7 +14,7 @@
   left: 50%;
   transform: translateX(-50%);
   font-size: 10px;
-  color: black;
+  color: hsl(138, 100%, 50%);
   white-space: nowrap;
   max-width: 60px;
   text-align: center;
@@ -23,13 +27,14 @@
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
+  color: hsl(138, 100%, 50%);
 }
 
 .key {
   width: 60px;
   height: 120px;
   background: white;
-  border: 2px solid black;
+  border: 2px solid hsl(107, 100%, 50%);
   text-align: center;
   line-height: 120px;
   font-size: 20px;
@@ -50,11 +55,15 @@
 
 .sample-name {
   font-size: 10px; /* Reduce font size */
-  color: #777; /* Keep a subtle color */
+  color: #00ff04; /* Keep a subtle color */
   text-align: center; /* Center the text under the key */
   margin: 0; /* Remove any margins */
   padding: 2px; /* Reduce padding around the text */
   white-space: nowrap; /* Prevent text from wrapping */
   overflow: clip; /* Hide anything that overflows */
   text-overflow: ellipsis; /* Add ellipsis for long filenames */
+}
+
+.control-group {
+  color: hsl(138, 100%, 50%);
 }

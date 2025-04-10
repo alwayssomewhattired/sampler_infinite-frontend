@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import * as Tone from "tone";
 import { useDropzone } from "react-dropzone";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 import "./Keyboard.css";
 
 // when two samples are on one midi note, two of the processor can't stop when stopped.
@@ -80,8 +81,6 @@ const SamplerApp = () => {
       return updatedGrainPlayers;
     });
   };
-
-
 
   const playSample = useCallback(
     (key) => {
@@ -252,8 +251,28 @@ const SamplerApp = () => {
 
   return (
     <div>
-      <h2>Granular Keyboard Sampler</h2>
-      <p>
+      <div>
+        <Link className="text" to="/audio">
+          Published Audio
+        </Link>
+      </div>
+      <div>
+        <Link className="text" to="/audioCreator">
+          Sampler Infinite
+        </Link>
+      </div>
+      <div>
+        <Link className="text" to="/granularSynth">
+          Granular Synth
+        </Link>
+      </div>
+      <div>
+        <Link className="text" to="/singleUser">
+          Your Account
+        </Link>
+      </div>
+      <h2 className="text">Granular Keyboard Sampler</h2>
+      <p className="text">
         Press <strong>A, S, D, F, G, H, J, K</strong> to play multiple samples
         with granular synthesis.
       </p>
@@ -320,14 +339,14 @@ const DropZone = ({ onFileDrop }) => {
     <div
       {...getRootProps()}
       style={{
-        border: "2px dashed #ccc",
+        border: "2px dashed hsl(138, 100%, 50%)",
         padding: 20,
         textAlign: "center",
         marginBottom: 20,
       }}
     >
       <input {...getInputProps()} />
-      <p>Drag & Drop an Audio File or Click to Upload</p>
+      <p className="text">Drag & Drop an Audio File or Click to Upload</p>
     </div>
   );
 };

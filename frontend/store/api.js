@@ -6,7 +6,6 @@ const api = createApi({
   reducerPath: "apiOne",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000", // dev
-    // baseUrl: "http://18.116.63.97:80", // prod
     prepareHeaders: (headers) => {
       const token = sessionStorage.getItem("token");
       if (token) {

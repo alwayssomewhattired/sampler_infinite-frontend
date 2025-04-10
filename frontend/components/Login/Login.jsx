@@ -18,7 +18,6 @@ export default function Login({ setMe }) {
         email,
         normal_password,
       });
-      console.log(response.data.token);
       setMe(response.data.me);
       sessionStorage.setItem("token", response.data.token);
       navigate("/audioCreator");

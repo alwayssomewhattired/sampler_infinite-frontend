@@ -14,7 +14,6 @@ export default function SingleUser({ me }) {
   const token = sessionStorage.getItem("token");
 
   const id = me;
-  console.log(me);
 
   const { data: myData, isLoading, isSuccess } = useGetUserQuery({ token, id });
   const [createUpdateMutation, error] = useUpdateMutation();
@@ -44,7 +43,7 @@ export default function SingleUser({ me }) {
   }, [reviewData]);
 
   useEffect(() => {
-    console.log(`is this read ${isReady}`);
+    console.log(`is this ready ${isReady}`);
     if (isReady) {
       setComments(commentData);
       console.log(commentData);

@@ -28,25 +28,14 @@ export default function SingleUser({ me }) {
   const [normal_password, setNormal_Password] = useState("");
 
   useEffect(() => {
-    console.log(`is this a success ${isSuccess}`);
-    if (isSuccess) {
-      console.log(myData);
-    }
-  }, [myData]);
-
-  useEffect(() => {
-    console.log(`is this finished ${isFinished}`);
     if (isSuccess) {
       setReviews(reviewData);
-      console.log(reviews);
     }
   }, [reviewData]);
 
   useEffect(() => {
-    console.log(`is this ready ${isReady}`);
     if (isReady) {
       setComments(commentData);
-      console.log(commentData);
     }
   }, [commentData]);
 
@@ -57,8 +46,7 @@ export default function SingleUser({ me }) {
         id,
         email,
         normal_password,
-      }); //might need to '.unwrap()'
-      console.log(response);
+      });
       navigate("/singleUser");
     } catch (error) {
       console.error(error);

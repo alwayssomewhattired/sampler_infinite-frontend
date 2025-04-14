@@ -9,8 +9,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "./../../styles/styles.css";
 
 export default function SingleReview({ audioId, reviewId }) {
-  console.log(audioId);
-  console.log(reviewId);
+
   const navigate = useNavigate();
 
   const { data: myData, isSuccess } = useGetReviewQuery({ audioId, reviewId });
@@ -24,20 +23,15 @@ export default function SingleReview({ audioId, reviewId }) {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
-      console.log(myData);
       setReview(myData);
-      console.log(review);
     }
   }, [myData]);
 
   useEffect(() => {
     console.log(`is this loaded ${loaded}`);
     if (loaded) {
-      console.log(commentData);
       setComments(commentData);
-      console.log(comments);
     }
   }, [commentData]);
 
@@ -49,7 +43,6 @@ export default function SingleReview({ audioId, reviewId }) {
         reviewId,
         commentText,
       });
-      console.log(response.data);
       navigate("/singleReview");
     } catch (error) {
       console.error(error);

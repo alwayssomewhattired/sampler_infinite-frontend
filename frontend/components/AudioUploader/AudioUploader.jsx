@@ -21,7 +21,6 @@ export default function AudioUploader({ newAudio, me }) {
         name,
         description,
       });
-      console.log(response.data);
     } catch (error) {
       console.error(error);
     }

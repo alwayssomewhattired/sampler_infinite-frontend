@@ -34,9 +34,7 @@ const SamplerApp = () => {
 
   // Initialize Tone.js Audio Context when the component mounts
   useEffect(() => {
-    Tone.start().then(() => {
-      console.log("Audio context started");
-    });
+    Tone.start().then(() => {});
   }, []);
 
   const loadSample = (key, file) => {
@@ -53,7 +51,6 @@ const SamplerApp = () => {
 
     // Check if a processor with the same file name already exists for this key
 
-    console.log(file.name);
     if (
       grainPlayers[key] &&
       grainPlayers[key].some(({ name }) => name === file.name)
@@ -77,16 +74,12 @@ const SamplerApp = () => {
       const updatedGrainPlayers = { ...prev };
       updatedGrainPlayers[key] = updatedGrainPlayers[key] || [];
       updatedGrainPlayers[key].push({ player: grainPlayer, name: file.name });
-      console.log(updatedGrainPlayers[key]);
       return updatedGrainPlayers;
     });
   };
 
   const playSample = useCallback(
     (key) => {
-      console.log("playSample grainPlayers:", grainPlayers[key]);
-      console.log("playSample activeKeys: ", activeKeys);
-
       if (grainPlayers[key] && !activeKeys.has(key)) {
         grainPlayers[key].forEach(({ player }, index) => {
           // Stagger start times
@@ -104,11 +97,7 @@ const SamplerApp = () => {
 
           // Function to trigger grains continuously at random intervals
           const triggerGrain = () => {
-            console.log(grainPlayers[key]);
-            console.log("triggerGrain active keys: ", activeKeys);
-
             if (!block1.current) {
-              console.log("exiting trigger grain");
               return;
             }
 
@@ -117,9 +106,6 @@ const SamplerApp = () => {
 
             const randomStartPosition = Math.random() * player.buffer.duration;
             player.start(nextGrainTime, randomStartPosition);
-            console.log(
-              `playing grain at: ${nextGrainTime} for player ${index}`
-            );
 
             // Update the next grain time with a random interval
             nextGrainTime += Math.random() * 0.2 + 0.05; // Add a random interval for the next grain
@@ -128,22 +114,17 @@ const SamplerApp = () => {
           const repeatGrain = () => {
             // Important conditional
             if (activeKeys.has(key)) {
-              console.log(" repeat grain exit 1");
               return;
             }
 
             // Clear any existing timeout for this key before setting a new one
             if (grainInterval[key]) {
-              console.log("repeat grain exit 2");
               clearTimeout(grainInterval[key]);
             }
 
             if (block1 == false) {
-              console.log("exiting repeat grain");
               return;
             }
-
-            console.log("I am repeating");
 
             if (nextGrainTime <= Tone.now()) {
               nextGrainTime = Tone.now() + 0.05;
@@ -162,7 +143,6 @@ const SamplerApp = () => {
 
           repeatGrain();
         });
-        console.log("play sample activekeys: ", activeKeys);
 
         // old and works
         // setActiveKeys((prev) => new Set(prev).add(key));
@@ -182,23 +162,19 @@ const SamplerApp = () => {
           return new Set(prev).add(key);
         });
       }
-      console.log("the outer edge");
     },
     [grainPlayers, activeKeys]
   );
 
   const stopSample = useCallback(
     (key) => {
-      console.log(grainPlayers);
       if (grainPlayers[key]) {
         // Stop all grain players associated with the key
         grainPlayers[key].forEach(({ player }, index) => {
-          console.log(`stopping grain player ${index} for key ${key}`);
           // Stop and disconnect the player
           player.stop();
           // player.disconnect();
         });
-        console.log("grain interval: ", grainInterval);
 
         // Clear all scheduled grains for that key
         setGrainInterval((prev) => {
@@ -207,7 +183,6 @@ const SamplerApp = () => {
           }
           return { ...prev, [key]: null }; // Remove the timeout from tracking
         });
-        console.log("stop sample active keys: ", activeKeys);
       }
 
       // // Remove the key from the active keys set
@@ -216,7 +191,6 @@ const SamplerApp = () => {
         newSet.delete(key);
         return newSet;
       });
-      console.log(grainPlayers);
     },
     [grainPlayers, grainInterval, activeKeys]
   );
@@ -234,7 +208,6 @@ const SamplerApp = () => {
     const handleKeyUp = (event) => {
       const key = event.key.toLowerCase();
       stopSample(key); // Stop the sample when the key is released
-      console.log("stopped sample");
       if (key in keyToNote && activeKeys.has(key)) {
         block1.current = false;
       }

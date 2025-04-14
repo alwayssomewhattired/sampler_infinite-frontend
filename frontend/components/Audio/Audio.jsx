@@ -10,12 +10,8 @@ export default function Audio({ setAudioId }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
-      console.log(myData);
-      console.log(myData.id);
       setSongs(myData);
-      console.log(songs);
     }
   }, [myData]);
 

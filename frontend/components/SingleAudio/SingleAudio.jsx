@@ -19,19 +19,14 @@ export default function SingleItem({ audioId, setReviewId }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`is this a success ${isSuccess}`);
     if (isSuccess) {
       setSong(myData);
-      console.log(song);
     }
   }, [myData]);
 
   useEffect(() => {
-    console.log(`is this finished ${finished}`);
     if (finished) {
-      console.log(reviewData);
       setReviews(reviewData);
-      console.log(song);
     }
   }, [reviewData]);
 
@@ -39,7 +34,6 @@ export default function SingleItem({ audioId, setReviewId }) {
     e.preventDefault();
     try {
       const response = await createReviewMutation({ itemId, reviewText });
-      console.log(response.data);
       navigate("/singleAudio");
     } catch (error) {
       console.error(error);

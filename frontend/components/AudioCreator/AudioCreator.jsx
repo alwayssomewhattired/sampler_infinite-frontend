@@ -122,13 +122,11 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
 
     // Set up WebSocket event listeners
     socket.onopen = () => {
-      console.log("WebSocket connected");
       setConnected(true);
     };
 
     socket.onmessage = (event) => {
       // Receive and display messages from the WebSocket server
-      console.log("Received message:", event.data);
       const audioName = event.data.slice(1, -1);
       setNewAudio(audioName);
       setMessages((prevMessages) => [...prevMessages, event.data]);
@@ -139,7 +137,6 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
     };
 
     socket.onclose = () => {
-      console.log("WebSocket closed");
       setConnected(false);
     };
 
@@ -161,13 +158,11 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
 
     // Set up WebSocket event listeners
     socket2.onopen = () => {
-      console.log("WebSocket2 connected");
       setConnected2(true);
     };
 
     socket2.onmessage = (event) => {
       // Receive and display messages from the WebSocket server
-      console.log("Received message:", event.data);
     };
 
     socket2.onerror = (error) => {
@@ -175,7 +170,6 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
     };
 
     socket2.onclose = () => {
-      console.log("WebSocket closed");
       setConnected2(false);
     };
 
@@ -196,7 +190,6 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
         note: selectNote,
       });
       socket2.send(jsonMessage); // Send message to websocket server
-      console.log("Sent message: ", jsonMessage);
     } else {
       console.error("Websocket is not connected");
     }

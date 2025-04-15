@@ -6,7 +6,7 @@ import {
 } from "./UsersSlice";
 import { useNavigate, Link } from "react-router-dom";
 
-export default function Home({ setUserId }) {
+export default function Users({ setUserId }) {
   const { data: myData, isSuccess } = useGetUsersQuery();
   const { data: myOwnData, isSuccess: done } = useAboutMeQuery();
   const [createDeleteMutation, { isLoading, error }] = useDeleteMutation();

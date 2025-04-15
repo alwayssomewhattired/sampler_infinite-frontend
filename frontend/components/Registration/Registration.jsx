@@ -30,7 +30,7 @@ export default function Registration({ setMe }) {
   return (
     <>
       <h1 className="text">Registration</h1>;
-      <Link className="text" to="/">
+      <Link className="text" to="/login">
         Back to login
       </Link>
       <div className="container">

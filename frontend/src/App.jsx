@@ -3,6 +3,7 @@ import { store } from "../store/store";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import Home from "../components/Home/Home";
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
 import Users from "../components/Users/Users";
@@ -58,10 +59,12 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login setMe={setMe} />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login setMe={setMe} />} />
           <Route path="/register" element={<Registration setMe={setMe} />} />
           <Route path="/audio" element={<Audio setAudioId={setAudioId} />} />
           <Route path="/users" element={<Users me={me} />} />
+          
           <Route
             path="singleAudio"
             element={

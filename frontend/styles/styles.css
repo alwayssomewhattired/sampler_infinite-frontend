@@ -11,16 +11,17 @@
 .logo {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-250%);
   font-size: 28px;
   font-weight: bold;
   color: hsl(116, 100%, 50%);
 }
 
-/* Menu on far left */
+/* Menu on far right */
 .menu {
   display: flex;
   flex-direction: column;
+  transform: translateX(+1250%);
 }
 
 .menu li {
@@ -31,7 +32,29 @@
 
 /* Align ul vertically within menu */
 .menu ul {
-  /* margin-top: 10px;*/
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Menu on far left */
+.menu-l {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+}
+
+.menu-l li {
+  display: block;
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+/* Align ul vertically within menu */
+.menu-l ul {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -56,12 +79,13 @@
 .dashboard {
   padding: 0px;
   text-align: center;
+  margin-top: -200px;
 }
 
 .dashboard ul {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 10px;
   display: flex;
   flex-direction: column;
   gap: 60px;
@@ -85,12 +109,6 @@
   cursor: pointer;
 }
 
-.button {
-  background-color: hsl(116, 100%, 50%);
-  color: black;
-  cursor: pointer;
-}
-
 .li-header {
   color: hsl(116, 100%, 50%);
   margin-bottom: 50px;
@@ -104,6 +122,12 @@
 .text-centered {
   text-align: center;
   color: hsl(119, 100%, 50%);
+}
+
+.button {
+  background-color: hsl(116, 100%, 50%);
+  color: black;
+  cursor: pointer;
 }
 
 .border {

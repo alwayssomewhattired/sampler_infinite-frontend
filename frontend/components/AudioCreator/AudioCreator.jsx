@@ -232,22 +232,63 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
 
   return (
     <>
-      <div>
-        <Link className="text" to="/audio">
-          Published Audio
-        </Link>
+      <div className="top-bar">
+        <div className="menu neu">
+          <h2 className="li-header">Account</h2>
+          <ul>
+            <li>
+              <Link className="neu" to="/login">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/register">
+                Register
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <Link className="text" to="/granularSynth">
-          Granular Synth
-        </Link>
+      <div className="top-bar">
+        <div className="menu-l neu">
+          <h2 className="li-header">Menu</h2>
+          <ul>
+            <li>
+              <Link className="neu" to="/">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audioCreator">
+                samplerinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audio">
+                Published Audio
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularInfinite">
+                granularinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularSynth">
+                Granular Synth
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/singleUser">
+                My Account
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <Link className="text" to="/singleUser">
-          Your Account
-        </Link>
-      </div>
-      <div style={{ textAlign: "center", padding: "20px" }}>
+      <div
+        style={{ textAlign: "center", padding: "20px", marginTop: "-350px" }}
+      >
         <h1 className="text">Sampler Infinite</h1>
         <h2 className="text">Press Start button to begin processor</h2>
         <h2 className="text">May take up to 5 minutes</h2>

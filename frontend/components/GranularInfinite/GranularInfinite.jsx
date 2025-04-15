@@ -225,13 +225,18 @@ const SamplerApp = () => {
   return (
     <div>
       <div>
+        <Link className="text" to="/">
+          Home
+        </Link>
+      </div>
+      <div>
         <Link className="text" to="/audio">
           Published Audio
         </Link>
       </div>
       <div>
         <Link className="text" to="/audioCreator">
-          Sampler Infinite
+          samplerinfinite
         </Link>
       </div>
       <div>
@@ -241,7 +246,7 @@ const SamplerApp = () => {
       </div>
       <div>
         <Link className="text" to="/singleUser">
-          Your Account
+          My Account
         </Link>
       </div>
       <h2 className="text">Granular Keyboard Sampler</h2>

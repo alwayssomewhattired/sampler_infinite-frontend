@@ -104,13 +104,18 @@ export default function SingleUser({ me }) {
   return (
     <>
       <div>
-        <Link className="text" to="/audio">
-          Published Audio
+        <Link className="text" to="/">
+          Home
         </Link>
       </div>
       <div>
         <Link className="text" to="/audioCreator">
-          SamplerInfinite
+          samplerinfinite
+        </Link>
+      </div>
+      <div>
+        <Link className="text" to="/audio">
+          Published Audio
         </Link>
       </div>
       <div>

@@ -28,6 +28,9 @@ export default function Login({ setMe }) {
   return (
     <>
       <h1 className="text">Login</h1>
+      <Link className="text" to="/">
+        Home
+      </Link>
       <Link className="text" to="/register">
         Register
       </Link>

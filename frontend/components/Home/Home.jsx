@@ -9,7 +9,7 @@ export default function Home() {
     <>
       <div className="top-bar">
         <div className="menu neu">
-          <h2 className="li-header">Menu</h2>
+          <h2 className="li-header">Account</h2>
           <ul>
             <li>
               <Link className="neu" to="/login">
@@ -23,11 +23,48 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="logo">
-          <h1>SAMPLERINFINITE</h1>
+      </div>
+      <div className="top-bar">
+        <div className="menu-l neu">
+          <h2 className="li-header">Menu</h2>
+          <ul>
+            <li>
+              <Link className="neu" to="/">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audioCreator">
+                samplerinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audio">
+                Published Audio
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularInfinite">
+                granularinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularSynth">
+                Granular Synth
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/singleUser">
+                My Account
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
 
+      <div className="logo">
+        <h1>SAMPLERINFINITE</h1>
+      </div>
       <div className="dashboard">
         <main>
           <ul>
@@ -58,7 +95,7 @@ export default function Home() {
             </li>
             <li>
               <Link to="/audio" className="neu card">
-                published audio
+                Published Audio
               </Link>
             </li>
             <li>
@@ -66,7 +103,7 @@ export default function Home() {
             </li>
             <li>
               <Link to="/granularSynth" className="neu card">
-                granular synth
+                Granular Synth
               </Link>
             </li>
           </ul>

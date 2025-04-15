@@ -1,10 +1,108 @@
+/* Flex container for top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 20px 40px;
+}
+
+/* Logo style */
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: hsl(116, 100%, 50%);
+}
+
+/* Menu on far left */
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu li {
+  display: block;
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+/* Align ul vertically within menu */
+.menu ul {
+  /* margin-top: 10px;*/
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.neu {
+  background: hsl(0, 0%, 0%);
+  border-radius: 20px;
+  box-shadow: 8px 8px 16px #11ff00, -8px -8px 16px #1eff00;
+  padding: 20px;
+  transition: all 0.3s ease;
+  color: hsl(119, 100%, 50%);
+}
+
+.neu:hover {
+  box-shadow: inset 8px 8px 16px #26ff00, inset -8px -8px 16px #00ff33;
+}
+
+.dashboard {
+  padding: 0px;
+  text-align: center;
+}
+
+.dashboard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.sidebar,
+.card,
+.main {
+  margin-bottom: 20px;
+  margin-top: 70px;
+  margin-left: 0px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
 .button {
   background-color: hsl(116, 100%, 50%);
   color: black;
   cursor: pointer;
 }
 
+.li-header {
+  color: hsl(116, 100%, 50%);
+  margin-bottom: 50px;
+  text-align: center;
+}
+
 .text {
+  color: hsl(119, 100%, 50%);
+}
+
+.text-centered {
+  text-align: center;
   color: hsl(119, 100%, 50%);
 }
 

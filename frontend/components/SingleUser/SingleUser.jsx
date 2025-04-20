@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import {
-  useGetUserQuery,
-  useUpdateMutation,
-  useGetMyReviewsQuery,
-  useGetMyCommentsQuery,
-} from "./SingleUserSlice";
+import { useGetMyReviewsQuery, useGetMyCommentsQuery } from "./SingleUserSlice";
 
 import "./../../styles/styles.css";
 
@@ -14,9 +9,6 @@ export default function SingleUser({ me }) {
   const token = sessionStorage.getItem("token");
 
   const id = me;
-
-  const { data: myData, isLoading, isSuccess } = useGetUserQuery({ token, id });
-  const [createUpdateMutation, error] = useUpdateMutation();
 
   const { data: reviewData, isSuccess: isFinished } = useGetMyReviewsQuery();
 
@@ -28,7 +20,7 @@ export default function SingleUser({ me }) {
   const [normal_password, setNormal_Password] = useState("");
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isFinished) {
       setReviews(reviewData);
     }
   }, [reviewData]);
@@ -39,38 +31,41 @@ export default function SingleUser({ me }) {
     }
   }, [commentData]);
 
-  const changeInfo = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await createUpdateMutation({
-        id,
-        email,
-        normal_password,
-      });
-      navigate("/singleUser");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const changeInfo = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await createUpdateMutation({
+  //       id,
+  //       email,
+  //       normal_password,
+  //     });
+  //     navigate("/singleUser");
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
-  let $details;
+  // let $details;
 
-  if (!token) {
-    navigate("/");
-  } else if (isLoading) {
-    $details = <p className="text">Loading User</p>;
-  } else {
-    $details = (
-      <>
-        <div>
+  // if (!token) {
+  //   navigate("/");
+  // } else if (isReady) {
+  //   $details = <p className="text">Loading User</p>;
+  // } else {
+  //   $details = (
+  //     <>
+  {
+    /* <div>
           <ul key={myData.id}>
             <h4 className="text">Old Email</h4>
             <h3 className="text">{myData.email}</h3>
             <h4 className="text">Old Password</h4>
             <h3 className="text">{myData.password}</h3>
           </ul>
-        </div>
-        <form onSubmit={changeInfo}>
+        </div> */
+  }
+  {
+    /* <form onSubmit={changeInfo}>
           <div></div>
           <label className="text">
             New Email
@@ -96,36 +91,52 @@ export default function SingleUser({ me }) {
           <div></div>
           <button className="button">Register</button>
           {isLoading && <output className="text">Creating user...</output>}
-        </form>
-      </>
-    );
+        </form> */
   }
+  //     </>
+  //   );
+  // }
 
   return (
     <>
-      <div>
-        <Link className="text" to="/">
-          Home
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/audioCreator">
-          samplerinfinite
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/audio">
-          Published Audio
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/granularSynth">
-          Granular Synth
-        </Link>
+      <div className="top-bar" style={{ transform: "translateY(+385px)" }}>
+        <div className="menu-l neu">
+          <h2 className="li-header">Menu</h2>
+          <ul>
+            <li>
+              <Link className="neu" to="/">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audioCreator">
+                samplerinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/audio">
+                Published Audio
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularInfinite">
+                granularinfinite
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/granularSynth">
+                Granular Synth
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
         <h1 className="text">Your Account</h1>
-        <div>{$details}</div>
+        <button className="button" onClick={() => navigate("/accountChange")}>
+          Change Information
+        </button>
+        {/* <div>{$details}</div> */}
         <div>
           <h2 className="text">Reviews</h2>
         </div>

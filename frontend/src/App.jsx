@@ -8,6 +8,7 @@ import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
 import Users from "../components/Users/Users";
 import SingleUser from "../components/SingleUser/SingleUser";
+import AccountChange from "../components/AccountChange/AccountChange";
 import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
@@ -59,35 +60,52 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home me={me} />} />
           <Route path="/login" element={<Login setMe={setMe} />} />
           <Route path="/register" element={<Registration setMe={setMe} />} />
-          <Route path="/audio" element={<Audio setAudioId={setAudioId} />} />
+          <Route
+            path="/audio"
+            element={<Audio setAudioId={setAudioId} me={me} />}
+          />
           <Route path="/users" element={<Users me={me} />} />
-          
+
           <Route
             path="singleAudio"
             element={
-              <SingleAudio audioId={audioId} setReviewId={setReviewId} />
+              <SingleAudio
+                audioId={audioId}
+                setReviewId={setReviewId}
+                me={me}
+              />
             }
           />
           <Route path="/singleUser" element={<SingleUser me={me} />} />
           <Route
             path="/audioCreator"
             element={
-              <AudioCreator setNewAudio={setNewAudio} newAudio={newAudio} />
+              <AudioCreator
+                setNewAudio={setNewAudio}
+                newAudio={newAudio}
+                me={me}
+              />
+            }
+          />
+          <Route path="/accountChange" element={<AccountChange me={me} />} />
+          <Route
+            path="/singleReview"
+            element={
+              <SingleReview audioId={audioId} reviewId={reviewId} me={me} />
             }
           />
           <Route
-            path="/singleReview"
-            element={<SingleReview audioId={audioId} reviewId={reviewId} />}
+            path="/granularSynth"
+            element={<GranularSynthComponent me={me} />}
           />
-          <Route path="/granularSynth" element={<GranularSynthComponent />} />
           <Route
             path="/audioUploader"
             element={<AudioUploader newAudio={newAudio} me={me} />}
           />
-          <Route path="/granularInfinite" element={<SamplerApp />} />
+          <Route path="/granularInfinite" element={<SamplerApp me={me} />} />
         </Routes>
       </BrowserRouter>
     </Provider>

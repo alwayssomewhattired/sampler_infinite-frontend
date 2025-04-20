@@ -40,7 +40,7 @@ import { useEffect, useState } from "react";
 
 import "./../../styles/styles.css";
 
-export default function AudioCreator({ setNewAudio, newAudio }) {
+export default function AudioCreator({ setNewAudio, newAudio, me }) {
   // const [newAudio, setNewAudio] = useState(null);
   // State for managing WebSocket connection and messages
   const [socket, setSocket] = useState(null);
@@ -233,21 +233,37 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
   return (
     <>
       <div className="top-bar">
-        <div className="menu neu">
-          <h2 className="li-header">Account</h2>
-          <ul>
-            <li>
-              <Link className="neu" to="/login">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/register">
-                Register
-              </Link>
-            </li>
-          </ul>
-        </div>
+        {me ? (
+          <div
+            className="menu neu"
+            style={{ transform: "translateX(+1040%)", marginBottom: "110px" }}
+          >
+            <h2 className="li-header">Account</h2>
+            <ul>
+              <li>
+                <Link className="neu" to="/singleUser">
+                  My Account
+                </Link>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="menu neu">
+            <h2 className="li-header">Account</h2>
+            <ul>
+              <li>
+                <Link className="neu" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/register">
+                  Register
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
       <div className="top-bar">
         <div className="menu-l neu">
@@ -276,11 +292,6 @@ export default function AudioCreator({ setNewAudio, newAudio }) {
             <li>
               <Link className="neu" to="/granularSynth">
                 Granular Synth
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/singleUser">
-                My Account
               </Link>
             </li>
           </ul>

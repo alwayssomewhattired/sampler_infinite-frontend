@@ -8,7 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 import "./../../styles/styles.css";
 
-export default function SingleItem({ audioId, setReviewId }) {
+export default function SingleItem({ audioId, setReviewId, me }) {
   const { data: myData, isSuccess } = useGetSingleAudioQuery(audioId);
   const { data: reviewData, isSuccess: finished } = useGetReviewsQuery(audioId);
   const [createReviewMutation, isLoading, error] = useCreateReviewMutation();
@@ -43,21 +43,37 @@ export default function SingleItem({ audioId, setReviewId }) {
   return (
     <>
       <div className="top-bar">
-        <div className="menu neu">
-          <h2 className="li-header">Account</h2>
-          <ul>
-            <li>
-              <Link className="neu" to="/login">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/register">
-                Register
-              </Link>
-            </li>
-          </ul>
-        </div>
+      {me ? (
+          <div
+            className="menu neu"
+            style={{ transform: "translateX(+1040%)", marginBottom: "110px" }}
+          >
+            <h2 className="li-header">Account</h2>
+            <ul>
+              <li>
+                <Link className="neu" to="/singleUser">
+                  My Account
+                </Link>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <div className="menu neu">
+            <h2 className="li-header">Account</h2>
+            <ul>
+              <li>
+                <Link className="neu" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/register">
+                  Register
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
       <div className="top-bar">
         <div className="menu-l neu">
@@ -86,11 +102,6 @@ export default function SingleItem({ audioId, setReviewId }) {
             <li>
               <Link className="neu" to="/granularSynth">
                 Granular Synth
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/singleUser">
-                My Account
               </Link>
             </li>
           </ul>

@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useGetMyReviewsQuery, useGetMyCommentsQuery } from "./SingleUserSlice";
+import {
+  useGetMyCommentsQuery,
+  useGetSongsQuery,
+  useUpdateCommentMutation,
+  useDeleteCommentMutation,
+} from "./SingleUserSlice";
 
 import "./../../styles/styles.css";
 
@@ -10,92 +15,84 @@ export default function SingleUser({ me }) {
 
   const id = me;
 
-  const { data: reviewData, isSuccess: isFinished } = useGetMyReviewsQuery();
-
   const { data: commentData, isSuccess: isReady } = useGetMyCommentsQuery();
 
-  const [reviews, setReviews] = useState([]);
   const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [songs, setSongs] = useState([]);
   const [email, setEmail] = useState("");
-  const [normal_password, setNormal_Password] = useState("");
 
-  useEffect(() => {
-    if (isFinished) {
-      setReviews(reviewData);
-    }
-  }, [reviewData]);
+  let [itemIds, setItemIds] = useState([]);
 
+  const [createDeleteCommentMutation, isLoading] = useDeleteCommentMutation(
+    comments.id
+  );
+  const [createUpdateCommentMutation, error] = useUpdateCommentMutation();
+
+  // Wait until commentData is ready
   useEffect(() => {
-    if (isReady) {
+    if (isReady && commentData.length > 0) {
       setComments(commentData);
+
+      const ids = commentData.map((a) => a.itemID);
+      setItemIds(ids); // <- update state
     }
-  }, [commentData]);
+  }, [isReady, commentData]);
 
-  // const changeInfo = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await createUpdateMutation({
-  //       id,
-  //       email,
-  //       normal_password,
-  //     });
-  //     navigate("/singleUser");
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  // Now call useGetSongsQuery only after itemId is set
+  const { data: songData, isSuccess: songSuccess } = useGetSongsQuery(itemIds, {
+    skip: !itemIds || itemIds.length === 0,
+  });
 
-  // let $details;
+  useEffect(() => {
+    if (songSuccess) {
+      setSongs(songData);
+    }
+  }, [songSuccess, songData]);
 
-  // if (!token) {
-  //   navigate("/");
-  // } else if (isReady) {
-  //   $details = <p className="text">Loading User</p>;
-  // } else {
-  //   $details = (
-  //     <>
-  {
-    /* <div>
-          <ul key={myData.id}>
-            <h4 className="text">Old Email</h4>
-            <h3 className="text">{myData.email}</h3>
-            <h4 className="text">Old Password</h4>
-            <h3 className="text">{myData.password}</h3>
-          </ul>
-        </div> */
+  const deleteComment = async (commentId) => {
+    try {
+      const response = await createDeleteCommentMutation(commentId);
+      navigate("/singleUser");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const commentInfo = async (e, commentId) => {
+    e.preventDefault();
+    try {
+      const response = await createUpdateCommentMutation({
+        commentId,
+        commentText,
+      });
+      navigate("/singleUser");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const [updateMap, setUpdateMap] = useState({});
+
+  const toggleUpdate = (id) => {
+    setUpdateMap((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  let arr = [];
+
+  if (songs.length !== 0 && comments.length !== 0) {
+    for (let i = 0; i < comments.length; i++) {
+      const comment = comments[i];
+      const matchingSong = songs.find((song) => song.id === comment.itemID);
+
+      if (matchingSong) {
+        arr.push({ song: matchingSong, comment });
+      }
+    }
   }
-  {
-    /* <form onSubmit={changeInfo}>
-          <div></div>
-          <label className="text">
-            New Email
-            <input
-              className="border"
-              name="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </label>
-          <div></div>
-          <label className="text">
-            New Password
-            <input
-              className="border"
-              name="Password"
-              value={normal_password}
-              onChange={(e) => setNormal_Password(e.target.value)}
-              required
-            />
-          </label>
-          <div></div>
-          <button className="button">Register</button>
-          {isLoading && <output className="text">Creating user...</output>}
-        </form> */
-  }
-  //     </>
-  //   );
-  // }
 
   return (
     <>
@@ -136,24 +133,61 @@ export default function SingleUser({ me }) {
         <button className="button" onClick={() => navigate("/accountChange")}>
           Change Information
         </button>
-        {/* <div>{$details}</div> */}
-        <div>
-          <h2 className="text">Reviews</h2>
-        </div>
-        {reviews.map((review) => (
-          <ul key={review.id}>
-            <h3 className="text">{review.reviewText}</h3>
-          </ul>
-        ))}
         <div>
           <h2 className="text">Comments</h2>
         </div>
-        {comments.map((comment) => (
-          <ul key={comment.id}>
-            <h3 className="text">{comment.commentText}</h3>
+        {arr.map((arr, index) => (
+          <ul key={index}>
+            <h3 className="text">{`On: ${arr.song.name}`}</h3>
+            <h3 className="text">{`Comment: ${arr.comment.commentText}`}</h3>
+            <button
+              className="button"
+              onClick={() => deleteComment(arr.comment.id)}
+            >
+              Delete
+            </button>
+            {!updateMap[arr.comment.id] && (
+              <button
+                className="button"
+                onClick={() => toggleUpdate(arr.comment.id)}
+              >
+                Update
+              </button>
+            )}
+            {updateMap[arr.comment.id] && (
+              <form onSubmit={(e) => commentInfo(e, arr.comment.id)}>
+                <input
+                  className="border"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <button className="button">Submit Update</button>
+              </form>
+            )}
           </ul>
         ))}
       </div>
     </>
   );
 }
+
+//////////////////////////////////////////////////////////        R E V I E W  S H I T     ///////////////////////////////////////////////////////////////////////
+
+// useEffect(() => {
+//   if (isFinished) {
+//     setReviews(reviewData);
+//   }
+// }, [reviewData]);
+
+// const { data: reviewData, isSuccess: isFinished } = useGetMyReviewsQuery();
+// const [reviews, setReviews] = useState([]);
+
+/* <div>{$details}</div> */
+/* <div>
+          <h2 className="text">Reviews</h2>
+        </div> */
+/* {reviews.map((review) => (
+          <ul key={review.id}>
+            <h3 className="text">{review.reviewText}</h3>
+          </ul>
+        ))} */

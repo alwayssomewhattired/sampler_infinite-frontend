@@ -17,7 +17,7 @@ const singleUserApi = api.injectEndpoints({
     updateEmail: builder.mutation({
       //I don't know if all of these things belong in the query
       query: ({ token, id, email }) => ({
-        url: `/api/users/${id}`,
+        url: `/api/users/${id}/email`,
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,7 +34,7 @@ const singleUserApi = api.injectEndpoints({
     updateUsername: builder.mutation({
       //I don't know if all of these things belong in the query
       query: ({ token, id, username }) => ({
-        url: `/api/users/${id}`,
+        url: `/api/users/${id}/username`,
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,7 +51,7 @@ const singleUserApi = api.injectEndpoints({
     updatePassword: builder.mutation({
       //I don't know if all of these things belong in the query
       query: ({ token, id, normal_password }) => ({
-        url: `/api/users/${id}`,
+        url: `/api/users/${id}/password`,
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -69,7 +69,6 @@ const singleUserApi = api.injectEndpoints({
 });
 
 export const {
-  useUpdateMutation,
   useGetUserQuery,
   useUpdateEmailMutation,
   useUpdateUsernameMutation,

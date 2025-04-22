@@ -2,9 +2,9 @@ import api from "../../store/api";
 
 const audioApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getSongs: builder.query({
+    getSongz: builder.query({
       query: () => ({
-        url: "/api/items/",
+        url: "/api/items/allItems",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -15,4 +15,4 @@ const audioApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetSongsQuery } = audioApi;
+export const { useGetSongzQuery } = audioApi;

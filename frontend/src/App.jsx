@@ -12,7 +12,7 @@ import AccountChange from "../components/AccountChange/AccountChange";
 import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
-import SingleReview from "../components/SingleReview/SingleReview";
+// import SingleReview from "../components/SingleReview/SingleReview";
 import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
 import AudioUploader from "../components/AudioUploader/AudioUploader";
 import SamplerApp from "../components/GranularInfinite/GranularInfinite";
@@ -47,14 +47,14 @@ function App() {
     sessionStorage.setItem("newAudio", JSON.stringify(newAudio));
   }, [newAudio]);
 
-  const [reviewId, setReviewId] = useState(() => {
-    const storedReview = sessionStorage.getItem("reviewId");
-    return storedReview ? JSON.parse(storedReview) : 0;
-  });
+  // const [reviewId, setReviewId] = useState(() => {
+  //   const storedReview = sessionStorage.getItem("reviewId");
+  //   return storedReview ? JSON.parse(storedReview) : 0;
+  // });
 
-  useEffect(() => {
-    sessionStorage.setItem("reviewId", JSON.stringify(reviewId));
-  }, [reviewId]);
+  // useEffect(() => {
+  //   sessionStorage.setItem("reviewId", JSON.stringify(reviewId));
+  // }, [reviewId]);
 
   return (
     <Provider store={store}>
@@ -74,7 +74,6 @@ function App() {
             element={
               <SingleAudio
                 audioId={audioId}
-                setReviewId={setReviewId}
                 me={me}
               />
             }
@@ -91,12 +90,12 @@ function App() {
             }
           />
           <Route path="/accountChange" element={<AccountChange me={me} />} />
-          <Route
+          {/* <Route
             path="/singleReview"
             element={
               <SingleReview audioId={audioId} reviewId={reviewId} me={me} />
             }
-          />
+          /> */}
           <Route
             path="/granularSynth"
             element={<GranularSynthComponent me={me} />}

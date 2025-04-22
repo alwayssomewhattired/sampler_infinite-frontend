@@ -1,11 +1,11 @@
-import { useGetSongsQuery } from "./AudioSlice";
+import { useGetSongzQuery } from "./AudioSlice";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import "./../../styles/styles.css";
 
 export default function Audio({ setAudioId, me }) {
-  const { data: myData, isSuccess } = useGetSongsQuery();
+  const { data: myData, isSuccess } = useGetSongzQuery();
   const [songs, setSongs] = useState([]);
   const navigate = useNavigate();
 

@@ -1,21 +1,29 @@
 import {
   useGetSingleAudioQuery,
-  useGetReviewsQuery,
-  useCreateReviewMutation,
+  useGetCommentsQuery,
+  usePostCommentMutation,
+  // useGetReviewsQuery,
+  // useCreateReviewMutation,
 } from "./SingleAudioSlice";
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import "./../../styles/styles.css";
 
-export default function SingleItem({ audioId, setReviewId, me }) {
+export default function SingleItem({ audioId, me }) {
   const { data: myData, isSuccess } = useGetSingleAudioQuery(audioId);
-  const { data: reviewData, isSuccess: finished } = useGetReviewsQuery(audioId);
-  const [createReviewMutation, isLoading, error] = useCreateReviewMutation();
+
+  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(audioId);
+  const [comments, setComments] = useState([]);
+
+  const [createCommentMutation, isLoading, error] = usePostCommentMutation();
+  const [commentText, setCommentText] = useState("");
+
   const [song, setSong] = useState("");
-  const [reviews, setReviews] = useState([]);
-  const [reviewText, setReviewText] = useState("");
+
+  const userID = me;
   const itemId = audioId;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,15 +33,20 @@ export default function SingleItem({ audioId, setReviewId, me }) {
   }, [myData]);
 
   useEffect(() => {
-    if (finished) {
-      setReviews(reviewData);
+    if (loaded) {
+      setComments(commentData);
     }
-  }, [reviewData]);
+  }, [commentData]);
 
-  const reviewInfo = async (e) => {
+  const commentInfo = async (e) => {
     e.preventDefault();
     try {
-      const response = await createReviewMutation({ itemId, reviewText });
+      const response = await createCommentMutation({
+        userID,
+        itemId,
+        // reviewId,
+        commentText,
+      });
       navigate("/singleAudio");
     } catch (error) {
       console.error(error);
@@ -43,7 +56,7 @@ export default function SingleItem({ audioId, setReviewId, me }) {
   return (
     <>
       <div className="top-bar">
-      {me ? (
+        {me ? (
           <div
             className="menu neu"
             style={{ transform: "translateX(+1040%)", marginBottom: "110px" }}
@@ -107,13 +120,72 @@ export default function SingleItem({ audioId, setReviewId, me }) {
           </ul>
         </div>
       </div>
-      <div style={{ textAlign: "center", padding: "20px", marginTop: "-350px" }}>
+      <div
+        style={{ textAlign: "center", padding: "20px", marginTop: "-350px" }}
+      >
         <h1 className="text">Single Audio</h1>
         <div>
           <ul key={song.id}>
             <h2 className="text">{song.name}</h2>
           </ul>
-          <form onSubmit={reviewInfo}>
+          <form onSubmit={commentInfo}>
+            <label className="text">
+              Create comment
+              <input
+                className="border"
+                name="Your comment"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+            </label>
+            <button className="button">Submit your comment</button>
+            {isLoading ? (
+              <output className="text">Creating comment</output>
+            ) : (
+              <output className="text">something else</output>
+            )}
+            {error && (
+              <output className="text">
+                Error creating comment {error.message}
+              </output>
+            )}
+          </form>
+          {comments.map((comment) => (
+            <ul key={comment.id}>
+              <h6 className="text">{comment.userID}</h6>
+              <h5 className="text">{comment.commentText}</h5>
+            </ul>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+//////////////////////////////////////////////////////////        R E V I E W  S H I T     ///////////////////////////////////////////////////////////////////////
+
+// const { data: reviewData, isSuccess: finished } = useGetReviewsQuery(audioId);
+// const [createReviewMutation, isLoading, error] = useCreateReviewMutation();
+// const [reviews, setReviews] = useState([]);
+// const [reviewText, setReviewText] = useState("");
+
+// useEffect(() => {
+//   if (finished) {
+//     setReviews(reviewData);
+//   }
+// }, [reviewData]);
+
+// const reviewInfo = async (e) => {
+//   e.preventDefault();
+//   try {
+//     const response = await createReviewMutation({ itemId, reviewText });
+//     navigate("/singleAudio");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+/* <form onSubmit={reviewInfo}>
             <label className="text">
               Create review
               <input
@@ -129,8 +201,9 @@ export default function SingleItem({ audioId, setReviewId, me }) {
                 Error creating review {error.message}
               </output>
             )}
-          </form>
-          {reviews.map((review) => (
+          </form> */
+
+/* {reviews.map((review) => (
             <ul key={review.id}>
               <h4 className="text">{review.userID}</h4>
               <h3 className="text">{review.reviewText}</h3>
@@ -143,9 +216,4 @@ export default function SingleItem({ audioId, setReviewId, me }) {
                 View review
               </button>
             </ul>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
+          ))} */

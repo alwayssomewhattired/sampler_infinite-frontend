@@ -8,28 +8,47 @@ const singleAudioApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
-    getReviews: builder.query({
-      query: (itemId) => ({
-        url: `/api/items/${itemId}/reviews`,
+    getComments: builder.query({
+      query: (audioId) => ({
+        url: `api/comments/${audioId}/comment`,
         method: "GET",
       }),
     }),
-    createReview: builder.mutation({
-      query: ({ itemId, reviewText }) => ({
-        url: `api/reviews/${itemId}/reviews`,
+    postComment: builder.mutation({
+      query: ({ itemId, commentText }) => ({
+        url: `api/comments/${itemId}/comments`,
         method: "POST",
-        body: { reviewText },
+        body: { commentText },
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
       }),
     }),
+    // getReviews: builder.query({
+    //   query: (itemId) => ({
+    //     url: `/api/items/${itemId}/reviews`,
+    //     method: "GET",
+    //   }),
+    // }),
+    // createReview: builder.mutation({
+    //   query: ({ itemId, reviewText }) => ({
+    //     url: `api/reviews/${itemId}/reviews`,
+    //     method: "POST",
+    //     body: { reviewText },
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Access-Control-Allow-Origin": "*",
+    //     },
+    //   }),
+    // }),
   }),
 });
 
 export const {
   useGetSingleAudioQuery,
-  useGetReviewsQuery,
-  useCreateReviewMutation,
+  // useGetReviewsQuery,
+  // useCreateReviewMutation,
+  useGetCommentsQuery,
+  usePostCommentMutation,
 } = singleAudioApi;

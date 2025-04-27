@@ -2,6 +2,9 @@ import {
   useGetSingleAudioQuery,
   useGetCommentsQuery,
   usePostCommentMutation,
+  useGetReactionQuery,
+  useReactionCommentMutation,
+  useGetUsersQuery,
   // useGetReviewsQuery,
   // useCreateReviewMutation,
 } from "./SingleAudioSlice";
@@ -16,10 +19,21 @@ export default function SingleItem({ audioId, me }) {
   const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(audioId);
   const [comments, setComments] = useState([]);
 
-  const [createCommentMutation, isLoading, error] = usePostCommentMutation();
+  const [createCommentMutation, { isLoading, error }] =
+    usePostCommentMutation();
   const [commentText, setCommentText] = useState("");
 
   const [song, setSong] = useState("");
+
+  let [userIds, setUserIds] = useState([]);
+  const [userNameIds, setUserNameIds] = useState([]);
+
+  const [unauthorize, setUnauthorize] = useState("");
+
+  const [createReactionMutation] = useReactionCommentMutation();
+
+  const [reactions, setReactions] = useState([]);
+  const [commentIDs, setCommentIDs] = useState([]);
 
   const userID = me;
   const itemId = audioId;
@@ -35,23 +49,129 @@ export default function SingleItem({ audioId, me }) {
   useEffect(() => {
     if (loaded) {
       setComments(commentData);
+      console.log(`commentData:`, commentData);
+
+      const ids = commentData.map((a) => a.userID);
+      setUserIds(ids);
+      const commentIds = commentData.map((a) => a.id);
+      setCommentIDs(commentIds);
+      console.log("ids: ", ids);
+      console.log(`commentIds: `, commentIds);
     }
-  }, [commentData]);
+  }, [loaded, commentData]);
+
+  const { data: userData, isSuccess: userSuccess } = useGetUsersQuery(
+    { ids: userIds },
+    {
+      skip: !userIds || userIds.length === 0,
+    }
+  );
+
+  const {
+    data: reactData,
+    isSuccess: reactSucc,
+    error: reactError,
+  } = useGetReactionQuery(commentIDs);
+
+  useEffect(() => {
+    if (reactSucc) {
+      setReactions(reactData);
+      console.log(reactData);
+    }
+  }, [reactData, reactSucc]);
+
+  useEffect(() => {
+    if (userSuccess) {
+      console.log(userData);
+      setUserNameIds(userData);
+      console.log("userData: ", userData);
+    }
+  }, [userSuccess, userData]);
+
+  const likeComment = async (commentID) => {
+    try {
+      window.location.reload();
+      const response = await createReactionMutation({
+        commentID,
+        reaction: "like",
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const dislikeComment = async (commentID) => {
+    try {
+      window.location.reload();
+      const response = await createReactionMutation({
+        commentID,
+        reaction: "dislike",
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const commentInfo = async (e) => {
     e.preventDefault();
     try {
+      window.location.reload();
       const response = await createCommentMutation({
         userID,
         itemId,
         // reviewId,
         commentText,
-      });
+      }).unwrap();
       navigate("/singleAudio");
     } catch (error) {
-      console.error(error);
+      if (error.originalStatus === 401) {
+        setUnauthorize("Please log in to comment.");
+      } else {
+        console.error("Something else went wrong", error);
+      }
     }
   };
+
+  let arr = [];
+
+  if (userNameIds.length != 0 && userIds.length != 0 && reactions.length != 0) {
+    for (let i = 0; i < userIds.length; i++) {
+      const id = userIds[i];
+      const comment_id = commentIDs[i];
+
+      const userObj = userNameIds.find((user) => user.id === id);
+      const reactionObj = reactions.find((r) => r.commentID === comment_id);
+
+      console.log("reactionObj: ", reactionObj);
+
+      let likeObj = {};
+      let dislikeObj = {};
+
+      if (reactionObj) {
+        if (reactionObj.reactionType === "like") {
+          likeObj = reactionObj; // this contains all the data for "like"
+        }
+        if (reactionObj.reactionType === "dislike") {
+          dislikeObj = reactionObj; // this contains all the data for "dislike"
+        }
+      }
+
+      if (userObj) {
+        arr.push({
+          id,
+          comment_id,
+          username: userObj.username,
+          reactionsLike:
+            likeObj && likeObj._count ? likeObj._count.reactionType : 0,
+          reactionsDislike:
+            dislikeObj && dislikeObj._count
+              ? dislikeObj._count.reactionType
+              : 0,
+        });
+      }
+      console.log(arr);
+    }
+  }
 
   return (
     <>
@@ -139,23 +259,58 @@ export default function SingleItem({ audioId, me }) {
               />
             </label>
             <button className="button">Submit your comment</button>
-            {isLoading ? (
-              <output className="text">Creating comment</output>
-            ) : (
-              <output className="text">something else</output>
-            )}
+            {isLoading && <output className="text">Creating comment</output>}
             {error && (
-              <output className="text">
-                Error creating comment {error.message}
+              <output className="error">
+                Error creating comment! {error.message}
               </output>
             )}
+            {unauthorize && <output className="error">{unauthorize}</output>}
           </form>
-          {comments.map((comment) => (
-            <ul key={comment.id}>
-              <h6 className="text">{comment.userID}</h6>
-              <h5 className="text">{comment.commentText}</h5>
-            </ul>
-          ))}
+          {comments.map((comment) => {
+            // Find the matching user in arr by comparing IDs
+            const user = arr.find((u) => u.id === comment.userID);
+            // find the matching reaction in arr by comparing IDs
+            const reaction = arr.find((r) => r.comment_id === comment.id);
+
+            return (
+              <ul key={comment.id}>
+                <h5 className="text">
+                  {user ? `User: ${user.username}` : "Unknown User"}
+                </h5>
+                <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "10px",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <h5 className="text">
+                    {`Likes: ${reaction ? reaction.reactionsLike : 0}`}
+                  </h5>
+                  <h5 className="text">
+                    {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
+                  </h5>
+                </div>
+                <button
+                  className="button"
+                  onClick={() => likeComment(comment.id)}
+                >
+                  Like
+                </button>
+                <button
+                  className="button"
+                  onClick={() => dislikeComment(comment.id)}
+                >
+                  Dislike
+                </button>
+                <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
+              </ul>
+            );
+          })}
         </div>
       </div>
     </>

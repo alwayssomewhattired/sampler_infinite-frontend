@@ -130,6 +130,10 @@
   color: hsl(119, 100%, 50%);
 }
 
+.error {
+  color: hsl(351, 100%, 50%);
+}
+
 .button {
   background-color: hsl(116, 100%, 50%);
   color: black;

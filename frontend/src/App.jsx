@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Home from "../components/Home/Home";
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
-import Users from "../components/Users/Users";
+// import Users from "../components/Users/Users";
 import SingleUser from "../components/SingleUser/SingleUser";
 import AccountChange from "../components/AccountChange/AccountChange";
 import Audio from "../components/Audio/Audio";
@@ -67,16 +67,11 @@ function App() {
             path="/audio"
             element={<Audio setAudioId={setAudioId} me={me} />}
           />
-          <Route path="/users" element={<Users me={me} />} />
+          {/* <Route path="/users" element={<Users me={me} />} /> */}
 
           <Route
             path="singleAudio"
-            element={
-              <SingleAudio
-                audioId={audioId}
-                me={me}
-              />
-            }
+            element={<SingleAudio audioId={audioId} me={me} />}
           />
           <Route path="/singleUser" element={<SingleUser me={me} />} />
           <Route

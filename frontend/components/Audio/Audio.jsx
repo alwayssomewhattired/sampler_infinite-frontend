@@ -89,24 +89,28 @@ export default function Audio({ setAudioId, me }) {
         <div>
           {songs.map((song) => (
             <ul key={song.id}>
-              <h2 className="text">{song.name}</h2>
-              <audio controls>
-                <source
-                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
-                  type="audio/wav"
-                />
-                Your browser does not support the audio element
-              </audio>
-              <button
-                className="button"
-                onClick={() => {
-                  setAudioId(song.id);
-                  navigate("/singleAudio");
-                }}
-              >
-                View
-              </button>
-              <h3 className="text">{song.description}</h3>
+              <div style={{ padding: "20px" }}>
+                <h2 className="text">Name:</h2>
+                <h2 className="text">{song.name}</h2>
+                <audio controls>
+                  <source
+                    src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
+                    type="audio/wav"
+                  />
+                  Your browser does not support the audio element
+                </audio>
+                <button
+                  className="button"
+                  onClick={() => {
+                    setAudioId(song.id);
+                    navigate("/singleAudio");
+                  }}
+                >
+                  View
+                </button>
+                <h3 className="text">Description:</h3>
+                <h3 className="text">{song.description}</h3>
+              </div>
             </ul>
           ))}
         </div>

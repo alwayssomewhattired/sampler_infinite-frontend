@@ -14,6 +14,16 @@ const singleAudioApi = api.injectEndpoints({
         method: "GET",
       }),
     }),
+    getUsers: builder.query({
+      query: ({ ids }) => ({
+        url: `api/users/allUserNamez`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids }),
+      }),
+    }),
     postComment: builder.mutation({
       query: ({ itemId, commentText }) => ({
         url: `api/comments/${itemId}/comments`,
@@ -23,6 +33,28 @@ const singleAudioApi = api.injectEndpoints({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
+      }),
+    }),
+    getReaction: builder.query({
+      query: ({ commentIDs }) => ({
+        url: `api/comments/reactionType`,
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: { commentIDs },
+      }),
+    }),
+    reactionComment: builder.mutation({
+      query: ({ commentID, reaction }) => ({
+        url: `api/comments/${commentID}/reactionComment`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: { reaction },
       }),
     }),
     // getReviews: builder.query({
@@ -47,8 +79,11 @@ const singleAudioApi = api.injectEndpoints({
 
 export const {
   useGetSingleAudioQuery,
-  // useGetReviewsQuery,
-  // useCreateReviewMutation,
+  useGetUsersQuery,
   useGetCommentsQuery,
   usePostCommentMutation,
+  useGetReactionQuery,
+  useReactionCommentMutation,
+  // useGetReviewsQuery,
+  // useCreateReviewMutation,
 } = singleAudioApi;

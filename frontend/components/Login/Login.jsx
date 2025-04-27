@@ -17,9 +17,9 @@ export default function Login({ setMe }) {
       const response = await createLoginMutation({
         email,
         normal_password,
-      });
-      setMe(response.data.me);
-      sessionStorage.setItem("token", response.data.token);
+      }).unwrap();
+      setMe(response.me);
+      sessionStorage.setItem("token", response.token);
       navigate("/audioCreator");
     } catch (error) {
       console.error(error);

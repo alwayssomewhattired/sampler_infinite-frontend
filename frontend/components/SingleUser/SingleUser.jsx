@@ -52,6 +52,7 @@ export default function SingleUser({ me }) {
 
   const deleteComment = async (commentId) => {
     try {
+      window.location.reload();
       const response = await createDeleteCommentMutation(commentId);
       navigate("/singleUser");
     } catch (error) {
@@ -62,6 +63,7 @@ export default function SingleUser({ me }) {
   const commentInfo = async (e, commentId) => {
     e.preventDefault();
     try {
+      window.location.reload();
       const response = await createUpdateCommentMutation({
         commentId,
         commentText,

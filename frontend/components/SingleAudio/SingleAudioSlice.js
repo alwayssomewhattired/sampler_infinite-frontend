@@ -1,5 +1,9 @@
 import api from "../../store/api";
 
+/////////////////////////////////////////
+//    IMPLEMENT THAT NEW CREATEREPLY API
+/////////////////////////////////////////
+
 const singleAudioApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getSingleAudio: builder.query({
@@ -33,6 +37,17 @@ const singleAudioApi = api.injectEndpoints({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
         },
+      }),
+    }),
+    postReplies: builder.mutation({
+      query: ({ replyText, parentCommentId, itemID }) => ({
+        url: `api/comments/reply`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: { replyText, parentCommentId, itemID },
       }),
     }),
     getReaction: builder.query({
@@ -81,6 +96,7 @@ export const {
   useGetSingleAudioQuery,
   useGetUsersQuery,
   useGetCommentsQuery,
+  usePostRepliesMutation,
   usePostCommentMutation,
   useGetReactionQuery,
   useReactionCommentMutation,

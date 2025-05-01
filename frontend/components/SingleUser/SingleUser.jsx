@@ -3,9 +3,15 @@ import { useNavigate, Link } from "react-router-dom";
 import {
   useGetMyCommentsQuery,
   useGetSongsQuery,
+  useGetUserQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
+  useCreatePhotoMutation,
+  useCreatePhotoDBMutation,
 } from "./SingleUserSlice";
+import ProfilePhoto from "./ProfilePhoto";
+
+// import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 import "./../../styles/styles.css";
 
@@ -15,19 +21,52 @@ export default function SingleUser({ me }) {
 
   const id = me;
 
+  const { data: userInfo, isSuccess: userInfoReady } = useGetUserQuery();
+
   const { data: commentData, isSuccess: isReady } = useGetMyCommentsQuery();
 
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [songs, setSongs] = useState([]);
-  const [email, setEmail] = useState("");
 
   let [itemIds, setItemIds] = useState([]);
 
   const [createDeleteCommentMutation, isLoading] = useDeleteCommentMutation(
     comments.id
   );
+
   const [createUpdateCommentMutation, error] = useUpdateCommentMutation();
+
+  const [createPhotoMutation] = useCreatePhotoMutation();
+  const [createPhotoDBMutation] = useCreatePhotoDBMutation();
+
+  // const getRandomDefaultPhoto = async () => {
+  //   const listParams = {
+  //     Bucket: "samplerinfinite-default-photos",
+  //     Prefix: "default",
+  //   };
+
+  //   const data = await s3.send(new ListObjectsV2Command(listParams));
+  //   const files = data.Contents;
+
+  //   if (!files || files.length === 0) {
+  //     throw new error("No default picture found");
+  //   }
+
+  //   const randomFile = files[Math.floor(Math.random() * files.length)].Key;
+
+  //   console.log(randomFile);
+  // };
+
+  useEffect(() => {
+    if (userInfoReady) {
+      console.log(userInfo);
+      setUserName(userInfo.username);
+      setEmail(userInfo.email);
+    }
+  }, [userInfoReady, userInfo]);
 
   // Wait until commentData is ready
   useEffect(() => {
@@ -96,6 +135,59 @@ export default function SingleUser({ me }) {
     }
   }
 
+  const profileUploader = () => {
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFileChange = (e) => {
+      setSelectedFile(e.target.files[0]);
+    };
+
+    const handleUpload = async () => {
+      try {
+        if (!selectedFile) return;
+
+        const formData = new FormData();
+        formData.append("profilePicture", selectedFile);
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
+
+        const response = await createPhotoMutation(formData);
+        console.log("profile Photo: ", response.data.imageUrl);
+        const photoId = response.data.imageUrl;
+        const response2 = await createPhotoDBMutation({ photoId });
+        console.log(response2);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return (
+      <div style={{ padding: "20px" }}>
+        <label htmlFor="file-upload" className="custom-file-button">
+          Choose Photo
+        </label>
+        <input
+          className="sample-name"
+          id="file-upload"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
+        {selectedFile && (
+          <p className="text">Selected file: {selectedFile.name}</p>
+        )}
+        <button
+          className="custom-file-button"
+          style={{ translate: "20px" }}
+          onClick={handleUpload}
+        >
+          Upload your Profile Picture
+        </button>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -133,6 +225,10 @@ export default function SingleUser({ me }) {
       </div>
       <div style={{ textAlign: "center", padding: "20px" }}>
         <h1 className="text">Your Account</h1>
+        <ProfilePhoto />
+        <h3 className="text">{userName}</h3>
+        <h3 className="text">{email}</h3>
+        {profileUploader()}
         <button className="button" onClick={() => navigate("/accountChange")}>
           Change Information
         </button>

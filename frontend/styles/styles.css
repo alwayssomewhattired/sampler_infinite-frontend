@@ -140,9 +140,40 @@
   cursor: pointer;
 }
 
+.button:hover {
+  background-color: #45a049;
+}
+
 .border {
   color: hsl(0, 0%, 0%);
   border: 2px solid hsl(116, 100%, 50%);
+}
+
+/**************************   CUSTOM FILE BUTTON ***********************************/
+/**************************/
+/**************************/
+.custom-file-button {
+  background-color: #00ff08;
+  color: rgb(0, 0, 0);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.custom-file-button:hover {
+  background-color: #45a049;
+}
+
+.sample-name {
+  font-size: 10px; /* Reduce font size */
+  color: #00ff04; /* Keep a subtle color */
+  text-align: center; /* Center the text under the key */
+  margin: 0; /* Remove any margins */
+  padding: 2px; /* Reduce padding around the text */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: clip; /* Hide anything that overflows */
+  text-overflow: ellipsis; /* Add ellipsis for long filenames */
 }
 
 body {

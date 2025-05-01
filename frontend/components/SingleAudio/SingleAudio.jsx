@@ -25,7 +25,6 @@ export default function SingleItem({ audioId, me }) {
   const [commentText, setCommentText] = useState("");
 
   const [replyText, setReplyText] = useState("");
-  // const [showReply, setShowReply] = useState(false);
   const [activeReplyId, setActiveReplyId] = useState(null);
 
   const [song, setSong] = useState("");
@@ -470,73 +469,6 @@ export default function SingleItem({ audioId, me }) {
               } else {
                 return nestedCommentSection(comment);
               }
-              //   // Find the matching user in arr by comparing IDs
-              //   const user = arr.find((u) => u.id === comment.userID);
-              //   // find the matching reaction in arr by comparing IDs
-              //   const reaction = arr.find((r) => r.comment_id === comment.id);
-
-              //   return (
-              //     <ul key={comment.id}>
-              //       <h5 className="text">
-              //         {user ? `User: ${user.username}` : "Unknown User"}
-              //       </h5>
-              //       <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
-              //       {/* <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5> */}
-              //       <div
-              //         style={{
-              //           display: "flex",
-              //           gap: "10px",
-              //           width: "100%",
-              //           justifyContent: "center",
-              //           alignItems: "center",
-              //         }}
-              //       >
-              //         <h5 className="text">
-              //           {`Likes: ${reaction ? reaction.reactionsLike : 0}`}
-              //         </h5>
-              //         <h5 className="text">
-              //           {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
-              //         </h5>
-              //       </div>
-              //       <button
-              //         className="button"
-              //         onClick={() => likeComment(comment.id)}
-              //       >
-              //         Like
-              //       </button>
-              //       <button
-              //         className="button"
-              //         onClick={() => dislikeComment(comment.id)}
-              //       >
-              //         Dislike
-              //       </button>
-              //       <button
-              //         className="button"
-              //         onClick={() => replyBox(comment.id)}
-              //       >
-              //         reply
-              //       </button>
-              //       {activeReplyId === comment.id && (
-              //         <form onSubmit={replyInfo}>
-              //           <label className="text">
-              //             Create reply
-              //             <input
-              //               className="border"
-              //               name="Your reply"
-              //               value={replyText}
-              //               onChange={(e) => setReplyText(e.target.value)}
-              //             />
-              //           </label>
-              //           <button className="button">Submit</button>
-              //         </form>
-              //       )}
-              //       <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
-              //       {comment.childComments.length > 0 && (
-              //         <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5>
-              //       )}
-              //     </ul>
-              //   );
-              // }
             })}
         </div>
       </div>

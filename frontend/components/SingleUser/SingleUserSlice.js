@@ -23,6 +23,16 @@ const singleUserApi = api.injectEndpoints({
         },
       }),
     }),
+    getUser: builder.query({
+      query: () => ({
+        url: "/api/users/aboutMe",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
     updateComment: builder.mutation({
       query: ({ commentId, commentText }) => ({
         url: `api/comments/updateComments/${commentId}`,
@@ -44,6 +54,20 @@ const singleUserApi = api.injectEndpoints({
         },
       }),
     }),
+    createPhoto: builder.mutation({
+      query: (formData) => ({
+        url: `api/users/profilePhoto`,
+        method: "POST",
+        body: formData,
+      }),
+    }),
+    createPhotoDB: builder.mutation({
+      query: (photoId) => ({
+        url: `api/users/profilePhotoDB`,
+        method: "POST",
+        body: photoId,
+      }),
+    }),
     // getMyReviews: builder.query({
     //   query: () => ({
     //     url: "/api/reviews/me",
@@ -60,6 +84,9 @@ const singleUserApi = api.injectEndpoints({
 export const {
   useGetMyCommentsQuery,
   useGetSongsQuery,
+  useGetUserQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
+  useCreatePhotoMutation,
+  useCreatePhotoDBMutation,
 } = singleUserApi;

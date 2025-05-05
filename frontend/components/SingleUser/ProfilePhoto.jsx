@@ -9,7 +9,6 @@ const ProfilePhoto = () => {
 
   useEffect(() => {
     if (!isUser && user) {
-      console.log(user);
       setUserPhotoId(user.photoId);
     }
   }, [user, isUser]);

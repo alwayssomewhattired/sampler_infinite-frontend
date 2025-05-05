@@ -9,7 +9,7 @@ import {
   // useGetReviewsQuery,
   // useCreateReviewMutation,
 } from "./SingleAudioSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import "./../../styles/styles.css";
@@ -52,16 +52,15 @@ export default function SingleItem({ audioId, me }) {
 
   useEffect(() => {
     if (loaded) {
-      setComments(commentData);
-      console.log(`commentData:`, commentData);
-      organizeComments(commentData);
+      // setComments(commentData);
+      // organizeComments(commentData);
+      const structured = organizeComments(commentData);
+      setComments(structured);
 
       const ids = commentData.map((a) => a.userID);
       setUserIds(ids);
       const commentIds = commentData.map((a) => a.id);
       setCommentIDs(commentIds);
-      console.log("ids: ", ids);
-      console.log(`commentIds: `, commentIds);
     }
   }, [loaded, commentData]);
 
@@ -94,16 +93,20 @@ export default function SingleItem({ audioId, me }) {
       }
     });
 
-    const result = [];
-
-    const traverse = (comment) => {
-      result.push(comment);
-      comment.childComments.forEach((child) => traverse(child));
+    const sortComments = (commentList) => {
+      commentList.sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      commentList.forEach((comment) => {
+        if (comment.childComments.length > 0) {
+          sortComments(comment.childComments);
+        }
+      });
     };
 
-    roots.forEach((root) => traverse(root));
+    sortComments(roots);
 
-    return result;
+    return roots;
   };
 
   const {
@@ -115,15 +118,12 @@ export default function SingleItem({ audioId, me }) {
   useEffect(() => {
     if (reactSucc) {
       setReactions(reactData);
-      console.log(reactData);
     }
   }, [reactData, reactSucc]);
 
   useEffect(() => {
     if (userSuccess) {
-      console.log(userData);
       setUserNameIds(userData);
-      console.log("userData: ", userData);
     }
   }, [userSuccess, userData]);
 
@@ -179,8 +179,6 @@ export default function SingleItem({ audioId, me }) {
       // window.location.reload();
       const parentCommentId = activeReplyId;
       const itemID = audioId;
-      console.log(activeReplyId);
-      console.log(replyText);
       const response = await createRepliesMutation({
         replyText,
         parentCommentId,
@@ -197,7 +195,6 @@ export default function SingleItem({ audioId, me }) {
   };
 
   const replyBox = (id) => {
-    console.log("HEYYY");
     setActiveReplyId(id);
   };
 
@@ -210,8 +207,6 @@ export default function SingleItem({ audioId, me }) {
 
       const userObj = userNameIds.find((user) => user.id === id);
       const reactionObj = reactions.find((r) => r.commentID === comment_id);
-
-      console.log("reactionObj: ", reactionObj);
 
       let likeObj = {};
       let dislikeObj = {};
@@ -242,20 +237,18 @@ export default function SingleItem({ audioId, me }) {
     }
   }
 
-  const singleCommentSection = (comment) => {
-    {
-      // Find the matching user in arr by comparing IDs
-      const user = arr.find((u) => u.id === comment.userID);
-      // find the matching reaction in arr by comparing IDs
-      const reaction = arr.find((r) => r.comment_id === comment.id);
+  const CommentSection = ({ comment, indent = 0 }) => {
+    const user = arr.find((u) => u.id === comment.userID);
+    const reaction = arr.find((r) => r.comment_id === comment.id);
 
-      return (
-        <ul key={comment.id}>
+    return (
+      <div style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}>
+        <ul key={comment.id} style={{ listStyle: "none", paddingLeft: 0 }}>
           <h5 className="text">
             {user ? `User: ${user.username}` : "Unknown User"}
           </h5>
           <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
-          {/* <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5> */}
+
           <div
             style={{
               display: "flex",
@@ -266,12 +259,13 @@ export default function SingleItem({ audioId, me }) {
             }}
           >
             <h5 className="text">
-              {`Likes: ${reaction ? reaction.reactionsLike : 0}`}
+              {`Likes: ${reaction ? reaction.reactionsLike : -0}`}
             </h5>
             <h5 className="text">
               {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
             </h5>
           </div>
+
           <button className="button" onClick={() => likeComment(comment.id)}>
             Like
           </button>
@@ -279,12 +273,13 @@ export default function SingleItem({ audioId, me }) {
             Dislike
           </button>
           <button className="button" onClick={() => replyBox(comment.id)}>
-            reply
+            Reply
           </button>
+
           {activeReplyId === comment.id && (
             <form onSubmit={replyInfo}>
               <label className="text">
-                Create reply
+                Create Reply
                 <input
                   className="border"
                   name="Your reply"
@@ -295,78 +290,24 @@ export default function SingleItem({ audioId, me }) {
               <button className="button">Submit</button>
             </form>
           )}
+
           <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
-          {comment.childComments.length > 0 && (
-            <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5>
-          )}
         </ul>
-      );
-    }
+      </div>
+    );
   };
 
-  const nestedCommentSection = (comment) => {
-    {
-      // Find the matching user in arr by comparing IDs
-      const user = arr.find((u) => u.id === comment.userID);
-      // find the matching reaction in arr by comparing IDs
-      const reaction = arr.find((r) => r.comment_id === comment.id);
-
-      return (
-        <ul key={comment.id} style={{ marginLeft: "50px" }}>
-          <h5 className="text">
-            {user ? `User: ${user.username}` : "Unknown User"}
-          </h5>
-          <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
-          {/* <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5> */}
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <h5 className="text">
-              {`Likes: ${reaction ? reaction.reactionsLike : 0}`}
-            </h5>
-            <h5 className="text">
-              {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
-            </h5>
-          </div>
-          <button className="button" onClick={() => likeComment(comment.id)}>
-            Like
-          </button>
-          <button className="button" onClick={() => dislikeComment(comment.id)}>
-            Dislike
-          </button>
-          <button className="button" onClick={() => replyBox(comment.id)}>
-            reply
-          </button>
-          {activeReplyId === comment.id && (
-            <form onSubmit={replyInfo}>
-              <label className="text">
-                Create reply
-                <input
-                  className="border"
-                  name="Your reply"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                />
-              </label>
-              <button className="button">Submit</button>
-            </form>
+  const renderComment = (comment, indent = 0) => {
+    return (
+      <div key={comment.id}>
+        <CommentSection comment={comment} indent={indent} />
+        {comment.childComments?.length > 0 &&
+          comment.childComments.map(
+            (child) => renderComment(child, indent + 30) // increment indent
           )}
-          <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
-          {comment.childComments.length > 0 && (
-            <h5 className="text">{`parent: ${comment.parentCommentId}`}</h5>
-          )}
-        </ul>
-      );
-    }
+      </div>
+    );
   };
-
-  const organizedComments = organizeComments(comments);
 
   return (
     <>
@@ -462,14 +403,7 @@ export default function SingleItem({ audioId, me }) {
             )}
             {unauthorize && <output className="error">{unauthorize}</output>}
           </form>
-          {organizedComments &&
-            organizedComments.map((comment) => {
-              if (!comment.parentCommentId) {
-                return singleCommentSection(comment);
-              } else {
-                return nestedCommentSection(comment);
-              }
-            })}
+          {comments && comments.map((comment) => renderComment(comment))}
         </div>
       </div>
     </>

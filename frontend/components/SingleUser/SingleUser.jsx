@@ -62,7 +62,6 @@ export default function SingleUser({ me }) {
 
   useEffect(() => {
     if (userInfoReady) {
-      console.log(userInfo);
       setUserName(userInfo.username);
       setEmail(userInfo.email);
     }
@@ -148,15 +147,10 @@ export default function SingleUser({ me }) {
 
         const formData = new FormData();
         formData.append("profilePicture", selectedFile);
-        for (let [key, value] of formData.entries()) {
-          console.log(`${key}:`, value);
-        }
 
         const response = await createPhotoMutation(formData);
-        console.log("profile Photo: ", response.data.imageUrl);
         const photoId = response.data.imageUrl;
         const response2 = await createPhotoDBMutation({ photoId });
-        console.log(response2);
       } catch (error) {
         console.error(error);
       }

@@ -1,24 +1,31 @@
 import {
-  useGetSingleAudioQuery,
-  useGetCommentsQuery,
   usePostRepliesMutation,
   usePostCommentMutation,
-  useGetReactionQuery,
   useReactionCommentMutation,
-  useGetUsersQuery,
   // useGetReviewsQuery,
   // useCreateReviewMutation,
 } from "./SingleAudioSlice";
-import { useState, useEffect, useMemo } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import "./../../styles/styles.css";
 
-export default function SingleItem({ audioId, me }) {
-  const { data: myData, isSuccess } = useGetSingleAudioQuery(audioId);
+import { useSingleAudio } from "../../hooks/useSingleAudio";
+import CommentSection from "./CommentSection";
 
-  const { data: commentData, isSuccess: loaded } = useGetCommentsQuery(audioId);
-  const [comments, setComments] = useState([]);
+export default function SingleItem({ audioId, me }) {
+  const userID = me;
+  const itemId = audioId;
+
+  const {
+    song,
+    comments,
+    userNameIds,
+    reactions,
+    userIds,
+    commentIDs,
+    refetchAll,
+  } = useSingleAudio(audioId);
 
   const [createCommentMutation, { isLoading, error }] =
     usePostCommentMutation();
@@ -27,113 +34,17 @@ export default function SingleItem({ audioId, me }) {
   const [replyText, setReplyText] = useState("");
   const [activeReplyId, setActiveReplyId] = useState(null);
 
-  const [song, setSong] = useState("");
-
-  let [userIds, setUserIds] = useState([]);
-  const [userNameIds, setUserNameIds] = useState([]);
-
   const [unauthorize, setUnauthorize] = useState("");
 
   const [createReactionMutation] = useReactionCommentMutation();
 
-  const [reactions, setReactions] = useState([]);
-  const [commentIDs, setCommentIDs] = useState([]);
-
-  const userID = me;
-  const itemId = audioId;
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isSuccess) {
-      setSong(myData);
-    }
-  }, [myData]);
-
-  useEffect(() => {
-    if (loaded) {
-      // setComments(commentData);
-      // organizeComments(commentData);
-      const structured = organizeComments(commentData);
-      setComments(structured);
-
-      const ids = commentData.map((a) => a.userID);
-      setUserIds(ids);
-      const commentIds = commentData.map((a) => a.id);
-      setCommentIDs(commentIds);
-    }
-  }, [loaded, commentData]);
-
-  const { data: userData, isSuccess: userSuccess } = useGetUsersQuery(
-    { ids: userIds },
-    {
-      skip: !userIds || userIds.length === 0,
-    }
-  );
-
-  const organizeComments = (comments) => {
-    const commentMap = new Map();
-
-    // all comments map by id
-    comments.forEach((comment) => {
-      commentMap.set(comment.id, { ...comment, childComments: [] });
-    });
-
-    const roots = [];
-
-    // all children are linked to parents
-    comments.forEach((comment) => {
-      if (comment.parentCommentId) {
-        const parent = commentMap.get(comment.parentCommentId);
-        if (parent) {
-          parent.childComments.push(commentMap.get(comment.id));
-        }
-      } else {
-        roots.push(commentMap.get(comment.id));
-      }
-    });
-
-    const sortComments = (commentList) => {
-      commentList.sort(
-        (a, b) => new Date(a.created_at) - new Date(b.created_at)
-      );
-      commentList.forEach((comment) => {
-        if (comment.childComments.length > 0) {
-          sortComments(comment.childComments);
-        }
-      });
-    };
-
-    sortComments(roots);
-
-    return roots;
-  };
-
-  const {
-    data: reactData,
-    isSuccess: reactSucc,
-    error: reactError,
-  } = useGetReactionQuery(commentIDs);
-
-  useEffect(() => {
-    if (reactSucc) {
-      setReactions(reactData);
-    }
-  }, [reactData, reactSucc]);
-
-  useEffect(() => {
-    if (userSuccess) {
-      setUserNameIds(userData);
-    }
-  }, [userSuccess, userData]);
-
   const likeComment = async (commentID) => {
     try {
-      window.location.reload();
       const response = await createReactionMutation({
         commentID,
         reaction: "like",
       }).unwrap();
+      await refetchAll();
     } catch (error) {
       console.error(error);
     }
@@ -141,11 +52,11 @@ export default function SingleItem({ audioId, me }) {
 
   const dislikeComment = async (commentID) => {
     try {
-      window.location.reload();
       const response = await createReactionMutation({
         commentID,
         reaction: "dislike",
       }).unwrap();
+      await refetchAll();
     } catch (error) {
       console.error(error);
     }
@@ -154,14 +65,13 @@ export default function SingleItem({ audioId, me }) {
   const commentInfo = async (e) => {
     e.preventDefault();
     try {
-      window.location.reload();
       const response = await createCommentMutation({
         userID,
         itemId,
         // reviewId,
         commentText,
       }).unwrap();
-      navigate("/singleAudio");
+      await refetchAll();
     } catch (error) {
       if (error.originalStatus === 401) {
         setUnauthorize("Please log in to comment.");
@@ -176,7 +86,6 @@ export default function SingleItem({ audioId, me }) {
   const replyInfo = async (e) => {
     e.preventDefault();
     try {
-      // window.location.reload();
       const parentCommentId = activeReplyId;
       const itemID = audioId;
       const response = await createRepliesMutation({
@@ -184,7 +93,7 @@ export default function SingleItem({ audioId, me }) {
         parentCommentId,
         itemID,
       }).unwrap();
-      navigate("/singleAudio");
+      await refetchAll();
     } catch (error) {
       if (error.originalStatus === 401) {
         setUnauthorize("Please log in to comment.");
@@ -194,118 +103,73 @@ export default function SingleItem({ audioId, me }) {
     }
   };
 
-  const replyBox = (id) => {
-    setActiveReplyId(id);
-  };
+  const userMap = {};
+  userNameIds.forEach((user) => {
+    userMap[user.id] = user;
+  });
 
-  let arr = [];
+  const reactionMap = {};
+  reactions.forEach((reaction) => {
+    const { commentID, reactionType, _count } = reaction;
+    console.log(reaction);
+    if (!reactionMap[commentID]) {
+      reactionMap[commentID] = { like: 0, dislike: 0 };
+    }
+    if (reactionType === "like") {
+      reactionMap[commentID].like = _count?.reactionType || 0;
+    } else if (reactionType === "dislike") {
+      reactionMap[commentID].dislike = _count?.reactionType || 0;
+    }
+  });
 
-  if (userNameIds.length != 0 && userIds.length != 0 && reactions.length != 0) {
+  const arr = [];
+
+  if (
+    userNameIds.length !== 0 &&
+    userIds.length != 0 &&
+    commentIDs.length !== 0
+  ) {
     for (let i = 0; i < userIds.length; i++) {
       const id = userIds[i];
       const comment_id = commentIDs[i];
 
       const userObj = userNameIds.find((user) => user.id === id);
-      const reactionObj = reactions.find((r) => r.commentID === comment_id);
-
-      let likeObj = {};
-      let dislikeObj = {};
-
-      if (reactionObj) {
-        if (reactionObj.reactionType === "like") {
-          likeObj = reactionObj; // this contains all the data for "like"
-        }
-        if (reactionObj.reactionType === "dislike") {
-          dislikeObj = reactionObj; // this contains all the data for "dislike"
-        }
-      }
+      const reactionData = reactionMap[comment_id] || { like: 0, dislike: 0 };
 
       if (userObj) {
         arr.push({
           id,
           comment_id,
           username: userObj.username,
-          reactionsLike:
-            likeObj && likeObj._count ? likeObj._count.reactionType : 0,
-          reactionsDislike:
-            dislikeObj && dislikeObj._count
-              ? dislikeObj._count.reactionType
-              : 0,
+          reactionsLike: reactionData.like,
+          reactionsDislike: reactionData.dislike,
         });
       }
-      console.log(arr);
     }
   }
 
-  const CommentSection = ({ comment, indent = 0 }) => {
-    const user = arr.find((u) => u.id === comment.userID);
-    const reaction = arr.find((r) => r.comment_id === comment.id);
-
-    return (
-      <div style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}>
-        <ul key={comment.id} style={{ listStyle: "none", paddingLeft: 0 }}>
-          <h5 className="text">
-            {user ? `User: ${user.username}` : "Unknown User"}
-          </h5>
-          <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
-
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <h5 className="text">
-              {`Likes: ${reaction ? reaction.reactionsLike : -0}`}
-            </h5>
-            <h5 className="text">
-              {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
-            </h5>
-          </div>
-
-          <button className="button" onClick={() => likeComment(comment.id)}>
-            Like
-          </button>
-          <button className="button" onClick={() => dislikeComment(comment.id)}>
-            Dislike
-          </button>
-          <button className="button" onClick={() => replyBox(comment.id)}>
-            Reply
-          </button>
-
-          {activeReplyId === comment.id && (
-            <form onSubmit={replyInfo}>
-              <label className="text">
-                Create Reply
-                <input
-                  className="border"
-                  name="Your reply"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                />
-              </label>
-              <button className="button">Submit</button>
-            </form>
-          )}
-
-          <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
-        </ul>
-      </div>
-    );
-  };
-
   const renderComment = (comment, indent = 0) => {
+    const user = userMap[comment.userID];
+    // const user = userMap;
+    // console.log("reaction map", reactionMap);
+    // const reaction = reactionMap[comment.id] || { like: 0, dislike: 0 };
+    const reaction = reactionMap;
+    console.log("reaction", reaction);
     return (
-      <div key={comment.id}>
-        <CommentSection comment={comment} indent={indent} />
-        {comment.childComments?.length > 0 &&
-          comment.childComments.map(
-            (child) => renderComment(child, indent + 30) // increment indent
-          )}
-      </div>
+      <CommentSection
+        key={comment.id}
+        comment={comment}
+        indent={indent}
+        user={user}
+        reaction={reaction}
+        activeReplyId={activeReplyId}
+        setActiveReplyId={setActiveReplyId}
+        replyText={replyText}
+        setReplyText={setReplyText}
+        onReplySubmit={replyInfo}
+        onLike={likeComment}
+        onDislike={dislikeComment}
+      />
     );
   };
 
@@ -381,9 +245,11 @@ export default function SingleItem({ audioId, me }) {
       >
         <h1 className="text">Single Audio</h1>
         <div>
-          <ul key={song.id}>
-            <h2 className="text">{song.name}</h2>
-          </ul>
+          {song && (
+            <ul key={song.id}>
+              <h2 className="text">{song.name}</h2>
+            </ul>
+          )}
           <form onSubmit={commentInfo}>
             <label className="text">
               Create comment
@@ -465,3 +331,84 @@ export default function SingleItem({ audioId, me }) {
               </button>
             </ul>
           ))} */
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// const CommentSection = ({ comment, indent = 0 }) => {
+//   const user = arr.find((u) => u.id === comment.userID);
+//   const reaction = arr.find((r) => r.comment_id === comment.id);
+
+//   return (
+//     <div style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}>
+//       <ul key={comment.id} style={{ listStyle: "none", paddingLeft: 0 }}>
+//         <h5 className="text">
+//           {user ? `User: ${user.username}` : "Unknown User"}
+//         </h5>
+//         <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
+
+//         <div
+//           style={{
+//             display: "flex",
+//             gap: "10px",
+//             width: "100%",
+//             justifyContent: "center",
+//             alignItems: "center",
+//           }}
+//         >
+//           <h5 className="text">
+//             {`Likes: ${reaction ? reaction.reactionsLike : -0}`}
+//           </h5>
+//           <h5 className="text">
+//             {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
+//           </h5>
+//         </div>
+
+//         <button className="button" onClick={() => likeComment(comment.id)}>
+//           Like
+//         </button>
+//         <button className="button" onClick={() => dislikeComment(comment.id)}>
+//           Dislike
+//         </button>
+//         <button className="button" onClick={() => replyBox(comment.id)}>
+//           Reply
+//         </button>
+
+//         {activeReplyId === comment.id && (
+//           <form onSubmit={replyInfo}>
+//             <label className="text">
+//               Create Reply
+//               <input
+//                 className="border"
+//                 name="Your reply"
+//                 value={replyText}
+//                 onChange={(e) => setReplyText(e.target.value)}
+//               />
+//             </label>
+//             <button className="button">Submit</button>
+//           </form>
+//         )}
+
+//         <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
+//       </ul>
+//     </div>
+//   );
+// };
+
+// const renderComment = (comment, indent = 0) => {
+//   return (
+//     <div key={comment.id}>
+//       <CommentSection comment={comment} indent={indent} />
+//       {comment.childComments?.length > 0 &&
+//         comment.childComments.map(
+//           (child) => renderComment(child, indent + 30) // increment indent
+//         )}
+//     </div>
+//   );
+// };

@@ -1,0 +1,40 @@
+.loc-three-column-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2%;
+  gap: 20%;
+}
+
+.loc-sidebar {
+  width: 12em;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.loc-center-content {
+  flex-grow: 1;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loc-comment-form {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.loc-button {
+  background-color: hsl(116, 100%, 50%);
+  color: black;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.loc-button:hover {
+  background-color: #45a049;
+}

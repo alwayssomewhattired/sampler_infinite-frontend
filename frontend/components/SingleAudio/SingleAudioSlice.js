@@ -1,8 +1,5 @@
 import api from "../../store/api";
 
-/////////////////////////////////////////
-//    IMPLEMENT THAT NEW CREATEREPLY API
-/////////////////////////////////////////
 
 const singleAudioApi = api.injectEndpoints({
   endpoints: (builder) => ({

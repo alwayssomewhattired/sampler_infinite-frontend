@@ -8,7 +8,7 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import "./../../styles/styles.css";
+import "./SingleAudioStyle.css";
 
 import { useSingleAudio } from "../../hooks/useSingleAudio";
 import CommentSection from "./CommentSection";
@@ -150,9 +150,6 @@ export default function SingleItem({ audioId, me }) {
 
   const renderComment = (comment, indent = 0) => {
     const user = userMap[comment.userID];
-    // const user = userMap;
-    // console.log("reaction map", reactionMap);
-    // const reaction = reactionMap[comment.id] || { like: 0, dislike: 0 };
     const reaction = reactionMap;
     console.log("reaction", reaction);
     return (
@@ -176,100 +173,100 @@ export default function SingleItem({ audioId, me }) {
   return (
     <>
       <div className="top-bar">
-        {me ? (
-          <div
-            className="menu neu"
-            style={{ transform: "translateX(+1040%)", marginBottom: "110px" }}
-          >
-            <h2 className="li-header">Account</h2>
+        <div className="loc-three-column-layout">
+          {/* Left: Menu */}
+          <div className="loc-sidebar menu-l neu">
+            <h2 className="li-header">Menu</h2>
             <ul>
               <li>
-                <Link className="neu" to="/singleUser">
-                  My Account
+                <Link className="neu" to="/">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/audioCreator">
+                  samplerinfinite
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/audio">
+                  Published Audio
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/granularInfinite">
+                  granularinfinite
+                </Link>
+              </li>
+              <li>
+                <Link className="neu" to="/granularSynth">
+                  Granular Synth
                 </Link>
               </li>
             </ul>
           </div>
-        ) : (
-          <div className="menu neu">
-            <h2 className="li-header">Account</h2>
-            <ul>
-              <li>
-                <Link className="neu" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/register">
-                  Register
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
-      <div className="top-bar">
-        <div className="menu-l neu">
-          <h2 className="li-header">Menu</h2>
-          <ul>
-            <li>
-              <Link className="neu" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audioCreator">
-                samplerinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audio">
-                Published Audio
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularInfinite">
-                granularinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularSynth">
-                Granular Synth
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div
-        style={{ textAlign: "center", padding: "20px", marginTop: "-350px" }}
-      >
-        <h1 className="text">Single Audio</h1>
-        <div>
-          {song && (
-            <ul key={song.id}>
-              <h2 className="text">{song.name}</h2>
-            </ul>
-          )}
-          <form onSubmit={commentInfo}>
-            <label className="text">
-              Create comment
-              <input
-                className="border"
-                name="Your comment"
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-              />
-            </label>
-            <button className="button">Submit your comment</button>
-            {isLoading && <output className="text">Creating comment</output>}
-            {error && (
-              <output className="error">
-                Error creating comment! {error.message}
-              </output>
+
+          {/* Center: Audio/Comments */}
+          <main className="loc-center-content">
+            <div className="logo">
+              <h1>Single Audio</h1>
+            </div>
+
+            {song && (
+              <div style={{ textAlign: "center" }}>
+                <h2 className="text">{song.name}</h2>
+              </div>
             )}
-            {unauthorize && <output className="error">{unauthorize}</output>}
-          </form>
-          {comments && comments.map((comment) => renderComment(comment))}
+
+            <form onSubmit={commentInfo} className="loc-comment-form">
+              <label className="text">
+                Create comment
+                <input
+                  className="border"
+                  name="Your comment"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+              </label>
+              <button className="button">Submit your comment</button>
+              {isLoading && <output className="text">Creating comment</output>}
+              {error && (
+                <output className="error">
+                  Error creating comment! {error.message}
+                </output>
+              )}
+              {unauthorize && <output className="error">{unauthorize}</output>}
+            </form>
+
+            {comments && comments.map((comment) => renderComment(comment))}
+          </main>
+
+          {/* Right: Account */}
+          <div className="loc-sidebar menu neu">
+            <h2 className="li-header">Account</h2>
+            <ul>
+              {me ? (
+                <li>
+                  <Link className="neu" to="/singleUser">
+                    My Account
+                  </Link>
+                </li>
+              ) : (
+                <>
+                  <li>
+                    <Link className="neu" to="/login">
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="neu" to="/register">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
     </>

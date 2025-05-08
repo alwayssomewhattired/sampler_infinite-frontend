@@ -1,0 +1,41 @@
+.audio-three-column-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2%;
+  gap: 40%;
+}
+
+.audio-sidebar {
+  width: 12em;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.audio-center-content {
+  flex-grow: 1;
+  max-width: 00px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.audio-comment-form {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.audio-button {
+  background-color: hsl(116, 100%, 50%);
+  color: black;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.audio-button:hover {
+  background-color: #45a049;
+}

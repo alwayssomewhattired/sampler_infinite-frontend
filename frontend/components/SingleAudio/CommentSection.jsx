@@ -15,49 +15,48 @@ export default function CommentSection({
   onDislike,
 }) {
   console.log(comment);
-  // const user = userMap?.[comment.userID];
   console.log("inside commentSection", reaction);
   const reaction1 = reaction[comment.id] || { like: 0, dislike: 0 };
   const isReplying = activeReplyId === comment.id;
 
   return (
-    <div style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}>
-      <ul key={comment.id} style={{ listStyle: "none", paddingLeft: 0 }}>
-        <h5 className="text">
-          {/* {userMap[comment.userID]
-            ? `User: ${userMap[comment.userID].username}`
-            : "Unknown User"} */}
+    <div
+      style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}
+      className="comment-card"
+    >
+      <ul key={comment.id} className="comment-display">
+        <div className="comment-header">
           {user ? `User: ${user.username}` : "Unknown User"}
-        </h5>
-        <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
+        </div>
+        <h5 className="text">{comment.commentText}</h5>
+
 
         {reaction && (
           <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              width: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="comment-actions"
           >
             <h5 className="text">Likes: {reaction1.like ?? 0}</h5>
             <h5 className="text">Dislikes: {reaction1.dislike ?? 0}</h5>
           </div>
         )}
 
-        <button className="button" onClick={() => onLike(comment.id)}>
-          Like
-        </button>
-        <button className="button" onClick={() => onDislike(comment.id)}>
-          Dislike
-        </button>
-        <button className="button" onClick={() => setActiveReplyId(comment.id)}>
-          Reply
-        </button>
+        <div className="comment-actions">
+          <button className="loc-button" onClick={() => onLike(comment.id)}>
+            Like
+          </button>
+          <button className="loc-button" onClick={() => onDislike(comment.id)}>
+            Dislike
+          </button>
+          <button
+            className="loc-button"
+            onClick={() => setActiveReplyId(comment.id)}
+          >
+            Reply
+          </button>
+        </div>
 
         {isReplying && (
-          <form onSubmit={onReplySubmit}>
+          <form onSubmit={onReplySubmit} className="comment-reply-form">
             <label className="text">
               Create Reply
               <input
@@ -71,7 +70,9 @@ export default function CommentSection({
           </form>
         )}
 
-        <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
+        <div className="comment-meta">
+          {new Date(comment.created_at).toLocaleString()}
+        </div>
       </ul>
 
       {comment.childComments?.length > 0 &&

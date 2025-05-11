@@ -1,10 +1,30 @@
+.home-logo {
+  position: sticky;
+  top: 0;
+  background-color: black;
+  z-index: 10;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+}
+
+.home-wrapper {
+  max-width: 2000px; /* or any width matching your center column */
+  margin: 0 auto;
+  width: 100%;
+}
+
+.text {
+  color: hsl(119, 100%, 50%);
+}
+
 .home-three-column-layout {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
   padding: 2%;
-  gap: 30%;
+  gap: 2rem;
 }
 
 .home-sidebar {
@@ -12,16 +32,17 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2em;
 }
 
 .home-center-content {
-  flex-grow: 1;
-  max-width: 700px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
 }
 
 .home-comment-form {
@@ -38,4 +59,93 @@
 
 .home-button:hover {
   background-color: #45a049;
+}
+
+/* Menu on far left */
+.menu-l {
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.menu-l li {
+  display: block;
+  margin-bottom: 50%;
+  text-align: center;
+  width: 10em;
+}
+
+.menu-l ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+/*  MENU ON FAR RIGHT   */
+.menu {
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.menu li {
+  display: block;
+  margin-bottom: 50%;
+  text-align: center;
+  width: 10em;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.center {
+  padding: 5%;
+}
+
+.neu {
+  background: hsl(0, 0%, 0%);
+  border-radius: 20px;
+  box-shadow: 8px 8px 16px #11ff00, -8px -8px 16px #1eff00;
+  padding: 20px;
+  transition: all 0.3s ease;
+  color: hsl(119, 100%, 50%);
+}
+
+.neu:hover {
+  box-shadow: inset 8px 8px 16px #26ff00, inset -8px -8px 16px #00ff33;
+}
+
+.li-header {
+  color: hsl(116, 100%, 50%);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 3em;
+  max-width: 10em;
+  margin: 0 auto;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 3em;
+  width: 100%;
+}
+
+.text-centered {
+  text-align: center;
+  color: hsl(119, 100%, 50%);
 }

@@ -5,6 +5,7 @@ import {
   // useGetReviewsQuery,
   // useCreateReviewMutation,
 } from "./SingleAudioSlice";
+import CustomAudioPlayer from "../../styles/CustomAudioPlayer";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -172,7 +173,11 @@ export default function SingleItem({ audioId, me }) {
 
   return (
     <>
-      <div className="top-bar">
+      \{" "}
+      <div className="wrapper">
+        <div className="logo">
+          <h1 className="logo-text">SAMPLERINFINITE</h1>
+        </div>
         <div className="loc-three-column-layout">
           {/* Left: Menu */}
           <div className="loc-sidebar menu-l neu">
@@ -208,16 +213,19 @@ export default function SingleItem({ audioId, me }) {
 
           {/* Center: Audio/Comments */}
           <main className="loc-center-content">
-            <div className="logo">
-              <h1>Single Audio</h1>
-            </div>
-
             {song && (
-              <div style={{ textAlign: "center" }}>
-                <h2 className="text">{song.name}</h2>
-              </div>
+              <>
+                <div className="audio-center">
+                  <h2 className="audio-text">Name:</h2>
+                  <h2 className="audio-text">{song.name}</h2>
+                  <CustomAudioPlayer
+                    src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
+                  />
+                  <h3 className="audio-text">Description:</h3>
+                  <h3 className="audio-text">{song.description}</h3>
+                </div>
+              </>
             )}
-
             <form onSubmit={commentInfo} className="loc-comment-form">
               <label className="text">
                 Create comment
@@ -242,7 +250,7 @@ export default function SingleItem({ audioId, me }) {
           </main>
 
           {/* Right: Account */}
-          <div className="loc-sidebar menu neu">
+          <div className="account menu neu">
             <h2 className="li-header">Account</h2>
             <ul>
               {me ? (

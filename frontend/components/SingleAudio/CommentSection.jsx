@@ -30,25 +30,22 @@ export default function CommentSection({
         </div>
         <h5 className="text">{comment.commentText}</h5>
 
-
         {reaction && (
-          <div
-            className="comment-actions"
-          >
+          <div className="comment-actions">
             <h5 className="text">Likes: {reaction1.like ?? 0}</h5>
             <h5 className="text">Dislikes: {reaction1.dislike ?? 0}</h5>
           </div>
         )}
 
         <div className="comment-actions">
-          <button className="loc-button" onClick={() => onLike(comment.id)}>
+          <button className="button" onClick={() => onLike(comment.id)}>
             Like
           </button>
-          <button className="loc-button" onClick={() => onDislike(comment.id)}>
+          <button className="button" onClick={() => onDislike(comment.id)}>
             Dislike
           </button>
           <button
-            className="loc-button"
+            className="button"
             onClick={() => setActiveReplyId(comment.id)}
           >
             Reply

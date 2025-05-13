@@ -5,11 +5,13 @@ import {
   // useGetReviewsQuery,
   // useCreateReviewMutation,
 } from "./SingleAudioSlice";
-import CustomAudioPlayer from "../../styles/CustomAudioPlayer";
+import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Account from "../Layout/Account";
+import Sidebar from "../Layout/Sidebar";
 
 import "./SingleAudioStyle.css";
+import "./../../styles/styles.css";
 
 import { useSingleAudio } from "../../hooks/useSingleAudio";
 import CommentSection from "./CommentSection";
@@ -173,109 +175,51 @@ export default function SingleItem({ audioId, me }) {
 
   return (
     <>
-      \{" "}
-      <div className="wrapper">
-        <div className="logo">
-          <h1 className="logo-text">SAMPLERINFINITE</h1>
-        </div>
-        <div className="loc-three-column-layout">
-          {/* Left: Menu */}
-          <div className="loc-sidebar menu-l neu">
-            <h2 className="li-header">Menu</h2>
-            <ul>
-              <li>
-                <Link className="neu" to="/">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/audioCreator">
-                  samplerinfinite
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/audio">
-                  Published Audio
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/granularInfinite">
-                  granularinfinite
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/granularSynth">
-                  Granular Synth
-                </Link>
-              </li>
-            </ul>
-          </div>
+      <div className="logo">
+        <h1 className="logo-text">SAMPLERINFINITE</h1>
+      </div>
+      <div className="three-column-layout">
+        {<Sidebar me={me} />}
 
-          {/* Center: Audio/Comments */}
-          <main className="loc-center-content">
-            {song && (
-              <>
-                <div className="audio-center">
-                  <h2 className="audio-text">Name:</h2>
-                  <h2 className="audio-text">{song.name}</h2>
-                  <CustomAudioPlayer
-                    src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
-                  />
-                  <h3 className="audio-text">Description:</h3>
-                  <h3 className="audio-text">{song.description}</h3>
-                </div>
-              </>
-            )}
-            <form onSubmit={commentInfo} className="loc-comment-form">
-              <label className="text">
-                Create comment
-                <input
-                  className="border"
-                  name="Your comment"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
+        {/* Center: Audio/Comments */}
+        <main className="center-content">
+          {song && (
+            <>
+              <div className="center">
+                <h2 className="text">Name:</h2>
+                <h2 className="text">{song.name}</h2>
+                <CustomAudioPlayer
+                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
                 />
-              </label>
-              <button className="button">Submit your comment</button>
-              {isLoading && <output className="text">Creating comment</output>}
-              {error && (
-                <output className="error">
-                  Error creating comment! {error.message}
-                </output>
-              )}
-              {unauthorize && <output className="error">{unauthorize}</output>}
-            </form>
+                <h3 className="text">Description:</h3>
+                <h3 className="text">{song.description}</h3>
+              </div>
+            </>
+          )}
+          <form onSubmit={commentInfo} className="comment-form">
+            <label className="text">
+              Create comment
+              <input
+                className="border"
+                name="Your comment"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+            </label>
+            <button className="button">Submit your comment</button>
+            {isLoading && <output className="text">Creating comment</output>}
+            {error && (
+              <output className="error">
+                Error creating comment! {error.message}
+              </output>
+            )}
+            {unauthorize && <output className="error">{unauthorize}</output>}
+          </form>
 
-            {comments && comments.map((comment) => renderComment(comment))}
-          </main>
+          {comments && comments.map((comment) => renderComment(comment))}
+        </main>
 
-          {/* Right: Account */}
-          <div className="account menu neu">
-            <h2 className="li-header">Account</h2>
-            <ul>
-              {me ? (
-                <li>
-                  <Link className="neu" to="/singleUser">
-                    My Account
-                  </Link>
-                </li>
-              ) : (
-                <>
-                  <li>
-                    <Link className="neu" to="/login">
-                      Login
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="neu" to="/register">
-                      Register
-                    </Link>
-                  </li>
-                </>
-              )}
-            </ul>
-          </div>
-        </div>
+        {<Account />}
       </div>
     </>
   );

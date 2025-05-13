@@ -27,49 +27,43 @@ export default function Login({ setMe }) {
   };
   return (
     <>
-      <h1 className="text">Login</h1>
-      <Link className="text" to="/">
-        Home
-      </Link>
-      <Link className="text" to="/register">
-        Register
-      </Link>
-      <div className="container">
-        <div className="item">
-          <form onSubmit={loginInfo}>
-            <div className="item">
-              <label className="text">
-                Email
-                <input
-                  className="border"
-                  name="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="item">
-              <label className="text">
-                Password
-                <input
-                  className="border"
-                  type="password"
-                  name="Password"
-                  value={normal_password}
-                  onChange={(e) => setNormal_Password(e.target.value)}
-                />
-              </label>
-            </div>
-            <button className="button">Login</button>
-            {isLoading && <output className="text">Logging in...</output>}
-            {error && (
-              <output className="text">
-                Invalid credentials{error.message}
-              </output>
-            )}
-          </form>
-        </div>
+      <div className="top-menu">
+        <Link className="neu" to="/">
+          Home
+        </Link>
+        <Link className="neu" to="/register">
+          Register
+        </Link>
       </div>
+      <h1 className="text" style={{ textAlign: "center" }}>
+        Login
+      </h1>
+      <form onSubmit={loginInfo} className="container">
+        <label className="text">
+          Email
+          <input
+            style={{ margin: "2em" }}
+            name="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <label className="text">
+          Password
+          <input
+            style={{ margin: "2em" }}
+            type="password"
+            name="Password"
+            value={normal_password}
+            onChange={(e) => setNormal_Password(e.target.value)}
+          />
+        </label>
+        <button className="button">Login</button>
+        {isLoading && <output className="text">Logging in...</output>}
+        {error && (
+          <output className="error">Invalid credentials{error.message}</output>
+        )}
+      </form>
     </>
   );
 }

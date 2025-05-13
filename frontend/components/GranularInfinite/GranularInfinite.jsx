@@ -19,7 +19,7 @@ const keyToNote = {
   k: "C5",
 };
 
-const SamplerApp = () => {
+const SamplerApp = ({ me }) => {
   const [grainPlayers, setGrainPlayers] = useState({});
   const [activeKeys, setActiveKeys] = useState(new Set());
   const [grainInterval, setGrainInterval] = useState({});
@@ -223,31 +223,48 @@ const SamplerApp = () => {
   }, [grainPlayers, activeKeys, playSample, stopSample]);
 
   return (
-    <div>
-      <div>
-        <Link className="text" to="/">
-          Home
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/audio">
-          Published Audio
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/audioCreator">
-          samplerinfinite
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/granularSynth">
-          Granular Synth
-        </Link>
-      </div>
-      <div>
-        <Link className="text" to="/singleUser">
-          My Account
-        </Link>
+    <>
+      <div className="top-menu">
+        <div>
+          <Link className="neu" to="/">
+            Home
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/audio">
+            Published Audio
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/audioCreator">
+            samplerinfinite
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/granularSynth">
+            Granular Synth
+          </Link>
+        </div>
+        {me ? (
+          <li>
+            <Link className="neu" to="/singleUser">
+              My Account
+            </Link>
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link className="neu" to="/login">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/register">
+                Register
+              </Link>
+            </li>
+          </>
+        )}
       </div>
       <h2 className="text">Granular Keyboard Sampler</h2>
       <p className="text">
@@ -300,7 +317,7 @@ const SamplerApp = () => {
           <span>{speed.toFixed(1)}</span>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

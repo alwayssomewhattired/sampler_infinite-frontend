@@ -27,14 +27,14 @@
   gap: 10px;
   justify-content: center;
   margin-top: 20px;
-  color: hsl(138, 100%, 50%);
+  color: hsl(0, 0%, 0%);
 }
 
 .key {
   width: 60px;
   height: 120px;
   background: white;
-  border: 2px solid hsl(107, 100%, 50%);
+  border: 2px solid hsl(0, 0%, 0%);
   text-align: center;
   line-height: 120px;
   font-size: 20px;

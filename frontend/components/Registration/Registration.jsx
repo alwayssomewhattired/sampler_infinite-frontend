@@ -29,58 +29,55 @@ export default function Registration({ setMe }) {
 
   return (
     <>
-      <h1 className="text">Registration</h1>;
-      <Link className="text" to="/">
-        Home
-      </Link>
-      <Link className="text" to="/login">
-        Login
-      </Link>
+      <div className="top-menu">
+        <Link className="neu" to="/">
+          Home
+        </Link>
+        <Link className="neu" to="/login">
+          Login
+        </Link>
+      </div>
+      <h1 className="text" style={{ textAlign: "center" }}>
+        Registration
+      </h1>
+      ;
       <div className="container">
-        <div className="item">
-          <form onSubmit={registerInfo}>
-            <div className="item">
-              <label className="text">
-                Username
-                <input
-                  className="border"
-                  name="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="item">
-              <label className="text">
-                Email
-                <input
-                  className="border"
-                  name="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </label>
-            </div>
-            <div className="item">
-              <label className="text">
-                Password
-                <input
-                  className="border"
-                  name="Password"
-                  value={normal_password}
-                  onChange={(e) => setNormal_Password(e.target.value)}
-                />
-              </label>
-            </div>
-            <button className="button">Register</button>
-            {isLoading && <output className="error">Creating user...</output>}
-            {error && (
-              <output className="text">
-                Error creating user {error.message}
-              </output>
-            )}
-          </form>
-        </div>
+        <form onSubmit={registerInfo} className="container">
+          <label className="text">
+            Username
+            <input
+              style={{ margin: "2em" }}
+              name="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+          <label className="text">
+            Email
+            <input
+              style={{ margin: "2em" }}
+              name="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+          <label className="text">
+            Password
+            <input
+              style={{ margin: "2em" }}
+              name="Password"
+              value={normal_password}
+              onChange={(e) => setNormal_Password(e.target.value)}
+            />
+          </label>
+          <button className="button">Register</button>
+          {isLoading && <output className="text">Creating user...</output>}
+          {error && (
+            <output className="error">
+              Error creating user {error.message}
+            </output>
+          )}
+        </form>
       </div>
     </>
   );

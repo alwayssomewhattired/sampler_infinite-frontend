@@ -3,6 +3,10 @@ ul {
   list-style-type: none;
 }
 
+li {
+  list-style-type: none;
+}
+
 body {
   background-color: black;
 }
@@ -22,6 +26,24 @@ body {
   align-items: flex-start;
   padding: 2%;
   gap: 2rem;
+}
+
+/********************************************     LOGIN/REGISTER      *******************************************/
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+}
+
+/********************************************     TOP MENU      ************************************************/
+.top-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 3%;
+  gap: 5em;
 }
 
 /*********************************************      SIDEBAR      ************************************/
@@ -147,6 +169,14 @@ body {
   max-width: 2000px; /* or any width matching your center column */
   margin: 0 auto;
   width: 100%;
+}
+
+.error {
+  color: hsl(0, 100%, 50%);
+}
+
+.text {
+  color: #00ff04;
 }
 
 .logo {

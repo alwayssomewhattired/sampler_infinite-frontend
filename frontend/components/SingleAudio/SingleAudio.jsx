@@ -10,7 +10,6 @@ import { useState } from "react";
 import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 
-import "./SingleAudioStyle.css";
 import "./../../styles/styles.css";
 
 import { useSingleAudio } from "../../hooks/useSingleAudio";

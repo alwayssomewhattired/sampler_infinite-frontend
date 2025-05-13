@@ -11,8 +11,8 @@ import {
 } from "./SingleUserSlice";
 import ProfilePhoto from "./ProfilePhoto";
 
-// import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-
+import Account from "../Layout/Account";
+import Sidebar from "../Layout/Sidebar";
 import "./../../styles/styles.css";
 
 export default function SingleUser({ me }) {
@@ -185,80 +185,58 @@ export default function SingleUser({ me }) {
 
   return (
     <>
-      <div className="top-bar" style={{ transform: "translateY(+385px)" }}>
-        <div className="menu-l neu">
-          <h2 className="li-header">Menu</h2>
-          <ul>
-            <li>
-              <Link className="neu" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audioCreator">
-                samplerinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audio">
-                Published Audio
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularInfinite">
-                granularinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularSynth">
-                Granular Synth
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div style={{ textAlign: "center", padding: "20px" }}>
-        <h1 className="text">Your Account</h1>
-        <ProfilePhoto />
-        <h3 className="text">{userName}</h3>
-        <h3 className="text">{email}</h3>
-        {profileUploader()}
-        <button className="button" onClick={() => navigate("/accountChange")}>
-          Change Information
-        </button>
-        <div>
-          <h2 className="text">Comments</h2>
-        </div>
-        {arr.map((arr, index) => (
-          <ul key={index}>
-            <h3 className="text">{`On: ${arr.song.name}`}</h3>
-            <h3 className="text">{`Comment: ${arr.comment.commentText}`}</h3>
-            <button
-              className="button"
-              onClick={() => deleteComment(arr.comment.id)}
-            >
-              Delete
-            </button>
-            {!updateMap[arr.comment.id] && (
+      <div style={{ display: "flex" }}>
+        {<Sidebar />}
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            maxWidth: "70em",
+          }}
+        >
+          <h1 className="text">Your Account</h1>
+          <ProfilePhoto />
+          <h3 className="text">{userName}</h3>
+          <h3 className="text">{email}</h3>
+          {profileUploader()}
+          <button className="button" onClick={() => navigate("/accountChange")}>
+            Change Information
+          </button>
+          <div>
+            <h2 className="text">Comments</h2>
+          </div>
+          {arr.map((arr, index) => (
+            <ul key={index}>
+              <h3 className="text">{`On: ${arr.song.name}`}</h3>
+              <h3 className="text">{`Comment: ${arr.comment.commentText}`}</h3>
               <button
                 className="button"
-                onClick={() => toggleUpdate(arr.comment.id)}
+                onClick={() => deleteComment(arr.comment.id)}
               >
-                Update
+                Delete
               </button>
-            )}
-            {updateMap[arr.comment.id] && (
-              <form onSubmit={(e) => commentInfo(e, arr.comment.id)}>
-                <input
-                  className="border"
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                />
-                <button className="button">Submit Update</button>
-              </form>
-            )}
-          </ul>
-        ))}
+              {!updateMap[arr.comment.id] && (
+                <button
+                  className="button"
+                  onClick={() => toggleUpdate(arr.comment.id)}
+                >
+                  Update
+                </button>
+              )}
+              {updateMap[arr.comment.id] && (
+                <form onSubmit={(e) => commentInfo(e, arr.comment.id)}>
+                  <input
+                    className="border"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                  />
+                  <button className="button">Submit Update</button>
+                </form>
+              )}
+            </ul>
+          ))}
+        </div>
       </div>
     </>
   );

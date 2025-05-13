@@ -1,71 +1,41 @@
-/******************************************************************    MENU BARS **************************************************************************************************/
-/* Specific stuff for SingleAudio */
-
-/*
-.menu-l,
-.logo,
-.menu {
-  flex: 100;
+/*****************************    GLOBAL    ***************************************/
+ul {
+  list-style-type: none;
 }
 
-.menu-l,
-.menu {
-  max-width: 20%;
+body {
+  background-color: black;
 }
 
-.logo {
-  text-align: center;
-  padding-top: 100%;
-  flex: 2;
+/***********************************************      LAYOUT      ***********************************************/
+
+.page-header {
+  font-family: "Courier New", Courier, monospace;
+  color: #00ff26;
+  margin-top: 1em;
 }
 
-.menu-me {
-  display: flex;
-  flex-direction: column;
-}
-
-.menu li {
-  display: block;
-  margin-bottom: 5em;
-  text-align: center;
-}
-
-/* Align ul vertically within menu */
-
-/*
-.menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2em;
-}
-
-
-/* Menu on far left */
-/*
-.menu-l {
-  /* display: flex; */
-/*
-  width: 200px;
-  flex-direction: column;
-  flex-shrink: 0;
-  /* position: absolute; */
-/* z-index: 10; */
-/*
-}
-
-.page-layout {
+.three-column-layout {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: flex-start;
-  gap: 40px;
-  padding: 40px;
+  padding: 2%;
+  gap: 2rem;
 }
 
-.main-content {
-  flex-grow: 1;
+/*********************************************      SIDEBAR      ************************************/
+.sidebar {
+  width: 12em;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+}
+.menu-l {
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
 .menu-l li {
@@ -75,8 +45,6 @@
   width: 10em;
 }
 
-/* Align ul vertically within menu */
-/*
 .menu-l ul {
   list-style: none;
   padding: 0;
@@ -86,6 +54,65 @@
   gap: 2em;
 }
 
+/*************************************************      CENTER      **********************************************/
+
+.main {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 3em;
+  width: 100%;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  width: 100%;
+  margin: 6em;
+  text-align: center;
+}
+
+/******************************     ACCOUNT     ************************************/
+
+.account {
+  width: 8em;
+  margin-left: 4em;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+}
+
+.menu {
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.menu li {
+  display: block;
+  margin-bottom: 50%;
+  text-align: center;
+  width: 10em;
+}
+
+.center {
+  padding: 5%;
+  margin-right: 2em;
+}
+
+/************************************************     LAYOUT  STYLE     ******************************************/
+
+@font-face {
+  font-family: "MyLogo";
+  src: url("../Thornblade-woZL8.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MyHeader";
+  src: url("../GlofinDemoBlack-xRJVK.ttf") format("truetype");
+}
 .neu {
   background: hsl(0, 0%, 0%);
   border-radius: 20px;
@@ -99,195 +126,19 @@
   box-shadow: inset 8px 8px 16px #26ff00, inset -8px -8px 16px #00ff33;
 }
 
-.dashboard {
-  padding: 0px;
-  text-align: center;
-  margin-top: -200px;
-}
-
-.dashboard ul {
-  list-style: none;
-  padding: 0;
-  margin: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-}
-
-.sidebar,
-.card,
-.main {
-  display: flex;
-  text-align: center;
-  margin-bottom: 20px;
-  margin-top: 70px;
-  margin-left: 0px;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
 .li-header {
   color: hsl(116, 100%, 50%);
-  margin-bottom: 50px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
-/**************************   HOMEGROWN NONSENSE ***********************************/
-/**************************/
-/**************************/
-/*
-.text {
-  color: hsl(119, 100%, 50%);
-}
-
-.text-centered {
-  text-align: center;
-  color: hsl(119, 100%, 50%);
-}
-
-.error {
-  color: hsl(351, 100%, 50%);
-}
-
-.button {
-  background-color: hsl(116, 100%, 50%);
-  color: black;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #45a049;
-}
-
-.border {
-  color: hsl(0, 0%, 0%);
-  border: 2px solid hsl(116, 100%, 50%);
-}
-
-/**************************   CUSTOM FILE BUTTON ***********************************/
-/**************************/
-/**************************/
-/*
-.custom-file-button {
-  background-color: #00ff08;
-  color: rgb(0, 0, 0);
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.custom-file-button:hover {
-  background-color: #45a049;
-}
-
-.sample-name {
-  font-size: 10px; /* Reduce font size */
-/*
-  color: #00ff04; /* Keep a subtle color */
-/*
-  text-align: center; /* Center the text under the key */
-/*
-  margin: 0; /* Remove any margins */
-/*
-  padding: 2px; /* Reduce padding around the text */
-/*
-  white-space: nowrap; /* Prevent text from wrapping */
-/*
-  overflow: clip; /* Hide anything that overflows */
-/*
-  text-overflow: ellipsis; /* Add ellipsis for long filenames */
-/*
-}
-
-body {
-  background-color: black;
-}
-
-.container {
+.card {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 400px;
-  width: 975px;
-}
-
-.item {
-  margin-left: auto;
-  width: 60px;
-  height: 60px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 18px;
-}
-
-/**************************   COMMENT STRUCTURE ***********************************/
-/**************************/
-/**************************/
-/*
-.comment-card {
-  display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  border: 1px hsl(116, 100%, 50%);
-  border-radius: 100px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  background-color: hsl(rgb(0, 255, 0));
-  box-shadow: 0 2px 4px rgb(30, 252, 1);
-}
-.comment-display {
-  display: flex;
-  flex-direction: column;
-  /* justify-content:space-around; */
-/*
-  padding: 0px;
-  align-items: center;
-}
-.comment-header {
-  font-weight: bold;
-  color: hsl(116, 100%, 50%);
-  margin-bottom: 4px;
-}
-.comment-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-  color: hsl(116, 100%, 50%);
-}
-.comment-reply-form {
-  margin-top: 10px;
-  color: hsl(116, 100%, 50%);
-}
-.comment-meta {
-  font-size: 10px;
-  color: hsl(76, 100%, 50%);
-  margin-top: 6px;
-}
-
-
-
-
-/***************************      NEW SHIT BEGINITH ********************************/
-
-/*****************************    GLOBAL    ***************************************/
-ul {
-  list-style-type: none;
-}
-
-body {
-  background-color: black;
+  margin-top: 3em;
+  max-width: 10em;
+  margin: 0 auto;
 }
 
 /******************************     SIMPLE      **************************************/
@@ -340,18 +191,6 @@ body {
   background-color: #45a049;
 }
 
-/******************************     ACCOUNT     ************************************/
-
-.account {
-  width: 8em;
-  margin-left: 4em;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2em;
-}
-
 /******************************     AUDIO PLAYER      ********************************/
 .custom-audio-player {
   margin-bottom: 2em;
@@ -380,4 +219,52 @@ body {
   width: 0%;
   border-radius: 4px;
   transition: width 0.2s ease;
+}
+
+/***********************************************      COMMENTS      ******************************************************/
+
+.comment-form {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.comment-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px hsl(116, 100%, 50%);
+  border-radius: 100px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background-color: hsl(rgb(0, 255, 0));
+  box-shadow: 0 2px 4px rgb(30, 252, 1);
+}
+.comment-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  padding: 0px;
+  align-items: center;
+}
+.comment-header {
+  font-weight: bold;
+  color: hsl(116, 100%, 50%);
+  margin-bottom: 4px;
+}
+.comment-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  color: hsl(116, 100%, 50%);
+}
+.comment-reply-form {
+  margin-top: 10px;
+  color: hsl(116, 100%, 50%);
+}
+.comment-meta {
+  font-size: 10px;
+  color: hsl(76, 100%, 50%);
+  margin-top: 6px;
 }

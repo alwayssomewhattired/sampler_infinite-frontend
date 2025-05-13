@@ -35,9 +35,10 @@ bin 28 = d# to d#
 */
 
 import { triggerBackend, startInstance, stopInstance } from "./AudioCreatorApi";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import Account from "../Layout/Account";
+import Sidebar from "../Layout/Sidebar";
 import "./../../styles/styles.css";
 
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
@@ -232,112 +233,53 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
   return (
     <>
-      <div className="top-bar">
-        {me ? (
-          <div
-            className="menu neu"
-            style={{ transform: "translateX(+1040%)", marginBottom: "110px" }}
-          >
-            <h2 className="li-header">Account</h2>
-            <ul>
-              <li>
-                <Link className="neu" to="/singleUser">
-                  My Account
-                </Link>
-              </li>
-            </ul>
-          </div>
-        ) : (
-          <div className="menu neu">
-            <h2 className="li-header">Account</h2>
-            <ul>
-              <li>
-                <Link className="neu" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link className="neu" to="/register">
-                  Register
-                </Link>
-              </li>
-            </ul>
-          </div>
-        )}
+      <div className="logo">
+        <h1 className="logo-text">SAMPLERINFINITE</h1>
       </div>
-      <div className="top-bar">
-        <div className="menu-l neu">
-          <h2 className="li-header">Menu</h2>
+      <div className="three-column-layout">
+        {<Sidebar />}
+        <div className="center-content">
+          <h1 className="page-header">Sampler Infinite</h1>
+
           <ul>
-            <li>
-              <Link className="neu" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audioCreator">
-                samplerinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/audio">
-                Published Audio
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularInfinite">
-                granularinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="neu" to="/granularSynth">
-                Granular Synth
-              </Link>
-            </li>
+            <h2 className="text">Press Start button to begin processor</h2>
+            <h2 className="text">May take up to 5 minutes</h2>
+            <button
+              className="button"
+              onClick={() => {
+                start();
+              }}
+            >
+              Start
+            </button>
+            <select id="dropdown" value={selectNote} onChange={handleChange}>
+              <option value="">-- Select a frequency range --</option>
+              {Object.entries(frequencies).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {key}
+                </option>
+              ))}
+            </select>
+            <button
+              className="button"
+              onClick={() => {
+                sendMessage2();
+              }}
+            >
+              Control Test
+            </button>
+            <div>{newAudio ? sample() : null}</div>
+            <div>
+              {whileLoading ? (
+                <output className="text">
+                  Sorry. This option is unavailable. Visit
+                  www.samplerinfinite.com to use this functionality
+                </output>
+              ) : null}
+            </div>
           </ul>
         </div>
-      </div>
-      <div
-        style={{ textAlign: "center", padding: "20px", marginTop: "-350px" }}
-      >
-        <h1 className="text">Sampler Infinite</h1>
-        <h2 className="text">Press Start button to begin processor</h2>
-        <h2 className="text">May take up to 5 minutes</h2>
-        <button
-          className="button"
-          onClick={() => {
-            start();
-          }}
-        >
-          Start
-        </button>
-        <select id="dropdown" value={selectNote} onChange={handleChange}>
-          <option value="">-- Select a frequency range --</option>
-          {Object.entries(frequencies).map(([key, value]) => (
-            <option key={key} value={value}>
-              {key}
-            </option>
-          ))}
-          {/* <option value="">A</option>
-          <option value="C">C</option> */}
-        </select>
-        <button
-          className="button"
-          onClick={() => {
-            sendMessage2();
-          }}
-        >
-          Control Test
-        </button>
-        <div>{newAudio ? sample() : null}</div>
-        <div>
-          {whileLoading ? (
-            <output className="text">
-              Sorry. This option is unavailable. Visit www.samplerinfinite.com
-              to use this functionality
-            </output>
-          ) : null}
-        </div>
+        {<Account me={me} />}
       </div>
     </>
   );

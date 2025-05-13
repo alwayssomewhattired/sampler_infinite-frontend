@@ -1,10 +1,12 @@
 import { useGetSongzQuery } from "./AudioSlice";
-import CustomAudioPlayer from "../../styles/CustomAudioPlayer";
+import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Account from "../Layout/Account";
+import Sidebar from "../Layout/Sidebar";
 
-// import "./../../styles/styles.css";
-import "./AudioStyle.css";
+import "./../../styles/styles.css";
+// import "./AudioStyle.css";
 
 export default function Audio({ setAudioId, me }) {
   const { data: myData, isSuccess } = useGetSongzQuery();
@@ -19,54 +21,24 @@ export default function Audio({ setAudioId, me }) {
 
   return (
     <>
-      <div className="audio-logo">
-        <h1 className="audio-logo-text">SAMPLERINFINITE</h1>
+      <div className="logo">
+        <h1 className="logo-text">SAMPLERINFINITE</h1>
       </div>
-      <div className="audio-three-column-layout">
-        {/* Left: Menu */}
-        <div className="audio-sidebar audio-menu-l audio-neu">
-          <h2 className="audio-li-header">Menu</h2>
-          <ul>
-            <li>
-              <Link className="audio-neu" to="/">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link className="audio-neu" to="/audioCreator">
-                samplerinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="audio-neu" to="/audio">
-                Published Audio
-              </Link>
-            </li>
-            <li>
-              <Link className="audio-neu" to="/granularInfinite">
-                granularinfinite
-              </Link>
-            </li>
-            <li>
-              <Link className="audio-neu" to="/granularSynth">
-                Granular Synth
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="audio-center-content">
-          <h1 className="audioHeader">Sampled Infinites</h1>
+      <div className="three-column-layout">
+        {<Sidebar />}
+        <div className="center-content">
+          <h1 className="page-header">Sampled Infinites</h1>
           <div>
             {songs.map((song) => (
               <ul key={song.id}>
-                <div className="audio-center">
-                  <h2 className="audio-text">Name:</h2>
-                  <h2 className="audio-text">{song.name}</h2>
+                <div className="center">
+                  <h2 className="text">Name:</h2>
+                  <h2 className="text">{song.name}</h2>
                   <CustomAudioPlayer
                     src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
                   />
                   <button
-                    className="audio-button"
+                    className="button"
                     onClick={() => {
                       setAudioId(song.id);
                       navigate("/singleAudio");
@@ -74,39 +46,14 @@ export default function Audio({ setAudioId, me }) {
                   >
                     View
                   </button>
-                  <h3 className="audio-text">Description:</h3>
-                  <h3 className="audio-text">{song.description}</h3>
+                  <h3 className="text">Description:</h3>
+                  <h3 className="text">{song.description}</h3>
                 </div>
               </ul>
             ))}
           </div>
         </div>
-        {/* Right: Account */}
-        <div className="audio-account menu neu">
-          <h2 className="audio-li-header">Account</h2>
-          <ul>
-            {me ? (
-              <li>
-                <Link className="audio-neu" to="/singleUser">
-                  My Account
-                </Link>
-              </li>
-            ) : (
-              <>
-                <li>
-                  <Link className="audio-neu" to="/login">
-                    Login
-                  </Link>
-                </li>
-                <li>
-                  <Link className="audio-neu" to="/register">
-                    Register
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </div>
+        {<Account me={me} />}
       </div>
     </>
   );

@@ -19,6 +19,21 @@ body {
   margin-top: 1em;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2em;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
 .three-column-layout {
   display: flex;
   flex-direction: row;
@@ -28,13 +43,19 @@ body {
   gap: 2rem;
 }
 
-/********************************************     LOGIN/REGISTER      *******************************************/
+.two-column-layout {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 2%;
+  gap: 2rem;
+}
 
-.container {
+.right {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2em;
 }
 
 /********************************************     TOP MENU      ************************************************/
@@ -201,6 +222,16 @@ body {
 }
 
 .button:hover {
+  background-color: #45a049;
+}
+
+.rect-button {
+  background-color: hsl(116, 100%, 50%);
+  color: black;
+  cursor: pointer;
+}
+
+.rect-button:hover {
   background-color: #45a049;
 }
 

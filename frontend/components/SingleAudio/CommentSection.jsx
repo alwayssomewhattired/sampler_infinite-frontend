@@ -25,8 +25,18 @@ export default function CommentSection({
       className="comment-card"
     >
       <ul key={comment.id} className="comment-display">
-        <div className="comment-header">
-          {user ? `User: ${user.username}` : "Unknown User"}
+        <div className="comment-header" style={{ display: "flex", alignItems: "center"}}>
+          <img
+            style={{
+              display: "flex",
+              maxWidth: "2em",
+              maxHeight: "2em",
+              marginRight: "0.5em",
+            }}
+            src={comment.user.photoId}
+            alt="Profile"
+          />
+          {user ? `${user.username}` : "Unknown User"}
         </div>
         <h5 className="text">{comment.commentText}</h5>
 

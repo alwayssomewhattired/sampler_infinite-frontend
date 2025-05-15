@@ -11,6 +11,42 @@ export default function Registration({ setMe }) {
   const [createRegisterMutation, { isLoading, error }] = useAddUserMutation();
   const navigate = useNavigate();
 
+  const defaultPhotos = [
+    "defaultALBRECHTDURERFINAL.png",
+    "defaultBEDRIDDENCOLLAGE.png",
+    "defaultBRAINSHAPEFINAL.png",
+    "defaultCAMELGUYfinal.png",
+    "defaultCLEANCUTLERYFINAL.png",
+    "defaultCONSTANTENERGYFINAL.png",
+    "defaultDOUBLECHECKCOLLAGE.png",
+    "defaultDYSTOPIA.png",
+    "defaultEMPTYOURSELVES.png",
+    "defaultERUTAnCOLLAGE.png",
+    "defaultEXAMINATION.png",
+    "defaultGLAZYFINAL.png",
+    "defaultLVZFINAL.png",
+    "defaultnost final.png",
+    "defaultnost.png",
+    "defaultOLDWIZARDCOLLAGEFINAL.png",
+    "defaultPAINALITYFINAL.png",
+    "defaultPLEASECONNECTFINAL.png",
+    "defaultPOKERRFINAL.png",
+    "defaultQUIETWALKFINAL.png",
+    "defaultSEMINAL4.png",
+    "defaultSOLARCORONAFINAL.png",
+    "defaultTHANKYOUFINAL.png",
+    "defaultUNAMED.png",
+    "defaultUNKNOWNFEELING.png",
+  ];
+
+  const defaultUrl =
+    "https://samplerinfinite-default-photos.s3.us-east-2.amazonaws.com";
+
+  const randomPhoto =
+    defaultPhotos[Math.floor(Math.random() * defaultPhotos.length)];
+
+  const photoId = `${defaultUrl}/${randomPhoto}`;
+
   const registerInfo = async (e) => {
     e.preventDefault();
     try {
@@ -18,6 +54,7 @@ export default function Registration({ setMe }) {
         username,
         email,
         normal_password,
+        photoId,
       }).unwrap();
       setMe(response.me);
       sessionStorage.setItem("token", response.token);

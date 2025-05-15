@@ -10,16 +10,14 @@ import {
   useCreatePhotoDBMutation,
 } from "./SingleUserSlice";
 import ProfilePhoto from "./ProfilePhoto";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 
-import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 import "./../../styles/styles.css";
 
-export default function SingleUser({ me }) {
+export default function SingleUser({ me, setAudioId }) {
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("token");
-
-  const id = me;
 
   const { data: userInfo, isSuccess: userInfoReady } = useGetUserQuery();
 
@@ -33,32 +31,12 @@ export default function SingleUser({ me }) {
 
   let [itemIds, setItemIds] = useState([]);
 
-  const [createDeleteCommentMutation, isLoading] = useDeleteCommentMutation(
-    comments.id
-  );
+  const [createDeleteCommentMutation] = useDeleteCommentMutation(comments.id);
 
-  const [createUpdateCommentMutation, error] = useUpdateCommentMutation();
+  const [createUpdateCommentMutation] = useUpdateCommentMutation();
 
   const [createPhotoMutation] = useCreatePhotoMutation();
   const [createPhotoDBMutation] = useCreatePhotoDBMutation();
-
-  // const getRandomDefaultPhoto = async () => {
-  //   const listParams = {
-  //     Bucket: "samplerinfinite-default-photos",
-  //     Prefix: "default",
-  //   };
-
-  //   const data = await s3.send(new ListObjectsV2Command(listParams));
-  //   const files = data.Contents;
-
-  //   if (!files || files.length === 0) {
-  //     throw new error("No default picture found");
-  //   }
-
-  //   const randomFile = files[Math.floor(Math.random() * files.length)].Key;
-
-  //   console.log(randomFile);
-  // };
 
   useEffect(() => {
     if (userInfoReady) {
@@ -126,13 +104,24 @@ export default function SingleUser({ me }) {
   if (songs.length !== 0 && comments.length !== 0) {
     for (let i = 0; i < comments.length; i++) {
       const comment = comments[i];
+      const likes = comments[i].reactions.filter(
+        (e) => e.reactionType == "like"
+      ).length;
+      const dislikes = comments[i].reactions.filter(
+        (e) => e.reactionType == "dislike"
+      ).length;
       const matchingSong = songs.find((song) => song.id === comment.itemID);
 
       if (matchingSong) {
-        arr.push({ song: matchingSong, comment });
+        arr.push({ song: matchingSong, comment, likes, dislikes });
       }
     }
   }
+
+  const handleCommentClick = (audioId) => {
+    setAudioId(audioId);
+    navigate("/singleAudio");
+  };
 
   const profileUploader = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -157,84 +146,127 @@ export default function SingleUser({ me }) {
     };
 
     return (
-      <div style={{ padding: "20px" }}>
-        <label htmlFor="file-upload" className="custom-file-button">
-          Choose Photo
-        </label>
-        <input
-          className="sample-name"
-          id="file-upload"
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          style={{ display: "none" }}
-        />
-        {selectedFile && (
-          <p className="text">Selected file: {selectedFile.name}</p>
-        )}
-        <button
-          className="custom-file-button"
-          style={{ translate: "20px" }}
-          onClick={handleUpload}
-        >
-          Upload your Profile Picture
-        </button>
-      </div>
+      <>
+        <div style={{ padding: "1em" }}>
+          <label
+            htmlFor="file-upload"
+            className="rect-button"
+            style={{
+              padding: "0.05rem 0.5em",
+              margin: "1em",
+              marginRight: "0.5em",
+              display: "inline-block",
+            }}
+          >
+            Choose Photo
+          </label>
+          <input
+            className="text"
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          {selectedFile && (
+            <p className="text">Selected file: {selectedFile.name}</p>
+          )}
+          <button className="rect-button" onClick={handleUpload}>
+            Upload your Profile Picture
+          </button>
+        </div>
+      </>
     );
   };
 
   return (
     <>
-      <div style={{ display: "flex" }}>
+      <div className="two-column-layout">
         {<Sidebar />}
-        <div
-          style={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: "70em",
-          }}
-        >
+        <div className="right">
           <h1 className="text">Your Account</h1>
           <ProfilePhoto />
           <h3 className="text">{userName}</h3>
           <h3 className="text">{email}</h3>
           {profileUploader()}
-          <button className="button" onClick={() => navigate("/accountChange")}>
+          <button
+            className="button"
+            style={{ marginTop: "1em" }}
+            onClick={() => navigate("/accountChange")}
+          >
             Change Information
           </button>
           <div>
             <h2 className="text">Comments</h2>
           </div>
-          {arr.map((arr, index) => (
-            <ul key={index}>
-              <h3 className="text">{`On: ${arr.song.name}`}</h3>
-              <h3 className="text">{`Comment: ${arr.comment.commentText}`}</h3>
-              <button
-                className="button"
-                onClick={() => deleteComment(arr.comment.id)}
+          {arr.map((item, index) => (
+            <li key={index}>
+              <h3
+                className="text"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textDecoration: "underline",
+                }}
+                onClick={() => handleCommentClick(item.song.id)}
+              >{`On: ${item.song.name}`}</h3>
+              <h3
+                className="text"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
               >
-                Delete
-              </button>
-              {!updateMap[arr.comment.id] && (
+                {item.comment.commentText}
+              </h3>
+              <div className="row-container">
+                <h1 className="text" style={{ fontSize: "1em" }}>
+                  {item.likes}
+                </h1>
+                <FontAwesomeIcon icon={faThumbsUp} style={{ color: "white" }} />
+                <FontAwesomeIcon
+                  icon={faThumbsDown}
+                  style={{ color: "white" }}
+                />
+                <h1 className="error" style={{ fontSize: "1em" }}>
+                  {item.dislikes}
+                </h1>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: "5em",
+                }}
+              >
                 <button
                   className="button"
-                  onClick={() => toggleUpdate(arr.comment.id)}
+                  onClick={() => deleteComment(item.comment.id)}
                 >
-                  Update
+                  Delete
                 </button>
-              )}
-              {updateMap[arr.comment.id] && (
-                <form onSubmit={(e) => commentInfo(e, arr.comment.id)}>
-                  <input
-                    className="border"
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                  />
-                  <button className="button">Submit Update</button>
-                </form>
-              )}
-            </ul>
+                {!updateMap[item.comment.id] && (
+                  <button
+                    className="button"
+                    onClick={() => toggleUpdate(item.comment.id)}
+                  >
+                    Update
+                  </button>
+                )}
+                {updateMap[item.comment.id] && (
+                  <form onSubmit={(e) => commentInfo(e, item.comment.id)}>
+                    <input
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                    />
+                    <button className="button">Submit Update</button>
+                  </form>
+                )}
+              </div>
+            </li>
           ))}
         </div>
       </div>

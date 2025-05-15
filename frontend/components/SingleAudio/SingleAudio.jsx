@@ -199,7 +199,6 @@ export default function SingleItem({ audioId, me }) {
             <label className="text">
               Create comment
               <input
-                className="border"
                 name="Your comment"
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}

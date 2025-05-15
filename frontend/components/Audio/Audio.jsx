@@ -6,7 +6,6 @@ import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 
 import "./../../styles/styles.css";
-// import "./AudioStyle.css";
 
 export default function Audio({ setAudioId, me }) {
   const { data: myData, isSuccess } = useGetSongzQuery();
@@ -16,6 +15,7 @@ export default function Audio({ setAudioId, me }) {
   useEffect(() => {
     if (isSuccess) {
       setSongs(myData);
+      console.log(myData);
     }
   }, [myData]);
 
@@ -32,8 +32,29 @@ export default function Audio({ setAudioId, me }) {
             {songs.map((song) => (
               <ul key={song.id}>
                 <div className="center">
-                  <h2 className="text">Name:</h2>
-                  <h2 className="text">{song.name}</h2>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <h2 className="text">{song.name}</h2>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    <img
+                      style={{
+                        display: "flex",
+                        maxWidth: "2em",
+                        maxHeight: "2em",
+                        marginRight: "0.5em",
+                      }}
+                      src={song.User.photoId}
+                      alt="Profile"
+                    />
+                    <h2 className="text">{song.User.username}</h2>
+                  </div>
                   <CustomAudioPlayer
                     src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
                   />

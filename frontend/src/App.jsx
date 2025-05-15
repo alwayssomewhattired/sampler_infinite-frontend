@@ -73,7 +73,10 @@ function App() {
             path="singleAudio"
             element={<SingleAudio audioId={audioId} me={me} />}
           />
-          <Route path="/singleUser" element={<SingleUser me={me} />} />
+          <Route
+            path="/singleUser"
+            element={<SingleUser me={me} setAudioId={setAudioId} />}
+          />
           <Route
             path="/audioCreator"
             element={

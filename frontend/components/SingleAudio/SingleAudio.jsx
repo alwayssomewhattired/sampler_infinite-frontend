@@ -2,8 +2,6 @@ import {
   usePostRepliesMutation,
   usePostCommentMutation,
   useReactionCommentMutation,
-  // useGetReviewsQuery,
-  // useCreateReviewMutation,
 } from "./SingleAudioSlice";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState } from "react";
@@ -70,7 +68,6 @@ export default function SingleItem({ audioId, me }) {
       const response = await createCommentMutation({
         userID,
         itemId,
-        // reviewId,
         commentText,
       }).unwrap();
       await refetchAll();

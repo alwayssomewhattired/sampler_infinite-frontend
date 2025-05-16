@@ -1,43 +1,18 @@
-// import api from "../../store/api";
+import api from "../../store/api";
 
-// const usersApi = api.injectEndpoints({
-//   endpoints: (builder) => ({
-//     getUsers: builder.query({
-//       query: (token) => ({
-//         url: "/api/users/allUsers",
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Access-Control-Allow-Origin": "*",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }),
-//       providesTags: ["User"],
-//     }),
-//     aboutMe: builder.query({
-//       query: (token) => ({
-//         url: "/api/users/aboutMe",
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Access-Control-Allow-Origin": "*",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }),
-//     }),
-//     delete: builder.mutation({
-//       query: ({ token, id }) => ({
-//         url: `/api/users/${id}`,
-//         method: "DELETE",
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Access-Control-Allow-Origin": "*",
-//           Authorization: `Bearer ${token}`,
-//         },
-//       }),
-//       invalidatesTags: ["User"],
-//     }),
-//   }),
-// });
+const usersApi = api.injectEndpoints({
+  endpoints: (builder) => ({
+    aboutHim: builder.query({
+      query: (profileId) => ({
+        url: `/api/users/aboutHim/${profileId}`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
+  }),
+});
 
-// export const { useGetUsersQuery, useAboutMeQuery, useDeleteMutation } = usersApi;
+export const { useAboutHimQuery } = usersApi;

@@ -6,13 +6,12 @@ import { useState, useEffect } from "react";
 import Home from "../components/Home/Home";
 import Registration from "../components/Registration/Registration";
 import Login from "../components/Login/Login";
-// import Users from "../components/Users/Users";
+import Users from "../components/Users/Users";
 import SingleUser from "../components/SingleUser/SingleUser";
 import AccountChange from "../components/AccountChange/AccountChange";
 import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
-// import SingleReview from "../components/SingleReview/SingleReview";
 import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
 import AudioUploader from "../components/AudioUploader/AudioUploader";
 import SamplerApp from "../components/GranularInfinite/GranularInfinite";
@@ -47,14 +46,14 @@ function App() {
     sessionStorage.setItem("newAudio", JSON.stringify(newAudio));
   }, [newAudio]);
 
-  // const [reviewId, setReviewId] = useState(() => {
-  //   const storedReview = sessionStorage.getItem("reviewId");
-  //   return storedReview ? JSON.parse(storedReview) : 0;
-  // });
+  const [profileId, setProfileId] = useState(() => {
+    const saved = sessionStorage.getItem("profileId");
+    return saved ? JSON.parse(saved) : 0;
+  });
 
-  // useEffect(() => {
-  //   sessionStorage.setItem("reviewId", JSON.stringify(reviewId));
-  // }, [reviewId]);
+  useEffect(() => {
+    sessionStorage.setItem("profileId", JSON.stringify(profileId));
+  }, [profileId]);
 
   return (
     <Provider store={store}>
@@ -65,9 +64,18 @@ function App() {
           <Route path="/register" element={<Registration setMe={setMe} />} />
           <Route
             path="/audio"
-            element={<Audio setAudioId={setAudioId} me={me} />}
+            element={
+              <Audio
+                setAudioId={setAudioId}
+                me={me}
+                setProfileId={setProfileId}
+              />
+            }
           />
-          {/* <Route path="/users" element={<Users me={me} />} /> */}
+          <Route
+            path="/users"
+            element={<Users me={me} profileId={profileId} />}
+          />
 
           <Route
             path="singleAudio"
@@ -88,12 +96,6 @@ function App() {
             }
           />
           <Route path="/accountChange" element={<AccountChange me={me} />} />
-          {/* <Route
-            path="/singleReview"
-            element={
-              <SingleReview audioId={audioId} reviewId={reviewId} me={me} />
-            }
-          /> */}
           <Route
             path="/granularSynth"
             element={<GranularSynthComponent me={me} />}

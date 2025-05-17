@@ -74,7 +74,9 @@ function App() {
           />
           <Route
             path="/users"
-            element={<Users me={me} profileId={profileId} />}
+            element={
+              <Users me={me} profileId={profileId} setAudioId={setAudioId} />
+            }
           />
 
           <Route

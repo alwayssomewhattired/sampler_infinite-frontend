@@ -107,12 +107,15 @@ export default function Audio({ setAudioId, me, setProfileId }) {
                         maxWidth: "2em",
                         maxHeight: "2em",
                         marginRight: "0.5em",
+                        cursor: "pointer",
                       }}
+                      onClick={() => profileHandle(song.user)}
                       src={song.User.photoId}
                       alt="Profile"
                     />
                     <h2
                       className="text"
+                      style={{ cursor: "pointer" }}
                       onClick={() => profileHandle(song.user)}
                     >
                       {song.User.username}

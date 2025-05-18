@@ -38,12 +38,14 @@ export default function CustomAudioPlayer({ src }) {
 
   return (
     <div className="custom-audio-player">
-      <button className="button" onClick={togglePlay}>
-        {isPlaying ? "Pause" : "Play"}
-      </button>
-      <a className="download-button" href={src} download>
-        Download
-      </a>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <button className="button" onClick={togglePlay}>
+          {isPlaying ? "Pause" : "Play"}
+        </button>
+        <a className="download-button" href={src} download>
+          Download
+        </a>
+      </div>
       <div onClick={handleProgressClick} className="progress-bar">
         <div
           className="progress-bar-filled"

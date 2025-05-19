@@ -101,7 +101,7 @@ export default function SingleItem({ audioId, me }) {
       }
     }
   };
-
+  // start of ugly mess
   const userMap = {};
   userNameIds.forEach((user) => {
     userMap[user.id] = user;
@@ -169,6 +169,8 @@ export default function SingleItem({ audioId, me }) {
     );
   };
 
+  // end of ugly mess
+
   return (
     <>
       <div className="logo">
@@ -210,6 +212,10 @@ export default function SingleItem({ audioId, me }) {
             )}
             {unauthorize && <output className="error">{unauthorize}</output>}
           </form>
+
+          {/* //////////////////////////////////// This is comment stuff below////////////////////////////////////////////////////////////////               */}
+          {/*****/}
+          {/**/}
 
           {comments && comments.map((comment) => renderComment(comment))}
         </main>

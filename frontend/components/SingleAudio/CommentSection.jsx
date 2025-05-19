@@ -25,7 +25,10 @@ export default function CommentSection({
       className="comment-card"
     >
       <ul key={comment.id} className="comment-display">
-        <div className="comment-header" style={{ display: "flex", alignItems: "center"}}>
+        <div
+          className="comment-header"
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <img
             style={{
               display: "flex",

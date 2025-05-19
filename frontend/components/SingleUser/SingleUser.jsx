@@ -273,24 +273,3 @@ export default function SingleUser({ me, setAudioId }) {
     </>
   );
 }
-
-//////////////////////////////////////////////////////////        R E V I E W  S H I T     ///////////////////////////////////////////////////////////////////////
-
-// useEffect(() => {
-//   if (isFinished) {
-//     setReviews(reviewData);
-//   }
-// }, [reviewData]);
-
-// const { data: reviewData, isSuccess: isFinished } = useGetMyReviewsQuery();
-// const [reviews, setReviews] = useState([]);
-
-/* <div>{$details}</div> */
-/* <div>
-          <h2 className="text">Reviews</h2>
-        </div> */
-/* {reviews.map((review) => (
-          <ul key={review.id}>
-            <h3 className="text">{review.reviewText}</h3>
-          </ul>
-        ))} */

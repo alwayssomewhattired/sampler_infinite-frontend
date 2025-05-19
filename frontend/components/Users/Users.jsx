@@ -1,11 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAboutHimQuery } from "./UsersSlice";
+import Sidebar from "../Layout/Sidebar";
+import Account from "../Layout/Account";
+
+import "./../../styles/styles.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
-import Sidebar from "../Layout/Sidebar";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
-import "./../../styles/styles.css";
+import useEnrichedUser from "../../utils/useEnrichedUser";
 
 export default function Users({ profileId, setAudioId }) {
   const navigate = useNavigate();
@@ -20,71 +23,26 @@ export default function Users({ profileId, setAudioId }) {
     }
   }, [isProfileData, profileData]);
 
-  const handleCommentClick = (audioId) => {
+  const handleContentClick = (audioId) => {
     console.log("audio id", audioId);
     setAudioId(audioId);
     navigate("/singleAudio");
   };
 
-  const commentsAndReact = useMemo(() => {
-    const allReactions = user.comments?.flatMap((comment) => comment.reactions);
-    const everything = allReactions?.reduce((element, reaction) => {
-      const { commentID, reactionType } = reaction;
-
-      if (!element[commentID]) {
-        element[commentID] = { like: 0, dislike: 0 };
-      }
-      if (reactionType in element[commentID]) {
-        element[commentID][reactionType]++;
-      } else {
-        element[commentID][reactionType] = 1;
-      }
-      return element;
-    }, {});
-
-    const commentsWithExtras = user.comments?.map((comment) => {
-      const reactionCounts = everything?.[comment.id] ?? {
-        like: 0,
-        dislike: 0,
-      };
-      const matchingItem = user.items?.find(
-        (item) => item.id === comment.itemID
-      );
-
-      return {
-        ...comment,
-        reactionCounts,
-        item: matchingItem || null,
-      };
-    });
-    console.log(commentsWithExtras);
-
-    return {
-      ...user,
-      comments: commentsWithExtras,
-      everything,
-    };
-  }, [user]);
-
-  useEffect(() => {
-    if (commentsAndReact) {
-      console.log(commentsAndReact);
-    }
-  });
-
+  const enrichedUser = useEnrichedUser(user);
   return (
     <>
       <div className="two-column-layout">
-        {<Sidebar />}{" "}
-        <div className="right" style={{ marginLeft: "5em" }}>
-          {user && commentsAndReact && (
-            <li key={commentsAndReact.id}>
+        {<Sidebar />}
+        <div className="right" style={{ marginLeft: "10em" }}>
+          {user && enrichedUser && (
+            <li key={enrichedUser.id}>
               <div style={{ display: "flex", gap: "1em" }}>
                 <h1 className="text" style={{ marginBottom: "1em" }}>
-                  {commentsAndReact.username}'s Account
+                  {enrichedUser.username}'s Account
                 </h1>
                 <h6 className="text" style={{ alignContent: "center" }}>
-                  {commentsAndReact.created_at}
+                  {enrichedUser.created_at}
                 </h6>
               </div>
               <div
@@ -96,7 +54,7 @@ export default function Users({ profileId, setAudioId }) {
               >
                 <img
                   style={{ height: "80px" }}
-                  src={commentsAndReact.photoId}
+                  src={enrichedUser.photoId}
                   alt="Profile"
                 />
               </div>
@@ -109,43 +67,57 @@ export default function Users({ profileId, setAudioId }) {
               >
                 <h2 className="text">SampledInfinites</h2>
               </div>
-              {commentsAndReact.comments?.map((audio) => {
-                return (
-                  <div
-                    key={audio.id}
-                    style={{ marginBottom: "1em", marginRight: "6.5em" }}
+              {enrichedUser.items?.map((audio) => (
+                <div
+                  key={audio.id}
+                  style={{ marginBottom: "1em", marginRight: "6.5em" }}
+                >
+                  <h3
+                    className="text"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      textDecoration: "underline",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleContentClick(audio.id)}
                   >
-                    <h3
-                      className="text"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textDecoration: "underline",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleCommentClick(audio.item.id)}
-                    >
-                      {audio.item.name}
-                    </h3>
-                    <div style={{ marginRight: "2em" }}>
-                      <CustomAudioPlayer
-                        src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${audio.item.id}`}
-                      />
-                    </div>
+                    {audio.name}
+                  </h3>
+                  <div style={{ marginRight: "2em" }}>
+                    <CustomAudioPlayer
+                      src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${audio.id}`}
+                    />
                   </div>
-                );
-              })}
-              <div
-                style={{
-                  marginTop: "2em",
-                  display: "flex",
-                  marginLeft: "3em",
-                }}
-              >
-                <h2 className="text">Comments</h2>
-              </div>
-              {commentsAndReact.comments?.map((comment) => {
+                  <div className="row-container">
+                    <h1 className="text" style={{ fontSize: "1em" }}>
+                      {audio.reactionCounts.like}
+                    </h1>
+                    <FontAwesomeIcon
+                      icon={faThumbsUp}
+                      style={{ color: "white" }}
+                    />
+                    <FontAwesomeIcon
+                      icon={faThumbsDown}
+                      style={{ color: "white" }}
+                    />
+                    <h1 className="error" style={{ fontSize: "1em" }}>
+                      {audio.reactionCounts.dislike}
+                    </h1>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "2em",
+                      display: "flex",
+                      marginLeft: "3em",
+                    }}
+                  >
+                    <h2 className="text">Comments</h2>
+                  </div>
+                </div>
+              ))}
+              {enrichedUser.comments?.map((comment) => {
                 return (
                   <div
                     key={comment.id}
@@ -160,7 +132,7 @@ export default function Users({ profileId, setAudioId }) {
                         textDecoration: "underline",
                         cursor: "pointer",
                       }}
-                      onClick={() => handleCommentClick(comment.itemID)}
+                      onClick={() => handleContentClick(comment.itemID)}
                     >
                       On: {comment.item.name || "Unknown Item"}
                     </h3>
@@ -196,6 +168,7 @@ export default function Users({ profileId, setAudioId }) {
             </li>
           )}
         </div>
+        <Account />
       </div>
     </>
   );

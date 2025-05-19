@@ -166,7 +166,6 @@ export default function Audio({ setAudioId, me, setProfileId }) {
                   >
                     <button
                       className="button"
-                      style={{}}
                       onClick={() => onLike(song.id)}
                     >
                       Like

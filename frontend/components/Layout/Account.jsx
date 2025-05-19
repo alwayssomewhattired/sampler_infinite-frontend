@@ -5,7 +5,7 @@ export default function Account({ me }) {
   return (
     <div className="account menu neu">
       <h2 className="li-header">Account</h2>
-      <ul>
+      <ul style={{ paddingInlineStart: "0em" }}>
         {me ? (
           <li>
             <Link className="neu" to="/singleUser">

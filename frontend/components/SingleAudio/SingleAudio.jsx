@@ -2,11 +2,15 @@ import {
   usePostRepliesMutation,
   usePostCommentMutation,
   useReactionCommentMutation,
+  useReactionItemMutation,
 } from "./SingleAudioSlice";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState } from "react";
 import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
+import useEnrichedItem from "../../utils/useEnrichedItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 
 import "./../../styles/styles.css";
 
@@ -27,6 +31,8 @@ export default function SingleItem({ audioId, me }) {
     refetchAll,
   } = useSingleAudio(audioId);
 
+  console.log("song", song);
+
   const [createCommentMutation, { isLoading, error }] =
     usePostCommentMutation();
   const [commentText, setCommentText] = useState("");
@@ -37,6 +43,8 @@ export default function SingleItem({ audioId, me }) {
   const [unauthorize, setUnauthorize] = useState("");
 
   const [createReactionMutation] = useReactionCommentMutation();
+
+  const [createItemReactionMutation] = useReactionCommentMutation();
 
   const likeComment = async (commentID) => {
     try {
@@ -57,6 +65,29 @@ export default function SingleItem({ audioId, me }) {
         reaction: "dislike",
       }).unwrap();
       await refetchAll();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const dislikeItem = async (id) => {
+    try {
+      const itemID = id;
+      const response = await createItemReactionMutation({
+        itemID,
+        reaction: "like",
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const likeItem = async (itemID) => {
+    try {
+      const response = await createItemReactionMutation({
+        itemID,
+        reaction: "dislike",
+      }).unwrap();
     } catch (error) {
       console.error(error);
     }
@@ -110,7 +141,6 @@ export default function SingleItem({ audioId, me }) {
   const reactionMap = {};
   reactions.forEach((reaction) => {
     const { commentID, reactionType, _count } = reaction;
-    console.log(reaction);
     if (!reactionMap[commentID]) {
       reactionMap[commentID] = { like: 0, dislike: 0 };
     }
@@ -150,7 +180,6 @@ export default function SingleItem({ audioId, me }) {
   const renderComment = (comment, indent = 0) => {
     const user = userMap[comment.userID];
     const reaction = reactionMap;
-    console.log("reaction", reaction);
     return (
       <CommentSection
         key={comment.id}
@@ -171,6 +200,9 @@ export default function SingleItem({ audioId, me }) {
 
   // end of ugly mess
 
+  const enrichedItem = useEnrichedItem(song);
+  console.log(enrichedItem);
+
   return (
     <>
       <div className="logo">
@@ -181,16 +213,59 @@ export default function SingleItem({ audioId, me }) {
 
         {/* Center: Audio/Comments */}
         <main className="center-content">
-          {song && (
+          {enrichedItem && (
             <>
               <div className="center">
-                <h2 className="text">Name:</h2>
-                <h2 className="text">{song.name}</h2>
+                <h2 className="text">Name: </h2>
+                <h2 className="text">{enrichedItem.name}</h2>
+                <h2 className="text">User: </h2>
+                <h2 className="text">{enrichedItem.User.username}</h2>
                 <CustomAudioPlayer
-                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
+                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${enrichedItem.id}`}
                 />
-                <h3 className="text">Description:</h3>
-                <h3 className="text">{song.description}</h3>
+                <div className="row-container" style={{ width: "100%" }}>
+                  <div
+                    className="row-container"
+                    style={{
+                      marginBottom: "3.5em",
+                      marginLeft: "4em",
+                      gap: "em",
+                    }}
+                  >
+                    <div className="row-container">
+                      <h1 className="text" style={{ fontSize: "1em" }}>
+                        {enrichedItem.itemReactionSum[0].like}
+                      </h1>
+                      <FontAwesomeIcon
+                        icon={faThumbsUp}
+                        style={{ color: "white" }}
+                      />
+                      <FontAwesomeIcon
+                        icon={faThumbsDown}
+                        style={{ color: "white" }}
+                      />
+                      <h1 className="error" style={{ fontSize: "1em" }}>
+                        {enrichedItem.itemReactionSum[0].dislike}
+                      </h1>
+                      <button
+                        className="button"
+                        onClick={() => likeItem(enrichedItem.id)}
+                      >
+                        Like
+                      </button>
+                      <button
+                        className="button"
+                        onClick={() => dislikeItem(enrichedItem.id)}
+                      >
+                        Dislike
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text">Description:</h3>
+                    <h3 className="text">{enrichedItem.description}</h3>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -225,140 +300,3 @@ export default function SingleItem({ audioId, me }) {
     </>
   );
 }
-
-//////////////////////////////////////////////////////////        R E V I E W  S H I T     ///////////////////////////////////////////////////////////////////////
-
-// const { data: reviewData, isSuccess: finished } = useGetReviewsQuery(audioId);
-// const [createReviewMutation, isLoading, error] = useCreateReviewMutation();
-// const [reviews, setReviews] = useState([]);
-// const [reviewText, setReviewText] = useState("");
-
-// useEffect(() => {
-//   if (finished) {
-//     setReviews(reviewData);
-//   }
-// }, [reviewData]);
-
-// const reviewInfo = async (e) => {
-//   e.preventDefault();
-//   try {
-//     const response = await createReviewMutation({ itemId, reviewText });
-//     navigate("/singleAudio");
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-/* <form onSubmit={reviewInfo}>
-            <label className="text">
-              Create review
-              <input
-                className="border"
-                name="Your review"
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-              />
-            </label>
-            <button className="button">Submit your review</button>
-            {error && (
-              <output className="text">
-                Error creating review {error.message}
-              </output>
-            )}
-          </form> */
-
-/* {reviews.map((review) => (
-            <ul key={review.id}>
-              <h4 className="text">{review.userID}</h4>
-              <h3 className="text">{review.reviewText}</h3>
-              <button
-                className="button"
-                onClick={() => {
-                  setReviewId(review.id), navigate("/singleReview");
-                }}
-              >
-                View review
-              </button>
-            </ul>
-          ))} */
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// const CommentSection = ({ comment, indent = 0 }) => {
-//   const user = arr.find((u) => u.id === comment.userID);
-//   const reaction = arr.find((r) => r.comment_id === comment.id);
-
-//   return (
-//     <div style={{ marginLeft: `${indent}px`, paddingTop: "10px" }}>
-//       <ul key={comment.id} style={{ listStyle: "none", paddingLeft: 0 }}>
-//         <h5 className="text">
-//           {user ? `User: ${user.username}` : "Unknown User"}
-//         </h5>
-//         <h5 className="text">{`Comment: ${comment.commentText}`}</h5>
-
-//         <div
-//           style={{
-//             display: "flex",
-//             gap: "10px",
-//             width: "100%",
-//             justifyContent: "center",
-//             alignItems: "center",
-//           }}
-//         >
-//           <h5 className="text">
-//             {`Likes: ${reaction ? reaction.reactionsLike : -0}`}
-//           </h5>
-//           <h5 className="text">
-//             {`Dislikes: ${reaction ? reaction.reactionsDislike : 0}`}
-//           </h5>
-//         </div>
-
-//         <button className="button" onClick={() => likeComment(comment.id)}>
-//           Like
-//         </button>
-//         <button className="button" onClick={() => dislikeComment(comment.id)}>
-//           Dislike
-//         </button>
-//         <button className="button" onClick={() => replyBox(comment.id)}>
-//           Reply
-//         </button>
-
-//         {activeReplyId === comment.id && (
-//           <form onSubmit={replyInfo}>
-//             <label className="text">
-//               Create Reply
-//               <input
-//                 className="border"
-//                 name="Your reply"
-//                 value={replyText}
-//                 onChange={(e) => setReplyText(e.target.value)}
-//               />
-//             </label>
-//             <button className="button">Submit</button>
-//           </form>
-//         )}
-
-//         <h6 className="text">{`Created At: ${comment.created_at}`}</h6>
-//       </ul>
-//     </div>
-//   );
-// };
-
-// const renderComment = (comment, indent = 0) => {
-//   return (
-//     <div key={comment.id}>
-//       <CommentSection comment={comment} indent={indent} />
-//       {comment.childComments?.length > 0 &&
-//         comment.childComments.map(
-//           (child) => renderComment(child, indent + 30) // increment indent
-//         )}
-//     </div>
-//   );
-// };

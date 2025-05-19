@@ -14,8 +14,6 @@ export default function CommentSection({
   onLike,
   onDislike,
 }) {
-  console.log(comment);
-  console.log("inside commentSection", reaction);
   const reaction1 = reaction[comment.id] || { like: 0, dislike: 0 };
   const isReplying = activeReplyId === comment.id;
 

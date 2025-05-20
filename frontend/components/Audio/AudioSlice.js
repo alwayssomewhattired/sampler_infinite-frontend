@@ -12,9 +12,9 @@ const audioApi = api.injectEndpoints({
         },
       }),
     }),
-    reactionItem: builder.mutation({
+    reactionItemToAudio: builder.mutation({
       query: ({ itemID, reaction }) => ({
-        url: `api/items/${itemID}/reactionItem`,
+        url: `api/items/reactionItem/${itemID}/`,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,4 +26,4 @@ const audioApi = api.injectEndpoints({
   }),
 });
 
-export const { useGetSongzQuery, useReactionItemMutation } = audioApi;
+export const { useGetSongzQuery, useReactionItemToAudioMutation } = audioApi;

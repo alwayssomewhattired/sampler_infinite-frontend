@@ -1,4 +1,4 @@
-import { useGetSongzQuery, useReactionItemMutation } from "./AudioSlice";
+import { useGetSongzQuery, useReactionItemToAudioMutation } from "./AudioSlice";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +10,10 @@ import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 import "./../../styles/styles.css";
 
 export default function Audio({ setAudioId, me, setProfileId }) {
-  const { data: myData, isSuccess } = useGetSongzQuery();
+  const { data: myData, isSuccess, refetch } = useGetSongzQuery();
   const [songs, setSongs] = useState([]);
   const navigate = useNavigate();
-  const [createItemReactionMutation] = useReactionItemMutation();
+  const [createItemReactionToAudioMutation] = useReactionItemToAudioMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -42,10 +42,11 @@ export default function Audio({ setAudioId, me, setProfileId }) {
   const onLike = async (id) => {
     try {
       const itemID = id;
-      const response = await createItemReactionMutation({
+      const response = await createItemReactionToAudioMutation({
         itemID,
         reaction: "like",
       }).unwrap();
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -53,10 +54,11 @@ export default function Audio({ setAudioId, me, setProfileId }) {
 
   const onDislike = async (itemID) => {
     try {
-      const response = await createItemReactionMutation({
+      const response = await createItemReactionToAudioMutation({
         itemID,
         reaction: "dislike",
       }).unwrap();
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -73,8 +75,12 @@ export default function Audio({ setAudioId, me, setProfileId }) {
 
   return (
     <>
-      <div className="logo">
-        <h1 className="logo-text">SAMPLERINFINITE</h1>
+      <div
+        className="logo-container"
+      >
+        <div className="logo">
+          <h1 className="logo-text">SAMPLERINFINITE</h1>
+        </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar />}
@@ -164,10 +170,7 @@ export default function Audio({ setAudioId, me, setProfileId }) {
                       marginTop: "-2.5em",
                     }}
                   >
-                    <button
-                      className="button"
-                      onClick={() => onLike(song.id)}
-                    >
+                    <button className="button" onClick={() => onLike(song.id)}>
                       Like
                     </button>
                     <button

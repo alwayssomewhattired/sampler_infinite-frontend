@@ -2,7 +2,7 @@ import {
   usePostRepliesMutation,
   usePostCommentMutation,
   useReactionCommentMutation,
-  useReactionItemzaMutation,
+  useReactionItemToSingleAudioMutation,
 } from "./SingleAudioSlice";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState } from "react";
@@ -11,15 +11,17 @@ import Sidebar from "../Layout/Sidebar";
 import useEnrichedItem from "../../utils/useEnrichedItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 import "./../../styles/styles.css";
 
 import { useSingleAudio } from "../../hooks/useSingleAudio";
 import CommentSection from "./CommentSection";
 
-export default function SingleItem({ audioId, me }) {
+export default function SingleItem({ audioId, me, setProfileId }) {
   const userID = me;
   const itemId = audioId;
+  const navigate = useNavigate();
 
   const {
     song,
@@ -42,9 +44,20 @@ export default function SingleItem({ audioId, me }) {
 
   const [unauthorize, setUnauthorize] = useState("");
 
-  const [createReactionMutation] = useReactionCommentMutation();
+  const [reactionItemToSingleAudioMutation] =
+    useReactionItemToSingleAudioMutation();
 
-  const [reactionItemzaMutation] = useReactionItemzaMutation();
+  const profileHandle = (profileId) => {
+    try {
+      console.log("profileId", profileId);
+      setProfileId(profileId);
+      navigate("/users");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const [createReactionMutation] = useReactionCommentMutation();
 
   const likeComment = async (commentID) => {
     try {
@@ -73,7 +86,7 @@ export default function SingleItem({ audioId, me }) {
   const dislikeItem = async (id) => {
     try {
       const itemID = id;
-      const response = await reactionItemzaMutation({
+      const response = await reactionItemToSingleAudioMutation({
         itemID,
         reaction: "dislike",
       }).unwrap();
@@ -86,7 +99,7 @@ export default function SingleItem({ audioId, me }) {
   const likeItem = async (id) => {
     try {
       const itemID = id;
-      const response = await reactionItemzaMutation({
+      const response = await reactionItemToSingleAudioMutation({
         itemID,
         reaction: "like",
       }).unwrap();
@@ -190,6 +203,7 @@ export default function SingleItem({ audioId, me }) {
         indent={indent}
         user={user}
         reaction={reaction}
+        profileHandle={profileHandle}
         activeReplyId={activeReplyId}
         setActiveReplyId={setActiveReplyId}
         replyText={replyText}
@@ -208,8 +222,10 @@ export default function SingleItem({ audioId, me }) {
 
   return (
     <>
+         <div className="logo-container">
       <div className="logo">
         <h1 className="logo-text">SAMPLERINFINITE</h1>
+      </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar me={me} />}
@@ -219,10 +235,31 @@ export default function SingleItem({ audioId, me }) {
           {enrichedItem && (
             <>
               <div className="center">
-                <h2 className="text">Name: </h2>
-                <h2 className="text">{enrichedItem.name}</h2>
-                <h2 className="text">User: </h2>
-                <h2 className="text">{enrichedItem.User.username}</h2>
+                <div
+                  className="row-container"
+                  style={{ justifyContent: "space-evenly" }}
+                >
+                  <h2 className="text">{enrichedItem.name}</h2>
+                  <img
+                    style={{
+                      display: "flex",
+                      maxWidth: "2em",
+                      maxHeight: "2em",
+                      marginLeft: "10em",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => profileHandle(enrichedItem.User.id)}
+                    src={enrichedItem.User.photoId}
+                    alt="Profile"
+                  />
+                  <h2
+                    className="text"
+                    style={{ fontStyle: "italic", cursor: "pointer" }}
+                    onClick={() => profileHandle(enrichedItem.User.id)}
+                  >
+                    {enrichedItem.User.username}
+                  </h2>
+                </div>
                 <CustomAudioPlayer
                   src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${enrichedItem.id}`}
                 />
@@ -298,7 +335,7 @@ export default function SingleItem({ audioId, me }) {
           {comments && comments.map((comment) => renderComment(comment))}
         </main>
 
-        {<Account />}
+        {<Account me={me} />}
       </div>
     </>
   );

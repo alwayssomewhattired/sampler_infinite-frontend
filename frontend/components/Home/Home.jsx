@@ -8,8 +8,10 @@ import "./../../styles/styles.css";
 export default function Home({ me }) {
   return (
     <>
-      <div className="logo">
-        <h1 className="logo-text">SAMPLERINFINITE</h1>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text">SAMPLERINFINITE</h1>
+        </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar me={me} />}
@@ -20,7 +22,7 @@ export default function Home({ me }) {
               <div className="center">
                 <h3 className="text">A frequency-based sample generator</h3>
               </div>
-              <li>
+              <li style={{ marginRight: "2em" }}>
                 <Link to="/audioCreator" className="neu card">
                   sampler infinite
                 </Link>
@@ -30,7 +32,7 @@ export default function Home({ me }) {
                   A granular keyboard with multi-sample processing
                 </h3>
               </div>
-              <li>
+              <li style={{ marginRight: "2em" }}>
                 <Link to="/granularInfinite" className="neu card">
                   granularinfinite
                 </Link>
@@ -40,7 +42,7 @@ export default function Home({ me }) {
                   Browse published audio from samplerinfinite
                 </h3>
               </div>
-              <li>
+              <li style={{ marginRight: "2em" }}>
                 <Link to="/audio" className="neu card">
                   Published Audio
                 </Link>
@@ -48,7 +50,7 @@ export default function Home({ me }) {
               <div className="center">
                 <h3 className="text">A standalone granular synth</h3>
               </div>
-              <li>
+              <li style={{ marginRight: "2em" }}>
                 <Link to="/granularSynth" className="neu card">
                   Granular Synth
                 </Link>
@@ -62,7 +64,7 @@ export default function Home({ me }) {
             </div>
           </main>
         </div>
-        {<Account />}
+        {<Account me={me} />}
       </div>
     </>
   );

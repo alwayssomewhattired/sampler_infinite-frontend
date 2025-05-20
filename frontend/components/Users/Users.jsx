@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAboutHimQuery } from "./UsersSlice";
 import Sidebar from "../Layout/Sidebar";
@@ -10,7 +10,7 @@ import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import useEnrichedUser from "../../utils/useEnrichedUser";
 
-export default function Users({ profileId, setAudioId }) {
+export default function Users({ profileId, setAudioId, me }) {
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const { data: profileData, isSuccess: isProfileData } =
@@ -30,6 +30,7 @@ export default function Users({ profileId, setAudioId }) {
   };
 
   const enrichedUser = useEnrichedUser(user);
+  console.log(enrichedUser);
   return (
     <>
       <div className="two-column-layout">
@@ -106,17 +107,17 @@ export default function Users({ profileId, setAudioId }) {
                       {audio.reactionCounts.dislike}
                     </h1>
                   </div>
-                  <div
-                    style={{
-                      marginTop: "2em",
-                      display: "flex",
-                      marginLeft: "3em",
-                    }}
-                  >
-                    <h2 className="text">Comments</h2>
-                  </div>
                 </div>
               ))}
+              <div
+                style={{
+                  marginTop: "2em",
+                  display: "flex",
+                  marginLeft: "3em",
+                }}
+              >
+                <h2 className="text">Comments</h2>
+              </div>
               {enrichedUser.comments?.map((comment) => {
                 return (
                   <div
@@ -134,7 +135,7 @@ export default function Users({ profileId, setAudioId }) {
                       }}
                       onClick={() => handleContentClick(comment.itemID)}
                     >
-                      On: {comment.item.name || "Unknown Item"}
+                      On: {comment.item?.name || "Unknown Item"}
                     </h3>
                     <h3
                       className="text"
@@ -168,7 +169,7 @@ export default function Users({ profileId, setAudioId }) {
             </li>
           )}
         </div>
-        <Account />
+        <Account me={me} />
       </div>
     </>
   );

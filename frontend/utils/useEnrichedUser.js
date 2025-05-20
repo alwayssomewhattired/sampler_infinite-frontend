@@ -28,13 +28,9 @@ export default function useEnrichedUser(user) {
         like: 0,
         dislike: 0,
       };
-      const matchingItem = user.items?.find(
-        (item) => item.id === comment.itemID
-      );
       return {
         ...comment,
         reactionCounts,
-        item: matchingItem || null,
       };
     });
 

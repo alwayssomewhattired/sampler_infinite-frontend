@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useGetMyCommentsQuery,
   useGetSongsQuery,
@@ -242,12 +242,6 @@ export default function SingleUser({ me, setAudioId }) {
                   marginBottom: "5em",
                 }}
               >
-                <button
-                  className="button"
-                  onClick={() => deleteComment(item.comment.id)}
-                >
-                  Delete
-                </button>
                 {!updateMap[item.comment.id] && (
                   <button
                     className="button"
@@ -256,6 +250,12 @@ export default function SingleUser({ me, setAudioId }) {
                     Update
                   </button>
                 )}
+                <button
+                  className="button"
+                  onClick={() => deleteComment(item.comment.id)}
+                >
+                  Delete
+                </button>
                 {updateMap[item.comment.id] && (
                   <form onSubmit={(e) => commentInfo(e, item.comment.id)}>
                     <input

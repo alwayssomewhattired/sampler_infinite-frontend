@@ -27,7 +27,7 @@ const singleAudioApi = api.injectEndpoints({
         };
       },
     }),
-    reactionItemza: builder.mutation({
+    reactionItemToSingleAudio: builder.mutation({
       query: ({ itemID, reaction }) => {
         console.log("HEYEYEYEYEY");
         return {
@@ -96,5 +96,5 @@ export const {
   usePostCommentMutation,
   useGetReactionQuery,
   useReactionCommentMutation,
-  useReactionItemzaMutation,
+  useReactionItemToSingleAudioMutation,
 } = singleAudioApi;

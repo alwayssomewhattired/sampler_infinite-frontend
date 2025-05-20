@@ -38,8 +38,12 @@ const GranularSynthComponent = ({ me }) => {
 
   return (
     <>
+    <div
+        className="logo-container"
+      >
       <div className="logo">
         <h1 className="logo-text">SAMPLERINFINITE</h1>
+      </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar />}

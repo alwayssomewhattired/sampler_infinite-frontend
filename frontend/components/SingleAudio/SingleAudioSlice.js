@@ -15,25 +15,31 @@ const singleAudioApi = api.injectEndpoints({
       }),
     }),
     getUsers: builder.query({
-      query: ({ ids }) => ({
-        url: `api/users/allUserNamez`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ids }),
-      }),
+      query: ({ ids }) => {
+        console.log("HEYEYEYEYEY");
+        return {
+          url: `api/users/allUserNamez`,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ids }),
+        };
+      },
     }),
-    reactionItem: builder.mutation({
-      query: ({ itemID, reaction }) => ({
-        url: `api/items/reactionItem/${itemID}`,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: { reaction },
-      }),
+    reactionItemza: builder.mutation({
+      query: ({ itemID, reaction }) => {
+        console.log("HEYEYEYEYEY");
+        return {
+          url: `api/items/reactionItem/${itemID}`,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: { reaction },
+        };
+      },
     }),
     postComment: builder.mutation({
       query: ({ itemId, commentText }) => ({
@@ -90,5 +96,5 @@ export const {
   usePostCommentMutation,
   useGetReactionQuery,
   useReactionCommentMutation,
-  useReactionItemMutation,
+  useReactionItemzaMutation,
 } = singleAudioApi;

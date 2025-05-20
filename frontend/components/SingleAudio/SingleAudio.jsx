@@ -2,7 +2,7 @@ import {
   usePostRepliesMutation,
   usePostCommentMutation,
   useReactionCommentMutation,
-  useReactionItemMutation,
+  useReactionItemzaMutation,
 } from "./SingleAudioSlice";
 import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { useState } from "react";
@@ -44,7 +44,7 @@ export default function SingleItem({ audioId, me }) {
 
   const [createReactionMutation] = useReactionCommentMutation();
 
-  const [createItemReactionMutation] = useReactionCommentMutation();
+  const [reactionItemzaMutation] = useReactionItemzaMutation();
 
   const likeComment = async (commentID) => {
     try {
@@ -73,21 +73,24 @@ export default function SingleItem({ audioId, me }) {
   const dislikeItem = async (id) => {
     try {
       const itemID = id;
-      const response = await createItemReactionMutation({
+      const response = await reactionItemzaMutation({
         itemID,
-        reaction: "like",
+        reaction: "dislike",
       }).unwrap();
+      await refetchAll();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const likeItem = async (itemID) => {
+  const likeItem = async (id) => {
     try {
-      const response = await createItemReactionMutation({
+      const itemID = id;
+      const response = await reactionItemzaMutation({
         itemID,
-        reaction: "dislike",
+        reaction: "like",
       }).unwrap();
+      await refetchAll();
     } catch (error) {
       console.error(error);
     }

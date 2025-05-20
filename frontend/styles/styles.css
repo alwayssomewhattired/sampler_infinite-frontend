@@ -200,12 +200,17 @@ body {
   color: #00ff04;
 }
 
+.logo-container {
+  width: 50%;
+  justify-content: center;
+  margin-left: 30em;
+}
+
 .logo {
   position: absolute;
   top: 0;
-  z-index: 10;
   text-align: center;
-  width: 100%;
+  width: 50%;
   font-family: "myLogo", sans-serif;
   font-size: xx-large;
 }

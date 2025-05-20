@@ -6,6 +6,7 @@ export default function CommentSection({
   indent = 0,
   user,
   reaction,
+  profileHandle,
   activeReplyId,
   setActiveReplyId,
   replyText,
@@ -33,11 +34,22 @@ export default function CommentSection({
               maxWidth: "2em",
               maxHeight: "2em",
               marginRight: "0.5em",
+              cursor: "pointer",
             }}
+            onClick={() => profileHandle(comment.userID)}
             src={comment.user.photoId}
             alt="Profile"
           />
-          {user ? `${user.username}` : "Unknown User"}
+          {user ? (
+            <h4
+              style={{ cursor: "pointer" }}
+              onClick={() => profileHandle(comment.userID)}
+            >
+              {user.username}
+            </h4>
+          ) : (
+            "Unknown User"
+          )}
         </div>
         <h5 className="text">{comment.commentText}</h5>
 
@@ -91,6 +103,7 @@ export default function CommentSection({
             indent={indent + 30}
             user={child.user}
             reaction={reaction}
+            profileHandle={profileHandle}
             activeReplyId={activeReplyId}
             setActiveReplyId={setActiveReplyId}
             replyText={replyText}

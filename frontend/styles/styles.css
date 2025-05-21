@@ -156,6 +156,7 @@ body {
   font-family: "MyHeader";
   src: url("../GlofinDemoBlack-xRJVK.ttf") format("truetype");
 }
+
 .neu {
   background: hsl(0, 0%, 0%);
   border-radius: 20px;

@@ -2,6 +2,8 @@ import { useMemo } from "react";
 
 export default function useEnrichedUser(user) {
   const enrichedUser = useMemo(() => {
+    if (!user) return null;
+
     // 1. COMMENT REACTIONS
     const commentReactions = user.comments?.flatMap(
       (comment) => comment.reactions

@@ -4,15 +4,17 @@ import {
   useGetMyCommentsQuery,
   useGetSongsQuery,
   useGetUserQuery,
+  useGetSelfToSingleUserQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   useCreatePhotoMutation,
   useCreatePhotoDBMutation,
 } from "./SingleUserSlice";
 import ProfilePhoto from "./ProfilePhoto";
+import CustomAudioPlayer from "../Layout/CustomAudioPlayer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
-
+import useEnrichedUser from "../../utils/useEnrichedUser";
 import Sidebar from "../Layout/Sidebar";
 import "./../../styles/styles.css";
 
@@ -20,6 +22,19 @@ export default function SingleUser({ me, setAudioId }) {
   const navigate = useNavigate();
 
   const { data: userInfo, isSuccess: userInfoReady } = useGetUserQuery();
+
+  const [user, setUser] = useState();
+  const {
+    data: selfData,
+    isSuccess: isSelf,
+    refetch,
+  } = useGetSelfToSingleUserQuery();
+  useEffect(() => {
+    if (isSelf) {
+      setUser(selfData);
+      console.log("selfData", selfData);
+    }
+  }, [isSelf, selfData]);
 
   const { data: commentData, isSuccess: isReady } = useGetMyCommentsQuery();
 
@@ -68,9 +83,8 @@ export default function SingleUser({ me, setAudioId }) {
 
   const deleteComment = async (commentId) => {
     try {
-      window.location.reload();
       const response = await createDeleteCommentMutation(commentId);
-      navigate("/singleUser");
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -79,12 +93,11 @@ export default function SingleUser({ me, setAudioId }) {
   const commentInfo = async (e, commentId) => {
     e.preventDefault();
     try {
-      window.location.reload();
       const response = await createUpdateCommentMutation({
         commentId,
         commentText,
       });
-      navigate("/singleUser");
+      await refetch();
     } catch (error) {
       console.error(error);
     }
@@ -118,7 +131,8 @@ export default function SingleUser({ me, setAudioId }) {
     }
   }
 
-  const handleCommentClick = (audioId) => {
+  const handleContentClick = (audioId) => {
+    console.log("audio id", audioId);
     setAudioId(audioId);
     navigate("/singleAudio");
   };
@@ -179,6 +193,9 @@ export default function SingleUser({ me, setAudioId }) {
     );
   };
 
+  const enrichedUser = useEnrichedUser(user);
+  console.log("enrichedUser", enrichedUser);
+
   return (
     <>
       <div className="two-column-layout">
@@ -186,8 +203,13 @@ export default function SingleUser({ me, setAudioId }) {
         <div className="right">
           <h1 className="text">Your Account</h1>
           <ProfilePhoto />
-          <h3 className="text">{userName}</h3>
-          <h3 className="text">{email}</h3>
+          {enrichedUser && user && (
+            <>
+              <h2 className="text">{enrichedUser.username}</h2>
+              <h2 className="text">{enrichedUser.email}</h2>
+              <h6 className="text">{enrichedUser.created_at}</h6>
+            </>
+          )}
           {profileUploader()}
           <button
             className="button"
@@ -197,10 +219,13 @@ export default function SingleUser({ me, setAudioId }) {
             Change Information
           </button>
           <div>
-            <h2 className="text">Comments</h2>
+            <h2 className="text">sampledinfinites</h2>
           </div>
-          {arr.map((item, index) => (
-            <li key={index}>
+          {enrichedUser?.items?.map((audio) => (
+            <div
+              key={audio.id}
+              style={{ marginBottom: "1em", marginRight: "6.5em" }}
+            >
               <h3
                 className="text"
                 style={{
@@ -208,22 +233,20 @@ export default function SingleUser({ me, setAudioId }) {
                   justifyContent: "center",
                   alignItems: "center",
                   textDecoration: "underline",
+                  cursor: "pointer",
                 }}
-                onClick={() => handleCommentClick(item.song.id)}
-              >{`On: ${item.song.name}`}</h3>
-              <h3
-                className="text"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+                onClick={() => handleContentClick(audio.id)}
               >
-                {item.comment.commentText}
+                {audio.name}
               </h3>
+              <div style={{ marginRight: "2em" }}>
+                <CustomAudioPlayer
+                  src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${audio.id}`}
+                />
+              </div>
               <div className="row-container">
                 <h1 className="text" style={{ fontSize: "1em" }}>
-                  {item.likes}
+                  {audio.reactionCounts.like}
                 </h1>
                 <FontAwesomeIcon icon={faThumbsUp} style={{ color: "white" }} />
                 <FontAwesomeIcon
@@ -231,43 +254,92 @@ export default function SingleUser({ me, setAudioId }) {
                   style={{ color: "white" }}
                 />
                 <h1 className="error" style={{ fontSize: "1em" }}>
-                  {item.dislikes}
+                  {audio.reactionCounts.dislike}
                 </h1>
               </div>
+            </div>
+          ))}
+          <h2 className="text">Comments</h2>
+          {enrichedUser?.comments?.map((comment) => {
+            return (
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginBottom: "5em",
-                }}
+                key={comment.id}
+                style={{ marginBottom: "1em", marginRight: "0em" }}
               >
-                {!updateMap[item.comment.id] && (
+                <h3
+                  className="text"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleContentClick(comment.itemID)}
+                >
+                  On: {comment.item?.name || "Unknown Item"}
+                </h3>
+                <h3
+                  className="text"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  {comment.commentText}
+                </h3>
+                <div className="row-container">
+                  <h1 className="text" style={{ fontSize: "1em" }}>
+                    {comment.reactionCounts.like}
+                  </h1>
+                  <FontAwesomeIcon
+                    icon={faThumbsUp}
+                    style={{ color: "white" }}
+                  />
+                  <FontAwesomeIcon
+                    icon={faThumbsDown}
+                    style={{ color: "white" }}
+                  />
+                  <h1 className="error" style={{ fontSize: "1em" }}>
+                    {comment.reactionCounts.dislike}
+                  </h1>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: "5em",
+                  }}
+                >
+                  {!updateMap[comment.id] && (
+                    <button
+                      className="button"
+                      onClick={() => toggleUpdate(comment.id)}
+                    >
+                      Update
+                    </button>
+                  )}
                   <button
                     className="button"
-                    onClick={() => toggleUpdate(item.comment.id)}
+                    onClick={() => deleteComment(comment.id)}
                   >
-                    Update
+                    Delete
                   </button>
-                )}
-                <button
-                  className="button"
-                  onClick={() => deleteComment(item.comment.id)}
-                >
-                  Delete
-                </button>
-                {updateMap[item.comment.id] && (
-                  <form onSubmit={(e) => commentInfo(e, item.comment.id)}>
-                    <input
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                    />
-                    <button className="button">Submit Update</button>
-                  </form>
-                )}
+                  {updateMap[comment.id] && (
+                    <form onSubmit={(e) => commentInfo(e, comment.id)}>
+                      <input
+                        value={commentText}
+                        onChange={(e) => setCommentText(e.target.value)}
+                      />
+                      <button className="button">Submit Update</button>
+                    </form>
+                  )}
+                </div>
               </div>
-            </li>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>

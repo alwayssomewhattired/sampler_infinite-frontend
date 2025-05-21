@@ -2,6 +2,16 @@ import api from "../../store/api";
 
 const singleUserApi = api.injectEndpoints({
   endpoints: (builder) => ({
+    getSelfToSingleUser: builder.query({
+      query: () => ({
+        url: `/api/users/aboutSelf`,
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }),
+    }),
     getMyComments: builder.query({
       query: () => ({
         url: `api/comments/me`,
@@ -68,16 +78,6 @@ const singleUserApi = api.injectEndpoints({
         body: photoId,
       }),
     }),
-    // getMyReviews: builder.query({
-    //   query: () => ({
-    //     url: "/api/reviews/me",
-    //     method: "GET",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*",
-    //     },
-    //   }),
-    // }),
   }),
 });
 
@@ -85,6 +85,7 @@ export const {
   useGetMyCommentsQuery,
   useGetSongsQuery,
   useGetUserQuery,
+  useGetSelfToSingleUserQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
   useCreatePhotoMutation,

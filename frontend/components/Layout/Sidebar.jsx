@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import "./../../styles/styles.css";
 
-
-
 export default function Sidebar() {
   return (
     <div className="sidebar menu-l neu">
@@ -31,6 +29,11 @@ export default function Sidebar() {
         <li>
           <Link className="neu" to="/granularSynth">
             Granular Synth
+          </Link>
+        </li>
+        <li>
+          <Link to="/aboutAuthor" className="neu">
+            About The Author
           </Link>
         </li>
       </ul>

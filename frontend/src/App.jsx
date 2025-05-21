@@ -15,6 +15,7 @@ import AudioCreator from "../components/AudioCreator/AudioCreator";
 import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
 import AudioUploader from "../components/AudioUploader/AudioUploader";
 import SamplerApp from "../components/GranularInfinite/GranularInfinite";
+import AboutAuthor from "../components/AboutAuthor/AboutAuthor";
 
 function App() {
   const [me, setMe] = useState(() => {
@@ -113,6 +114,7 @@ function App() {
             element={<AudioUploader newAudio={newAudio} me={me} />}
           />
           <Route path="/granularInfinite" element={<SamplerApp me={me} />} />
+          <Route path="/aboutAuthor" element={<AboutAuthor me={me} />} />
         </Routes>
       </BrowserRouter>
     </Provider>

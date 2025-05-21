@@ -55,6 +55,14 @@ export default function Home({ me }) {
                   Granular Synth
                 </Link>
               </li>
+              <div className="center">
+                <h3 className="text">Information about the master-genius</h3>
+              </div>
+              <li style={{ marginRight: "2em" }}>
+                <Link to="/aboutAuthor" className="neu card">
+                  About The Author
+                </Link>
+              </li>
             </ul>
 
             <div className="neu main">

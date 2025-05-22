@@ -218,6 +218,7 @@ body {
 
 .logo-text {
   color: hsl(119, 100%, 50%);
+  cursor: pointer;
 }
 
 .button {

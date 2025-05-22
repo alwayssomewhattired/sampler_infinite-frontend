@@ -1,10 +1,12 @@
 import { useState, useRef } from "react";
 import { GranularSynth } from "./GranularSynthClass";
+import { useNavigate } from "react-router-dom";
 import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 import "./../../styles/styles.css";
 
 const GranularSynthComponent = ({ me }) => {
+  const navigate = useNavigate();
   const audioContextRef = useRef(
     new (window.AudioContext || window.webkitAudioContext)()
   );
@@ -38,12 +40,12 @@ const GranularSynthComponent = ({ me }) => {
 
   return (
     <>
-    <div
-        className="logo-container"
-      >
-      <div className="logo">
-        <h1 className="logo-text">SAMPLERINFINITE</h1>
-      </div>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar />}

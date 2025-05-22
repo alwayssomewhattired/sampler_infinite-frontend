@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import * as Tone from "tone";
 import { useDropzone } from "react-dropzone";
 import classNames from "classnames";
@@ -25,7 +25,6 @@ const SamplerApp = ({ me }) => {
   const [grainInterval, setGrainInterval] = useState({});
 
   const block1 = useRef(false); // This persists across renders
-  console.log(block1);
 
   // Granular synth parameters
   const [grainSize, setGrainSize] = useState(0.05); // Grain size in seconds

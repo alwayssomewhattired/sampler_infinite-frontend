@@ -56,7 +56,7 @@ export default function Home({ me }) {
                 </Link>
               </li>
               <div className="center">
-                <h3 className="text">Information about the master-genius</h3>
+                <h3 className="text">Information about the creator</h3>
               </div>
               <li style={{ marginRight: "2em" }}>
                 <Link to="/aboutAuthor" className="neu card">

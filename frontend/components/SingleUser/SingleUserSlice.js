@@ -12,27 +12,6 @@ const singleUserApi = api.injectEndpoints({
         },
       }),
     }),
-    getMyComments: builder.query({
-      query: () => ({
-        url: `api/comments/me`,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }),
-    }),
-    // itemIds in query instead of params!
-    getSongs: builder.query({
-      query: (itemIds) => ({
-        url: `/api/items/specificItems?itemIds=${itemIds?.join(",")}`,
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }),
-    }),
     getUser: builder.query({
       query: () => ({
         url: "/api/users/aboutMe",
@@ -82,8 +61,6 @@ const singleUserApi = api.injectEndpoints({
 });
 
 export const {
-  useGetMyCommentsQuery,
-  useGetSongsQuery,
   useGetUserQuery,
   useGetSelfToSingleUserQuery,
   useUpdateCommentMutation,

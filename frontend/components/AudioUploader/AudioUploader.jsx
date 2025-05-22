@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function AudioUploader({ newAudio, me }) {
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
-  const [createAudioMutation, isSuccess, error] = usePostAudioMutation();
+  const [createAudioMutation, error] = usePostAudioMutation();
 
   const id = newAudio;
   const user = me;

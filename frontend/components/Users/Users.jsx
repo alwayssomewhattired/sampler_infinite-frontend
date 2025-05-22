@@ -19,23 +19,27 @@ export default function Users({ profileId, setAudioId, me }) {
   useEffect(() => {
     if (isProfileData) {
       setUser(profileData);
-      console.log("profileData", profileData);
     }
   }, [isProfileData, profileData]);
 
   const handleContentClick = (audioId) => {
-    console.log("audio id", audioId);
     setAudioId(audioId);
     navigate("/singleAudio");
   };
 
   const enrichedUser = useEnrichedUser(user);
-  console.log(enrichedUser);
   return (
     <>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
+      </div>
       <div className="two-column-layout">
         {<Sidebar />}
-        <div className="right" style={{ marginLeft: "10em" }}>
+        <div className="right" style={{ marginLeft: "8%", marginTop: "6.5%" }}>
           {user && enrichedUser && (
             <li key={enrichedUser.id}>
               <div style={{ display: "flex", gap: "1em" }}>

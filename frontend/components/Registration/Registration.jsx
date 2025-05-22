@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useAddUserMutation } from "./RegistrationSlice";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../Layout/Sidebar";
+import Account from "../Layout/Account";
 
 import "./../../styles/styles.css";
 
@@ -66,55 +68,63 @@ export default function Registration({ setMe }) {
 
   return (
     <>
-      <div className="top-menu">
-        <Link className="neu" to="/">
-          Home
-        </Link>
-        <Link className="neu" to="/login">
-          Login
-        </Link>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
       </div>
-      <h1 className="text" style={{ textAlign: "center" }}>
-        Registration
-      </h1>
-      ;
-      <div className="container">
-        <form onSubmit={registerInfo} className="container">
-          <label className="text">
-            Username
-            <input
-              style={{ margin: "2em" }}
-              name="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-          <label className="text">
-            Email
-            <input
-              style={{ margin: "2em" }}
-              name="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </label>
-          <label className="text">
-            Password
-            <input
-              style={{ margin: "2em" }}
-              name="Password"
-              value={normal_password}
-              onChange={(e) => setNormal_Password(e.target.value)}
-            />
-          </label>
-          <button className="button">Register</button>
-          {isLoading && <output className="text">Creating user...</output>}
-          {error && (
-            <output className="error">
-              Error creating user {error.message}
-            </output>
-          )}
-        </form>
+      <div className="two-column-layout">
+        {<Sidebar />}
+        <div
+          className="center"
+          style={{ marginLeft: "23%", marginTop: "6.5em" }}
+        >
+          <h1
+            className="text"
+            style={{ textAlign: "center", marginBottom: "1em" }}
+          >
+            Registration
+          </h1>
+          <form onSubmit={registerInfo} className="container">
+            <label className="text">
+              Username
+              <input
+                style={{ margin: "2em" }}
+                name="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </label>
+            <label className="text">
+              Email
+              <input
+                style={{ margin: "2em" }}
+                name="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </label>
+            <label className="text">
+              Password
+              <input
+                style={{ margin: "2em" }}
+                name="Password"
+                value={normal_password}
+                onChange={(e) => setNormal_Password(e.target.value)}
+              />
+            </label>
+            <button className="button">Register</button>
+            {isLoading && <output className="text">Creating user...</output>}
+            {error && (
+              <output className="error">
+                Error creating user {error.message}
+              </output>
+            )}
+          </form>
+        </div>
+        <div style={{ marginLeft: "22%" }}>{<Account />}</div>
       </div>
     </>
   );

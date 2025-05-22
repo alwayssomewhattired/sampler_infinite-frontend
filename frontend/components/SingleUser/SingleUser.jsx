@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  useGetMyCommentsQuery,
-  useGetSongsQuery,
-  useGetUserQuery,
   useGetSelfToSingleUserQuery,
   useUpdateCommentMutation,
   useDeleteCommentMutation,
@@ -21,8 +18,6 @@ import "./../../styles/styles.css";
 export default function SingleUser({ me, setAudioId }) {
   const navigate = useNavigate();
 
-  const { data: userInfo, isSuccess: userInfoReady } = useGetUserQuery();
-
   const [user, setUser] = useState();
   const {
     data: selfData,
@@ -32,54 +27,17 @@ export default function SingleUser({ me, setAudioId }) {
   useEffect(() => {
     if (isSelf) {
       setUser(selfData);
-      console.log("selfData", selfData);
     }
   }, [isSelf, selfData]);
 
-  const { data: commentData, isSuccess: isReady } = useGetMyCommentsQuery();
-
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
-  const [songs, setSongs] = useState([]);
 
-  let [itemIds, setItemIds] = useState([]);
-
-  const [createDeleteCommentMutation] = useDeleteCommentMutation(comments.id);
+  const [createDeleteCommentMutation] = useDeleteCommentMutation();
 
   const [createUpdateCommentMutation] = useUpdateCommentMutation();
 
   const [createPhotoMutation] = useCreatePhotoMutation();
   const [createPhotoDBMutation] = useCreatePhotoDBMutation();
-
-  useEffect(() => {
-    if (userInfoReady) {
-      setUserName(userInfo.username);
-      setEmail(userInfo.email);
-    }
-  }, [userInfoReady, userInfo]);
-
-  // Wait until commentData is ready
-  useEffect(() => {
-    if (isReady && commentData.length > 0) {
-      setComments(commentData);
-
-      const ids = commentData.map((a) => a.itemID);
-      setItemIds(ids); // <- update state
-    }
-  }, [isReady, commentData]);
-
-  // Now call useGetSongsQuery only after itemId is set
-  const { data: songData, isSuccess: songSuccess } = useGetSongsQuery(itemIds, {
-    skip: !itemIds || itemIds.length === 0,
-  });
-
-  useEffect(() => {
-    if (songSuccess) {
-      setSongs(songData);
-    }
-  }, [songSuccess, songData]);
 
   const deleteComment = async (commentId) => {
     try {
@@ -112,27 +70,7 @@ export default function SingleUser({ me, setAudioId }) {
     }));
   };
 
-  let arr = [];
-
-  if (songs.length !== 0 && comments.length !== 0) {
-    for (let i = 0; i < comments.length; i++) {
-      const comment = comments[i];
-      const likes = comments[i].reactions.filter(
-        (e) => e.reactionType == "like"
-      ).length;
-      const dislikes = comments[i].reactions.filter(
-        (e) => e.reactionType == "dislike"
-      ).length;
-      const matchingSong = songs.find((song) => song.id === comment.itemID);
-
-      if (matchingSong) {
-        arr.push({ song: matchingSong, comment, likes, dislikes });
-      }
-    }
-  }
-
   const handleContentClick = (audioId) => {
-    console.log("audio id", audioId);
     setAudioId(audioId);
     navigate("/singleAudio");
   };
@@ -194,13 +132,22 @@ export default function SingleUser({ me, setAudioId }) {
   };
 
   const enrichedUser = useEnrichedUser(user);
-  console.log("enrichedUser", enrichedUser);
 
   return (
     <>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
+      </div>
       <div className="two-column-layout">
         {<Sidebar />}
-        <div className="right">
+        <div
+          className="right"
+          style={{ marginRight: "12.5%", marginTop: "6.5%" }}
+        >
           <h1 className="text">Your Account</h1>
           <ProfilePhoto />
           {enrichedUser && user && (

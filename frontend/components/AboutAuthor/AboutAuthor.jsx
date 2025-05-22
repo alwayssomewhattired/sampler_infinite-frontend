@@ -1,5 +1,6 @@
 import Sidebar from "../Layout/Sidebar";
 import Account from "../Layout/Account";
+import ZachPhoto from "./ZachPhoto.jpg";
 
 export default function AboutAuthor({ me }) {
   const stats = [
@@ -12,7 +13,6 @@ export default function AboutAuthor({ me }) {
     "AWS",
     "RTK",
   ];
-  console.log("hello world");
 
   return (
     <>
@@ -27,9 +27,14 @@ export default function AboutAuthor({ me }) {
             height: "100%",
           }}
         >
-          <h1 className="text" style={{ fontFamily: "monospace" }}>
-            Name:{" "}
-          </h1>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <h1 className="text" style={{ fontFamily: "monospace" }}>
+              Name:{" "}
+            </h1>
+            <div style={{ marginLeft: "47%", position: "absolute" }}>
+              <img src={ZachPhoto} style={{ height: "15em" }} />
+            </div>
+          </div>
           <h2 className="text" style={{ fontFamily: "monospace" }}>
             Zachary Malinka
           </h2>
@@ -59,11 +64,12 @@ export default function AboutAuthor({ me }) {
             my project that is hosted on AWS. My Frontend is built with React,
             RTK, and JavaScript. My backend is made with Express and Node.js,
             with a Prisma wrapper for high-level SQL creation. The
-            samplerinfinite audio processor is built using C++. All three are
-            ran on ec2 instances for user interaction + enjoyment (did I mention
-            it includes a user-base?). I run Python Lamda functions to help
-            handle requests, and I use REST and WebSockets to communicate across
-            my servers for other servers or to trigger Lambda functions.
+            samplerinfinite audio processor is built using C++. All three
+            components run on EC2 instances to support user interaction and
+            provide an engaging experience. This project also supports a user
+            base. I run Python Lambda functions to help handle requests, and I
+            use REST and WebSockets to communicate across my servers for other
+            servers or to trigger Lambda functions.
           </h2>
           <h1 className="text" style={{ fontFamily: "monospace" }}>
             Links
@@ -75,7 +81,7 @@ export default function AboutAuthor({ me }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Frontend
+              Frontend (React)
             </a>
             <a
               className="text"
@@ -83,7 +89,7 @@ export default function AboutAuthor({ me }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Backend
+              Backend (Node.js + Prisma)
             </a>
             <a
               className="text"
@@ -91,7 +97,7 @@ export default function AboutAuthor({ me }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Audio Processor
+              Audio Processor (C++)
             </a>
           </div>
         </div>

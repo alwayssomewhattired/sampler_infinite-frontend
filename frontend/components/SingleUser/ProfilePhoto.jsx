@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { useGetUserQuery } from "./SingleUserSlice";
 
@@ -44,8 +43,6 @@ const ProfilePhoto = () => {
   const defaultUrl =
     "https://samplerinfinite-default-photos.s3.us-east-2.amazonaws.com";
 
-  const specificUrl =
-    "https://samplerinfinite-profile-photos.s3.us-east-2.amazonaws.com";
 
   const randomPhoto =
     defaultPhotos[Math.floor(Math.random() * defaultPhotos.length)];

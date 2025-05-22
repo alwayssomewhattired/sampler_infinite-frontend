@@ -233,11 +233,11 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
   return (
     <>
-          <div
-        className="logo-container"
-      >
-      <div className="logo">
-        <h1 className="logo-text">SAMPLERINFINITE</h1>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
         </div>
       </div>
       <div className="three-column-layout">

@@ -18,7 +18,6 @@ export default function Audio({ setAudioId, me, setProfileId }) {
   useEffect(() => {
     if (isSuccess) {
       setSongs(myData);
-      console.log(myData);
     }
   }, [myData]);
 
@@ -75,11 +74,11 @@ export default function Audio({ setAudioId, me, setProfileId }) {
 
   return (
     <>
-      <div
-        className="logo-container"
-      >
+      <div className="logo-container">
         <div className="logo">
-          <h1 className="logo-text">SAMPLERINFINITE</h1>
+          <h1 className="logo-text" onClick={()=>navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
         </div>
       </div>
       <div className="three-column-layout">

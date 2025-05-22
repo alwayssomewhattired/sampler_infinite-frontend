@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   useGetUserQuery,
   useUpdateEmailMutation,
@@ -7,6 +7,7 @@ import {
   useUpdatePasswordMutation,
 } from "./AccountChangeSlice";
 import Sidebar from "../Layout/Sidebar";
+import Account from "../Layout/Account";
 
 let emailSuccess = false;
 let usernameSuccess = false;
@@ -14,8 +15,8 @@ let passwordSuccess = false;
 
 export default function AccountChange({ me }) {
   const token = sessionStorage.getItem("token");
+  const navigate = useNavigate();
 
-  const [cred, setCred] = useState([]);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [normal_password, setNormal_Password] = useState("");
@@ -26,16 +27,10 @@ export default function AccountChange({ me }) {
   const [changeUsername, setChangeUsername] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
 
-  const { data: myData, isLoading, isSuccess } = useGetUserQuery({ token, id });
+  const { data: myData } = useGetUserQuery({ token, id });
   const [createUpdateEmailMutation] = useUpdateEmailMutation();
   const [createUpdateUsernameMutation] = useUpdateUsernameMutation();
   const [createUpdatePasswordMutation] = useUpdatePasswordMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      setCred(myData);
-    }
-  }, [isSuccess]);
 
   const changeEmailInfo = async (emailEvent) => {
     emailEvent.preventDefault();
@@ -81,9 +76,16 @@ export default function AccountChange({ me }) {
 
   return (
     <>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
+      </div>
       <div className="two-column-layout">
         {<Sidebar />}
-        <div className="right" style={{ marginTop: "10em" }}>
+        <div className="right" style={{ marginTop: "10em", marginLeft: "3%" }}>
           {myData && (
             <>
               <h3 className="text">Email</h3>
@@ -176,6 +178,7 @@ export default function AccountChange({ me }) {
             </>
           )}
         </div>
+        {<Account me={me} />}
       </div>
     </>
   );

@@ -15,7 +15,6 @@ const singleUserApi = api.injectEndpoints({
       providesTags: ["User"],
     }),
     updateEmail: builder.mutation({
-      //I don't know if all of these things belong in the query
       query: ({ token, id, email }) => ({
         url: `/api/users/${id}/email`,
         method: "PUT",
@@ -32,7 +31,6 @@ const singleUserApi = api.injectEndpoints({
       invalidatesTags: ["User"],
     }),
     updateUsername: builder.mutation({
-      //I don't know if all of these things belong in the query
       query: ({ token, id, username }) => ({
         url: `/api/users/${id}/username`,
         method: "PUT",
@@ -49,7 +47,6 @@ const singleUserApi = api.injectEndpoints({
       invalidatesTags: ["User"],
     }),
     updatePassword: builder.mutation({
-      //I don't know if all of these things belong in the query
       query: ({ token, id, normal_password }) => ({
         url: `/api/users/${id}/password`,
         method: "PUT",

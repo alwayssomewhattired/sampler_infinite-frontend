@@ -16,7 +16,6 @@ const singleAudioApi = api.injectEndpoints({
     }),
     getUsers: builder.query({
       query: ({ ids }) => {
-        console.log("HEYEYEYEYEY");
         return {
           url: `api/users/allUserNamez`,
           method: "POST",
@@ -29,7 +28,6 @@ const singleAudioApi = api.injectEndpoints({
     }),
     reactionItemToSingleAudio: builder.mutation({
       query: ({ itemID, reaction }) => {
-        console.log("HEYEYEYEYEY");
         return {
           url: `api/items/reactionItem/${itemID}`,
           method: "POST",

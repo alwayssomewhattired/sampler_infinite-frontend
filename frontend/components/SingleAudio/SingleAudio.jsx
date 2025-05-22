@@ -33,7 +33,6 @@ export default function SingleItem({ audioId, me, setProfileId }) {
     refetchAll,
   } = useSingleAudio(audioId);
 
-  console.log("song", song);
 
   const [createCommentMutation, { isLoading, error }] =
     usePostCommentMutation();
@@ -49,7 +48,6 @@ export default function SingleItem({ audioId, me, setProfileId }) {
 
   const profileHandle = (profileId) => {
     try {
-      console.log("profileId", profileId);
       setProfileId(profileId);
       navigate("/users");
     } catch (error) {
@@ -218,19 +216,18 @@ export default function SingleItem({ audioId, me, setProfileId }) {
   // end of ugly mess
 
   const enrichedItem = useEnrichedItem(song);
-  console.log(enrichedItem);
 
   return (
     <>
-         <div className="logo-container">
-      <div className="logo">
-        <h1 className="logo-text">SAMPLERINFINITE</h1>
-      </div>
+      <div className="logo-container">
+        <div className="logo">
+          <h1 className="logo-text" onClick={() => navigate("/")}>
+            SAMPLERINFINITE
+          </h1>
+        </div>
       </div>
       <div className="three-column-layout">
         {<Sidebar me={me} />}
-
-        {/* Center: Audio/Comments */}
         <main className="center-content">
           {enrichedItem && (
             <>
@@ -327,10 +324,6 @@ export default function SingleItem({ audioId, me, setProfileId }) {
             )}
             {unauthorize && <output className="error">{unauthorize}</output>}
           </form>
-
-          {/* //////////////////////////////////// This is comment stuff below////////////////////////////////////////////////////////////////               */}
-          {/*****/}
-          {/**/}
 
           {comments && comments.map((comment) => renderComment(comment))}
         </main>

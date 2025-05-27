@@ -4,11 +4,11 @@ After=network.target
 
 [Service]
 ExecStart=/home/ubuntu/sampler_infinite-frontend/git-auto-pull.sh
-Restart=always
 User=ubuntu
 WorkingDirectory=/home/ubuntu/sampler_infinite-frontend
 StandardOutput=append:/var/log/git-auto-pull.log
 StandardError=append:/var/log/git-auto-pull.log
+Restart=on-failure
 
 [Install]
 WantedBy=multi.user.target

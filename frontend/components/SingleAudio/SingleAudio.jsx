@@ -33,7 +33,6 @@ export default function SingleItem({ audioId, me, setProfileId }) {
     refetchAll,
   } = useSingleAudio(audioId);
 
-
   const [createCommentMutation, { isLoading, error }] =
     usePostCommentMutation();
   const [commentText, setCommentText] = useState("");
@@ -271,7 +270,7 @@ export default function SingleItem({ audioId, me, setProfileId }) {
                   >
                     <div className="row-container">
                       <h1 className="text" style={{ fontSize: "1em" }}>
-                        {enrichedItem.itemReactionSum[0].like}
+                        {enrichedItem.itemReactionSum[0]?.like}
                       </h1>
                       <FontAwesomeIcon
                         icon={faThumbsUp}
@@ -282,7 +281,7 @@ export default function SingleItem({ audioId, me, setProfileId }) {
                         style={{ color: "white" }}
                       />
                       <h1 className="error" style={{ fontSize: "1em" }}>
-                        {enrichedItem.itemReactionSum[0].dislike}
+                        {enrichedItem.itemReactionSum[0]?.dislike}
                       </h1>
                       <button
                         className="button"

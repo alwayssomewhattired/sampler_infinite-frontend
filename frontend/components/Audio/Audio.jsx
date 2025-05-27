@@ -76,7 +76,7 @@ export default function Audio({ setAudioId, me, setProfileId }) {
     <>
       <div className="logo-container">
         <div className="logo">
-          <h1 className="logo-text" onClick={()=>navigate("/")}>
+          <h1 className="logo-text" onClick={() => navigate("/")}>
             SAMPLERINFINITE
           </h1>
         </div>
@@ -92,40 +92,51 @@ export default function Audio({ setAudioId, me, setProfileId }) {
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "center",
-                      marginBottom: "-4.5em",
-                    }}
-                  >
-                    <h2 className="text">{song.name}</h2>
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
                       alignItems: "center",
-                      fontStyle: "italic",
+                      justifyContent: "space-between",
+                      position: "relative",
+                      width: "100%",
+                      padding: "0 1em",
                     }}
                   >
-                    <img
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                      }}
+                    >
+                      <h2 className="text">{song.name}</h2>
+                    </div>
+                    <div
                       style={{
                         display: "flex",
-                        maxWidth: "2em",
-                        maxHeight: "2em",
-                        marginRight: "0.5em",
-                        cursor: "pointer",
+                        alignItems: "center",
+                        fontStyle: "italic",
+                        marginLeft: "20em",
                       }}
-                      onClick={() => profileHandle(song.user)}
-                      src={song.User.photoId}
-                      alt="Profile"
-                    />
-                    <h2
-                      className="text"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => profileHandle(song.user)}
                     >
-                      {song.User.username}
-                    </h2>
+                      <img
+                        style={{
+                          maxWidth: "2em",
+                          maxHeight: "2em",
+                          marginRight: "0.5em",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => profileHandle(song.user)}
+                        src={song.User.photoId}
+                        alt="Profile"
+                      />
+                      <h2
+                        className="text"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => profileHandle(song.user)}
+                      >
+                        {song.User.username}
+                      </h2>
+                    </div>
                   </div>
+
                   <CustomAudioPlayer
                     src={`https://firstdemoby.s3.us-east-2.amazonaws.com/${song.id}`}
                   />

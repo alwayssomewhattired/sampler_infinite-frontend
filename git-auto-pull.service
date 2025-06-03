@@ -6,7 +6,7 @@ After=network.target
 ExecStart=/home/ubuntu/sampler_infinite-frontend/git-auto-pull.sh
 User=ubuntu
 WorkingDirectory=/home/ubuntu/sampler_infinite-frontend
-Environment="PATH=/home/ubuntu/sampler_infinite-frontend/frontend/node_modules"
+Environment="PATH=/usr/bin:/usr/local/bin:/bin"
 StandardOutput=append:/var/log/git-auto-pull.log
 StandardError=append:/var/log/git-auto-pull.log
 Restart=on-failure

@@ -6,6 +6,9 @@ import Sidebar from "../Layout/Sidebar";
 import { noteToFreq } from "../../utils/noteToFreq";
 import "./../../styles/styles.css";
 
+//////////////////TODO
+// UNTRACK API FILES IN AUDIOCREATOR AND AUDIOUPLOADER
+
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);

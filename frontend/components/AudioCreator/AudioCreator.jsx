@@ -70,6 +70,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
     socket2.onmessage = (event) => {
       // Receive and display messages from the WebSocket server
+      console.log(event);
     };
 
     socket2.onerror = (error) => {

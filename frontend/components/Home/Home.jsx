@@ -6,7 +6,6 @@ import "./../../styles/styles.css";
 // import "./HomeStyle.css";
 
 export default function Home({ me }) {
-  console.log("IT'S ALIVE!!!!!!!");
   return (
     <>
       <div className="logo-container">

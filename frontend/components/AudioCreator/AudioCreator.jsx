@@ -20,41 +20,41 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
-  // i have two websocket connections. turn both into one in the future
-  useEffect(() => {
-    // Create WebSocket connection
-    const socket = new WebSocket(
-      "wss://plrgozahy9.execute-api.us-east-2.amazonaws.com/dev/"
-    ); // Replace with your WebSocket URL
+  // // i have two websocket connections. turn both into one in the future
+  // useEffect(() => {
+  //   // Create WebSocket connection
+  //   const socket = new WebSocket(
+  //     "wss://plrgozahy9.execute-api.us-east-2.amazonaws.com/dev/"
+  //   ); // Replace with your WebSocket URL
 
-    // Set up WebSocket event listeners
-    socket.onopen = () => {
-      setConnected(true);
-    };
+  //   // Set up WebSocket event listeners
+  //   socket.onopen = () => {
+  //     setConnected(true);
+  //   };
 
-    socket.onmessage = (event) => {
-      // Receive and display messages from the WebSocket server
-      const audioName = event.data.slice(1, -1);
-      setNewAudio(audioName);
-      setMessages((prevMessages) => [...prevMessages, event.data]);
-    };
+  //   socket.onmessage = (event) => {
+  //     // Receive and display messages from the WebSocket server
+  //     const audioName = event.data.slice(1, -1);
+  //     setNewAudio(audioName);
+  //     setMessages((prevMessages) => [...prevMessages, event.data]);
+  //   };
 
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+  //   socket.onerror = (error) => {
+  //     console.error("WebSocket error:", error);
+  //   };
 
-    socket.onclose = () => {
-      setConnected(false);
-    };
+  //   socket.onclose = () => {
+  //     setConnected(false);
+  //   };
 
-    // Set the WebSocket object in the state
-    setSocket(socket);
+  //   // Set the WebSocket object in the state
+  //   setSocket(socket);
 
-    // Clean up the WebSocket connection when the component unmounts
-    return () => {
-      socket.close();
-    };
-  }, []); // Empty dependency array to run the effect only once (on mount)
+  //   // Clean up the WebSocket connection when the component unmounts
+  //   return () => {
+  //     socket.close();
+  //   };
+  // }, []); // Empty dependency array to run the effect only once (on mount)
 
   // Second connection
   useEffect(() => {

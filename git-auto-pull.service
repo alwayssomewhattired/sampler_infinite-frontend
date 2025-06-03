@@ -7,8 +7,8 @@ ExecStart=/home/ubuntu/sampler_infinite-frontend/git-auto-pull.sh
 User=ubuntu
 WorkingDirectory=/home/ubuntu/sampler_infinite-frontend
 Environment="PATH=/usr/bin:/usr/local/bin:/bin"
-StandardOutput=append:/var/log/git-auto-pull.log
-StandardError=append:/var/log/git-auto-pull.log
+StandardOutput=journal
+StandardError=journal
 Restart=on-failure
 
 [Install]

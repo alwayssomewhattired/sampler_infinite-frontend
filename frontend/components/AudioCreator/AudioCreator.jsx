@@ -5,93 +5,49 @@ import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 import { noteToFreq } from "../../utils/noteToFreq";
 import "./../../styles/styles.css";
-
-//////////////////TODO
-// UNTRACK API FILES IN AUDIOCREATOR AND AUDIOUPLOADER
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
 
-  const [socket2, setSocket2] = useState(null);
+  // const [socket2, setSocket2] = useState(null);
   const [message2, setMessage2] = useState("control_change");
-  const [connected2, setConnected2] = useState(false);
+  // const [connected2, setConnected2] = useState(false);
 
   const [selectNote, setSelectNote] = useState("");
 
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
-  // // i have two websocket connections. turn both into one in the future
-  // useEffect(() => {
-  //   // Create WebSocket connection
-  //   const socket = new WebSocket(
-  //     "wss://plrgozahy9.execute-api.us-east-2.amazonaws.com/dev/"
-  //   ); // Replace with your WebSocket URL
+  const { socket: socket1, connected: connected1 } = useWebSocket(
+    "wss://plrgozahy9.execute-api.us-east-2.amazonaws.com/dev/",
+    {
+      onOpen: () => setConnected(true),
+      onMessage: (event) => {
+        const audioName = event.data.slice(1, -1);
+        setNewAudio(audioName);
+        setMessages((prev) => [...prev, event.data]);
+      },
+      onClose: () => setConnected(false),
+    }
+  );
 
-  //   // Set up WebSocket event listeners
-  //   socket.onopen = () => {
-  //     setConnected(true);
-  //   };
+  const { socket: socket2, connected: connected2 } = useWebSocket(
+    "wss://0wl8ctuh90.execute-api.us-east-2.amazonaws.com/production/",
+    {
+      onOpen: () => console.log("socket2 connected"),
+      onMessage: (event) => {
+        console.log("Message from socket2:", event);
+      },
+      onClose: () => console.log("socket2 disconnected"),
+    }
+  );
 
-  //   socket.onmessage = (event) => {
-  //     // Receive and display messages from the WebSocket server
-  //     const audioName = event.data.slice(1, -1);
-  //     setNewAudio(audioName);
-  //     setMessages((prevMessages) => [...prevMessages, event.data]);
-  //   };
-
-  //   socket.onerror = (error) => {
-  //     console.error("WebSocket error:", error);
-  //   };
-
-  //   socket.onclose = () => {
-  //     setConnected(false);
-  //   };
-
-  //   // Set the WebSocket object in the state
-  //   setSocket(socket);
-
-  //   // Clean up the WebSocket connection when the component unmounts
-  //   return () => {
-  //     socket.close();
-  //   };
-  // }, []); // Empty dependency array to run the effect only once (on mount)
-
-  // Second connection
-  useEffect(() => {
-    // Create WebSocket connection
-    const socket2 = new WebSocket(
-      "wss://0wl8ctuh90.execute-api.us-east-2.amazonaws.com/production/"
-    ); // Replace with your WebSocket URL
-
-    // Set up WebSocket event listeners
-    socket2.onopen = () => {
-      setConnected2(true);
-    };
-
-    socket2.onmessage = (event) => {
-      // Receive and display messages from the WebSocket server
-      console.log(event);
-    };
-
-    socket2.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket2.onclose = () => {
-      setConnected2(false);
-    };
-
-    // Set the WebSocket object in the state
-    setSocket2(socket2);
-
-    // Clean up the WebSocket connection when the component unmounts
-    return () => {
-      socket2.close();
-    };
-  }, []); // Empty dependency array to run the effect only once (on mount)
+  const handleChange = (event) => {
+    setSelectNote(event.target.value);
+  };
 
   const sendMessage2 = () => {
     if (socket2 && connected2) {
@@ -102,12 +58,8 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
       });
       socket2.send(jsonMessage); // Send message to websocket server
     } else {
-      console.error("Websocket is not connected");
+      console.error("Websocket is not connected. Cannot send message");
     }
-  };
-
-  const handleChange = (event) => {
-    setSelectNote(event.target.value);
   };
 
   // Function to display sampled infinite
@@ -131,6 +83,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     if (newAudio) {
       setWhileLoading(false);
       stopInstance();
+      console.log("Instance stopped.");
     }
   }, [newAudio, setWhileLoading]);
 
@@ -138,7 +91,11 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setNewAudio(null);
     setWhileLoading(true);
     await startInstance();
-    triggerBackend();
+    console.log("After startInstance");
+    // triggerBackend();
+    // console.log("After triggerBackend");
+    sendMessage2();
+    console.log("After sendMessage2");
   }
 
   return (

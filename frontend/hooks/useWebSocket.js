@@ -15,7 +15,12 @@ export const useWebSocket = (url, { onOpen, onMessage, onError, onClose }) => {
 
     ws.onmessage = (event) => {
       console.log("Received:", event.data);
-      onMessage?.(event, ws);
+      try {
+        const message = JSON.parse(event.data);
+        onMessage?.(message, ws);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     ws.onerror = (error) => {

@@ -25,23 +25,15 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     "wss://plrgozahy9.execute-api.us-east-2.amazonaws.com/dev/",
     {
       onOpen: () => setConnected(true),
-      onMessage: (event) => {
-        const audioName = event.data.slice(1, -1);
-        setNewAudio(audioName);
-        setMessages((prev) => [...prev, event.data]);
+      onMessage: (message) => {
+        console.log("Message from socket:", message);
+        if (message.audio) {
+          const audioName = message.audio.slice(1, -1);
+          setNewAudio(audioName);
+          setMessages((prev) => [...prev, message.audio]);
+        }
       },
       onClose: () => setConnected(false),
-    }
-  );
-
-  const { socket: socket2, connected: connected2 } = useWebSocket(
-    "wss://0wl8ctuh90.execute-api.us-east-2.amazonaws.com/production/",
-    {
-      onOpen: () => console.log("socket2 connected"),
-      onMessage: (event) => {
-        console.log("Message from socket2:", event);
-      },
-      onClose: () => console.log("socket2 disconnected"),
     }
   );
 
@@ -49,14 +41,14 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setSelectNote(event.target.value);
   };
 
-  const sendMessage2 = () => {
-    if (socket2 && connected2) {
+  const sendMessage = () => {
+    if (socket1 && connected1) {
       const jsonMessage = JSON.stringify({
         action: "sendMessage",
         body: message2,
         note: selectNote,
       });
-      socket2.send(jsonMessage); // Send message to websocket server
+      socket1.send(jsonMessage); // Send message to websocket server
     } else {
       console.error("Websocket is not connected. Cannot send message");
     }
@@ -92,9 +84,9 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setWhileLoading(true);
     await startInstance();
     console.log("After startInstance");
-    // triggerBackend();
-    // console.log("After triggerBackend");
-    sendMessage2();
+    triggerBackend();
+    console.log("After triggerBackend");
+    sendMessage();
     console.log("After sendMessage2");
   }
 
@@ -131,14 +123,6 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
                 </option>
               ))}
             </select>
-            <button
-              className="button"
-              onClick={() => {
-                sendMessage2();
-              }}
-            >
-              Control Test
-            </button>
             <div>{newAudio ? sample() : null}</div>
             <div>
               {whileLoading ? (

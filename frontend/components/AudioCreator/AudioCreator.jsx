@@ -8,6 +8,10 @@ import "./../../styles/styles.css";
 import { useWebSocket } from "../../hooks/useWebSocket";
 
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   // const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -26,11 +30,16 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     {
       onOpen: () => setConnected(true),
       onMessage: (message) => {
-        console.log("Message from socket:", message);
-        if (message.audio) {
-          const audioName = message.audio.slice(1, -1);
-          setNewAudio(audioName);
-          setMessages((prev) => [...prev, message.audio]);
+        console.log("Raw message from socket:", message.data);
+        try {
+          const data = JSON.parse(message.data);
+          if (data.audio) {
+            const audioName = data.audio.slice(1, -1);
+            setNewAudio(audioName);
+            setMessages((prev) => [...prev, data.audio]);
+          }
+        } catch (error) {
+          console.error("Failed to parse WebSocket message:", error);
         }
       },
       onClose: () => setConnected(false),
@@ -44,7 +53,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const sendMessage = () => {
     if (socket1 && connected1) {
       const jsonMessage = JSON.stringify({
-        action: "sendMessage",
+        action: "audioSend",
         body: message2,
         note: selectNote,
       });
@@ -84,8 +93,9 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setWhileLoading(true);
     await startInstance();
     console.log("After startInstance");
-    triggerBackend();
+    await triggerBackend();
     console.log("After triggerBackend");
+    await sleep(10000); // wait 10 seconds
     sendMessage();
     console.log("After sendMessage2");
   }

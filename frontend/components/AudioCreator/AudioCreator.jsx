@@ -1,4 +1,6 @@
-import { triggerBackend, startInstance, stopInstance } from "./AudioCreatorApi";
+// import { triggerBackend, startInstance, stopInstance } from "./AudioCreatorApi";
+import { startInstance, stopInstance } from "./AudioCreatorApi";
+
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Account from "../Layout/Account";
@@ -12,13 +14,11 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  // const [socket, setSocket] = useState(null);
+
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
 
-  // const [socket2, setSocket2] = useState(null);
   const [message2, setMessage2] = useState("control_change");
-  // const [connected2, setConnected2] = useState(false);
 
   const [selectNote, setSelectNote] = useState("");
 
@@ -93,8 +93,8 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setWhileLoading(true);
     await startInstance();
     console.log("After startInstance");
-    await triggerBackend();
-    console.log("After triggerBackend");
+    // await triggerBackend();
+    // console.log("After triggerBackend");
     await sleep(10000); // wait 10 seconds
     sendMessage();
     console.log("After sendMessage2");

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useDefaultUser } from "./useDefaultUser";
 
 export const useWebSocket = (url, { onOpen, onMessage, onError, onClose }) => {
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
+  const defaultUser = useDefaultUser();
 
   useEffect(() => {
     const ws = new WebSocket(url);
@@ -10,6 +12,16 @@ export const useWebSocket = (url, { onOpen, onMessage, onError, onClose }) => {
     ws.onopen = () => {
       console.log("Connected!");
       setConnected(true);
+
+      if (defaultUser) {
+        const jsonMessage = JSON.stringify({
+          action: "audioSend",
+          body: "user_id",
+          user_id: defaultUser,
+        });
+        ws.send(jsonMessage);
+      }
+
       onOpen?.(ws);
     };
 

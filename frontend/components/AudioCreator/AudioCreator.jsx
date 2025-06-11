@@ -1,6 +1,4 @@
-// import { triggerBackend, startInstance, stopInstance } from "./AudioCreatorApi";
 import { startInstance, stopInstance } from "./AudioCreatorApi";
-
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Account from "../Layout/Account";
@@ -8,12 +6,14 @@ import Sidebar from "../Layout/Sidebar";
 import { noteToFreq } from "../../utils/noteToFreq";
 import "./../../styles/styles.css";
 import { useWebSocket } from "../../hooks/useWebSocket";
+import { useDefaultUser } from "../../hooks/useDefaultUser";
 
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
+  const defaultUser = useDefaultUser();
+
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
 
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
@@ -30,13 +30,12 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     {
       onOpen: () => setConnected(true),
       onMessage: (message) => {
-        console.log("Raw message from socket:", message.data);
+        console.log("Raw message from socket:", message);
         try {
-          const data = JSON.parse(message.data);
-          if (data.audio) {
-            const audioName = data.audio.slice(1, -1);
+          if (message.sampledInfiniteId) {
+            const audioName = message.sampledInfiniteId.slice(1, -1);
             setNewAudio(audioName);
-            setMessages((prev) => [...prev, data.audio]);
+            setMessages((prev) => [...prev, message.sampledInfiniteId]);
           }
         } catch (error) {
           console.error("Failed to parse WebSocket message:", error);
@@ -58,6 +57,20 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
         note: selectNote,
       });
       socket1.send(jsonMessage); // Send message to websocket server
+    } else {
+      console.error("Websocket is not connected. Cannot send message");
+    }
+  };
+
+  const sendTriggerMessage = () => {
+    if (socket1 && connected1) {
+      const jsonMessage = JSON.stringify({
+        action: "audioSend",
+        body: "processor_trigger",
+        user_id: defaultUser,
+        note: selectNote,
+      });
+      socket1.send(jsonMessage);
     } else {
       console.error("Websocket is not connected. Cannot send message");
     }
@@ -93,8 +106,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setWhileLoading(true);
     await startInstance();
     console.log("After startInstance");
-    // await triggerBackend();
-    // console.log("After triggerBackend");
+    sendTriggerMessage();
     await sleep(10000); // wait 10 seconds
     sendMessage();
     console.log("After sendMessage2");

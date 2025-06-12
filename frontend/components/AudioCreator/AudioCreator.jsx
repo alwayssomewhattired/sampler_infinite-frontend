@@ -1,4 +1,3 @@
-import { startInstance, stopInstance } from "./AudioCreatorApi";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Account from "../Layout/Account";
@@ -7,6 +6,9 @@ import { noteToFreq } from "../../utils/noteToFreq";
 import "./../../styles/styles.css";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { useDefaultUser } from "../../hooks/useDefaultUser";
+
+// TO-DO
+// 1. FIND OUT WHAT IS CAUSING FRESH START INSTANCE TO FAIL. SOME LAMBDA FUNCTION.
 
 export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const defaultUser = useDefaultUser();
@@ -62,6 +64,18 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     }
   };
 
+  const startInstance = () => {
+    if (socket1 && connected1) {
+      const jsonMessage = JSON.stringify({
+        action: "startInstance",
+        body: "startInstance",
+      });
+      socket1.send(jsonMessage);
+    } else {
+      console.error("Websocket is not connected. Cannot send message");
+    }
+  };
+
   const sendTriggerMessage = () => {
     if (socket1 && connected1) {
       const jsonMessage = JSON.stringify({
@@ -96,7 +110,6 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   useEffect(() => {
     if (newAudio) {
       setWhileLoading(false);
-      stopInstance();
       console.log("Instance stopped.");
     }
   }, [newAudio, setWhileLoading]);

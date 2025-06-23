@@ -16,7 +16,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [connected, setConnected] = useState(false);
 
   const [selectNote, setSelectNote] = useState("");
-// litrally nothin
+// executable tester :'=
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 

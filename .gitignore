@@ -1,3 +1,4 @@
 .env.production
 .env.development
 git-auto-pull.service
+README.md

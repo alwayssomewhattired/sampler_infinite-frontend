@@ -16,7 +16,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [connected, setConnected] = useState(false);
 
   const [selectNote, setSelectNote] = useState("");
-  // executable tester :'=
+  const [controlSource, setControlSource] = useState("");
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -41,6 +41,11 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     setSelectNote(event.target.value);
   };
 
+  const handleControlSource = (event) => {
+    setControlSource(event.target.value);
+    console.log("event", event.target.value);
+  };
+
   const sendTriggerMessage = () => {
     if (socket1 && connected1) {
       const jsonMessage = JSON.stringify({
@@ -48,10 +53,13 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
         body: "processor_trigger",
         user_id: defaultUser,
         note: selectNote,
+        source: controlSource,
       });
       socket1.send(jsonMessage);
     } else {
-      console.error("Websocket is not connected. Cannot send message");
+      console.error(
+        "Websocket is not connected. Cannot send message. Audio Processing has stopped."
+      );
     }
   };
 
@@ -98,35 +106,49 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
         <div className="center-content">
           <h1 className="page-header">Sampler Infinite</h1>
 
-          <ul>
-            <h2 className="text">Press Start button to begin processor</h2>
-            <h2 className="text">May take up to 5 minutes</h2>
-            <button
-              className="button"
-              onClick={() => {
-                start();
-              }}
-            >
-              Start
-            </button>
-            <select id="dropdown" value={selectNote} onChange={handleChange}>
-              <option value="">-- Select a frequency range --</option>
-              {Object.entries(noteToFreq).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {key}
-                </option>
-              ))}
-            </select>
-            <div>{newAudio ? sample() : null}</div>
-            <div>
-              {whileLoading ? (
-                <output className="text">
-                  Sorry. This option is unavailable. Visit
-                  www.samplerinfinite.com to use this functionality
-                </output>
-              ) : null}
-            </div>
-          </ul>
+          <h2 className="text">Press Start button to begin processor</h2>
+          <h2 className="text">May take up to 5 minutes</h2>
+          <select
+            id="dropdown"
+            value={controlSource}
+            onChange={handleControlSource}
+            style={{ width: "50%", margin: "0 auto", marginBottom: "1em" }}
+          >
+            <option value="">-- Select a source --</option>
+            <option value="user_source">Upload</option>
+            <option value="random_source">Random</option>
+          </select>
+          <select
+            id="dropdown"
+            value={selectNote}
+            onChange={handleChange}
+            style={{ width: "50%", margin: "0 auto", marginBottom: "1em" }}
+          >
+            <option value="">-- Select a frequency range --</option>
+            {Object.entries(noteToFreq).map(([key, value]) => (
+              <option key={key} value={value}>
+                {key}
+              </option>
+            ))}
+          </select>
+          <button
+            style={{ width: "10%", margin: "0 auto", marginBottom: "1em" }}
+            className="button"
+            onClick={() => {
+              start();
+            }}
+          >
+            Start
+          </button>
+          <div>{newAudio ? sample() : null}</div>
+          <div>
+            {whileLoading ? (
+              <output className="text">
+                Sorry. This option is unavailable. Visit www.samplerinfinite.com
+                to use this functionality
+              </output>
+            ) : null}
+          </div>
         </div>
         {<Account me={me} />}
       </div>

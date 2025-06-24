@@ -2,3 +2,5 @@
 .env.development
 git-auto-pull.service
 README.md
+frontend/dist/assets/index-*.css
+frontend/dist/assets/index-*.js

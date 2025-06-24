@@ -28,7 +28,7 @@ while true; do
 
         if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
         echo "[$(date)] New commit detected. Pulling..."
-        git reset --hard $REMOTE_BRANCH
+        sudo git reset --hard $REMOTE_BRANCH
 
         cd frontend || {
             echo "Failed to cd into frontend"

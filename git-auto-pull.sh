@@ -36,10 +36,10 @@ while true; do
         }
 
         echo "Installing dependencies..."
-        npm install
+        sudo npm install
 
         echo "Running build..."
-        npm run build
+        sudo npm run build
 
         echo "Finished!"
 

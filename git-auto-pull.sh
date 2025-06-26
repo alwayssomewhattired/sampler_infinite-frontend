@@ -13,7 +13,7 @@ cd /home/ubuntu/sampler_infinite-frontend || {
 echo "Current directory: $(pwd)"
 echo "Running git pull..."
 
-REMOTE=prod
+REMOTE=origin
 BRANCH=main
 REMOTE_BRANCH="$REMOTE/$BRANCH"
 
@@ -28,7 +28,7 @@ while true; do
 
         if [ "$LOCAL_HASH" != "$REMOTE_HASH" ]; then
         echo "[$(date)] New commit detected. Pulling..."
-        sudo git reset --hard $REMOTE_BRANCH
+        git reset --hard $REMOTE_BRANCH
 
         cd frontend || {
             echo "Failed to cd into frontend"
@@ -36,10 +36,10 @@ while true; do
         }
 
         echo "Installing dependencies..."
-        sudo npm install
+        npm install
 
         echo "Running build..."
-        sudo npm run build
+        npm run build
 
         echo "Finished!"
 

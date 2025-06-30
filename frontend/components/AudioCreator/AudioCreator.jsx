@@ -23,12 +23,21 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const navigate = useNavigate();
 
   const s3Upload = async (presignedUrl, audioBlob) => {
+    console.log("Blob:", audioFile);
+    console.log("Size:", audioFile.size);
+    console.log("Type:", audioFile.type);
+
     try {
-      await fetch(presignedUrl, {
+      const response = await fetch(presignedUrl, {
         method: "PUT",
         headers: { "Content-Type": "audio/mp3" },
         body: audioBlob,
       });
+
+      const text = await response.text();
+      console.log("Upload response: ", response.status, text);
+
+      if (!response.ok) throw new Error(`Upload failed: ${response.status}`);
     } catch (error) {
       console.error("Failed to send user audio: ", error);
     }
@@ -46,9 +55,6 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
         } else if (message.source_ready) {
           const presignedUrl = message.upload_url;
           const s3Key = message.s3_key;
-
-          // const formData = new formData();
-          // formData.append("audio", audioFile);
 
           s3Upload(presignedUrl, audioFile);
 
@@ -85,6 +91,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     const file = e.target.files[0];
     if (file) {
       setAudioFile(file);
+      console.log("Audio File Received!");
     } else {
       console.log("No audio file found from user upload.");
     }

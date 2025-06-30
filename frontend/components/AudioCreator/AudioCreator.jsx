@@ -22,12 +22,12 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
-  const s3Upload = async (presignedUrl, formData) => {
+  const s3Upload = async (presignedUrl, audioBlob) => {
     try {
       await fetch(presignedUrl, {
         method: "PUT",
         headers: { "Content-Type": "audio/mp3" },
-        body: formData,
+        body: audioBlob,
       });
     } catch (error) {
       console.error("Failed to send user audio: ", error);

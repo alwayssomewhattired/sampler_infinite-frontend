@@ -23,11 +23,15 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const navigate = useNavigate();
 
   const s3Upload = async (presignedUrl, formData) => {
-    await fetch(presignedUrl, {
-      method: "PUT",
-      headers: { "Content-Type": "audio/mp3" },
-      body: formData,
-    });
+    try {
+      await fetch(presignedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "audio/mp3" },
+        body: formData,
+      });
+    } catch (error) {
+      console.error("Failed to send user audio: ", error);
+    }
   };
 
   const { socket: socket1, connected: connected1 } = useWebSocket(apiUrl, {

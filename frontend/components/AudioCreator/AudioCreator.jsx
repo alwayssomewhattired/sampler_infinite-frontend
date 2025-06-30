@@ -15,10 +15,20 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
 
+  const [audioFile, setAudioFile] = useState(null);
+
   const [selectNote, setSelectNote] = useState("");
   const [controlSource, setControlSource] = useState("");
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
+
+  const s3Upload = async (presignedUrl, formData) => {
+    await fetch(presignedUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "audio/mp3" },
+      body: formData,
+    });
+  };
 
   const { socket: socket1, connected: connected1 } = useWebSocket(apiUrl, {
     onOpen: () => setConnected(true),
@@ -29,9 +39,30 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           const audioName = message.sampledInfiniteId.slice(1, -1);
           setNewAudio(audioName);
           setMessages((prev) => [...prev, message.sampledInfiniteId]);
+        } else if (message.source_ready) {
+          const presignedUrl = message.upload_url;
+          const s3Key = message.s3_key;
+
+          // const formData = new formData();
+          // formData.append("audio", audioFile);
+
+          s3Upload(presignedUrl, audioFile);
+
+          console.log("Audio Uploaded to S3!");
+
+          const jsonMessage = JSON.stringify({
+            action: "audioSend",
+            body: "user_upload",
+            s3_key: s3Key,
+            user_id: defaultUser,
+          });
+          socket1.send(jsonMessage);
         }
       } catch (error) {
-        console.error("Failed to parse WebSocket message:", error);
+        console.error(
+          "Failed to parse WebSocket message or upload audio:",
+          error
+        );
       }
     },
     onClose: () => setConnected(false),
@@ -44,6 +75,15 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const handleControlSource = (event) => {
     setControlSource(event.target.value);
     console.log("event", event.target.value);
+  };
+
+  const handleSourceUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAudioFile(file);
+    } else {
+      console.log("No audio file found from user upload.");
+    }
   };
 
   const sendTriggerMessage = () => {
@@ -108,6 +148,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
           <h2 className="text">Press Start button to begin processor</h2>
           <h2 className="text">May take up to 5 minutes</h2>
+          <h2 className="text">Only mp3 uploads at this time</h2>
           <select
             id="dropdown"
             value={controlSource}
@@ -118,6 +159,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
             <option value="user_source">Upload</option>
             <option value="random_source">Random</option>
           </select>
+          <input type="file" accept="audio/*" onChange={handleSourceUpload} />
           <select
             id="dropdown"
             value={selectNote}

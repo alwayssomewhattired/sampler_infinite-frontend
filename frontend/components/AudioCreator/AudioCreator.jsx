@@ -24,10 +24,6 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const navigate = useNavigate();
 
   const s3Upload = async (presignedUrl, audioBlob) => {
-    console.log("Blob:", audioFile);
-    console.log("Size:", audioFile.size);
-    console.log("Type:", audioFile.type);
-
     try {
       const response = await fetch(presignedUrl, {
         method: "PUT",
@@ -60,6 +56,8 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           s3Upload(presignedUrl, audioFileRef.current);
 
           console.log("Audio Uploaded to S3!");
+          console.log("s3_key: ", s3Key);
+          console.log("user_id: ", defaultUser);
 
           const jsonMessage = JSON.stringify({
             action: "audioSend",

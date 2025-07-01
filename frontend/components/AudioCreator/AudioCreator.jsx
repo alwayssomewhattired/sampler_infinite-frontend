@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Account from "../Layout/Account";
 import Sidebar from "../Layout/Sidebar";
 import { noteToFreq } from "../../utils/noteToFreq";
@@ -16,6 +16,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [connected, setConnected] = useState(false);
 
   const [audioFile, setAudioFile] = useState(null);
+  const audioFileRef = useRef(null);
 
   const [selectNote, setSelectNote] = useState("");
   const [controlSource, setControlSource] = useState("");
@@ -56,7 +57,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           const presignedUrl = message.upload_url;
           const s3Key = message.s3_key;
 
-          s3Upload(presignedUrl, audioFile);
+          s3Upload(presignedUrl, audioFileRef.current);
 
           console.log("Audio Uploaded to S3!");
 
@@ -89,8 +90,10 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
   const handleSourceUpload = async (e) => {
     const file = e.target.files[0];
+    console.log("File: ", file);
     if (file) {
       setAudioFile(file);
+      audioFileRef.current = file;
       console.log("Audio File Received!");
     } else {
       console.log("No audio file found from user upload.");

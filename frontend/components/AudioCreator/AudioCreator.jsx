@@ -42,7 +42,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
   const { socket: socket1, connected: connected1 } = useWebSocket(apiUrl, {
     onOpen: () => setConnected(true),
-    onMessage: (message) => {
+    onMessage: async (message) => {
       console.log("Raw message from socket:", message);
       try {
         if (message.sampledInfiniteId) {
@@ -53,7 +53,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           const presignedUrl = message.upload_url;
           const s3Key = message.s3_key;
 
-          s3Upload(presignedUrl, audioFileRef.current);
+          await s3Upload(presignedUrl, audioFileRef.current);
 
           console.log("Audio Uploaded to S3!");
           console.log("s3_key: ", s3Key);

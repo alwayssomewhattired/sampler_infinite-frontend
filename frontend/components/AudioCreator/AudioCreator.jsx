@@ -23,6 +23,9 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   const [whileLoading, setWhileLoading] = useState(false);
   const navigate = useNavigate();
 
+  const socketRef = useRef(null);
+  const connectedRef = useRef(false);
+
   const s3Upload = async (presignedUrl, audioBlob) => {
     try {
       const response = await fetch(presignedUrl, {
@@ -40,7 +43,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     }
   };
 
-  const { socket: socket1, connected: connected1 } = useWebSocket(apiUrl, {
+  const { socket, connected: connectedState } = useWebSocket(apiUrl, {
     onOpen: () => setConnected(true),
     onMessage: async (message) => {
       console.log("Raw message from socket:", message);
@@ -65,7 +68,11 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
             s3_key: s3Key,
             user_id: defaultUser,
           });
-          socket1.send(jsonMessage);
+          if (!socketRef.current || !connectedRef.current) {
+            console.warn("Socket not ready");
+            return;
+          }
+          socketRef.current.send(jsonMessage);
           console.log("user_upload sent");
         }
       } catch (error) {
@@ -77,6 +84,14 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
     },
     onClose: () => setConnected(false),
   });
+
+  useEffect(() => {
+    socketRef.current = socket;
+  }, [socket]);
+
+  useEffect(() => {
+    connectedRef.current = connected;
+  }, [connected]);
 
   const handleChange = (event) => {
     setSelectNote(event.target.value);
@@ -100,20 +115,18 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
   };
 
   const sendTriggerMessage = () => {
-    if (socket1 && connected1) {
-      const jsonMessage = JSON.stringify({
-        action: "audioSend",
-        body: "processor_trigger",
-        user_id: defaultUser,
-        note: selectNote,
-        source: controlSource,
-      });
-      socket1.send(jsonMessage);
-    } else {
-      console.error(
-        "Websocket is not connected. Cannot send message. Audio Processing has stopped."
-      );
+    if (!socketRef.current || !connectedRef.current) {
+      console.warn("Socket not ready");
+      return;
     }
+    const jsonMessage = JSON.stringify({
+      action: "audioSend",
+      body: "processor_trigger",
+      user_id: defaultUser,
+      note: selectNote,
+      source: controlSource,
+    });
+    socketRef.current.send(jsonMessage);
   };
 
   function sample() {

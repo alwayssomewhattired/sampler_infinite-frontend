@@ -65,11 +65,8 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
             s3_key: s3Key,
             user_id: defaultUser,
           });
-          if (socket1 && connected1) {
-            socket1.send(jsonMessage);
-          } else {
-            console.warn("WebSocket not ready to send message");
-          }
+          socket1.send(jsonMessage);
+          console.log("user_upload sent");
         }
       } catch (error) {
         console.error(

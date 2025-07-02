@@ -49,7 +49,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
       console.log("Raw message from socket:", message);
       try {
         if (message.sampledInfiniteId) {
-          const audioName = message.sampledInfiniteId.slice(1, -1);
+          const audioName = message.sampledInfiniteId;
           setNewAudio(audioName);
           setMessages((prev) => [...prev, message.sampledInfiniteId]);
         } else if (message.source_ready) {

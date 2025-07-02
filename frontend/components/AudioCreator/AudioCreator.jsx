@@ -211,10 +211,7 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           <div>{newAudio ? sample() : null}</div>
           <div>
             {whileLoading ? (
-              <output className="text">
-                Sorry. This option is unavailable. Visit www.samplerinfinite.com
-                to use this functionality
-              </output>
+              <output className="text">Processing...</output>
             ) : null}
           </div>
         </div>

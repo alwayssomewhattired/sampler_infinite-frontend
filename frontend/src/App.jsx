@@ -12,7 +12,7 @@ import AccountChange from "../components/AccountChange/AccountChange";
 import Audio from "../components/Audio/Audio";
 import SingleAudio from "../components/SingleAudio/SingleAudio";
 import AudioCreator from "../components/AudioCreator/AudioCreator";
-import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
+// import GranularSynthComponent from "../components/GranularSynth/GranularSynth";
 import AudioUploader from "../components/AudioUploader/AudioUploader";
 import SamplerApp from "../components/GranularInfinite/GranularInfinite";
 import AboutAuthor from "../components/AboutAuthor/AboutAuthor";
@@ -105,10 +105,10 @@ function App() {
             }
           />
           <Route path="/accountChange" element={<AccountChange me={me} />} />
-          <Route
+          {/* <Route
             path="/granularSynth"
             element={<GranularSynthComponent me={me} />}
-          />
+          /> */}
           <Route
             path="/audioUploader"
             element={<AudioUploader newAudio={newAudio} me={me} />}

@@ -74,6 +74,9 @@ export default function Audio({ setAudioId, me, setProfileId }) {
 
   return (
     <>
+      <div className="three-column-layout">
+        {<Sidebar />}
+        <div className="center-content">
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -81,9 +84,6 @@ export default function Audio({ setAudioId, me, setProfileId }) {
           </h1>
         </div>
       </div>
-      <div className="three-column-layout">
-        {<Sidebar />}
-        <div className="center-content">
           <h1 className="page-header">Sampled Infinites</h1>
           <div>
             {songsAndReact.map((song) => (

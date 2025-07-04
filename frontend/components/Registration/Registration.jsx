@@ -68,6 +68,11 @@ export default function Registration({ setMe }) {
 
   return (
     <>
+      <div className="three-column-layout">
+        {<Sidebar />}
+        <div
+          className="center-content"
+        >
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -75,12 +80,6 @@ export default function Registration({ setMe }) {
           </h1>
         </div>
       </div>
-      <div className="two-column-layout">
-        {<Sidebar />}
-        <div
-          className="center"
-          style={{ marginLeft: "23%", marginTop: "6.5em" }}
-        >
           <h1
             className="text"
             style={{ textAlign: "center", marginBottom: "1em" }}
@@ -124,7 +123,7 @@ export default function Registration({ setMe }) {
             )}
           </form>
         </div>
-        <div style={{ marginLeft: "22%" }}>{<Account />}</div>
+        <div>{<Account />}</div>
       </div>
     </>
   );

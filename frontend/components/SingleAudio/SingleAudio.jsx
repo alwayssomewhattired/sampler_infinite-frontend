@@ -218,6 +218,9 @@ export default function SingleItem({ audioId, me, setProfileId }) {
 
   return (
     <>
+      <div className="three-column-layout">
+        {<Sidebar me={me} />}
+        <main className="center-content">
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -225,9 +228,6 @@ export default function SingleItem({ audioId, me, setProfileId }) {
           </h1>
         </div>
       </div>
-      <div className="three-column-layout">
-        {<Sidebar me={me} />}
-        <main className="center-content">
           {enrichedItem && (
             <>
               <div className="center">

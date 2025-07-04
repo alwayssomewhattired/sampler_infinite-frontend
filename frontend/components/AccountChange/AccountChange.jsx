@@ -76,6 +76,9 @@ export default function AccountChange({ me }) {
 
   return (
     <>
+      <div className="two-column-layout">
+        {<Sidebar />}
+        <div className="right" style={{ marginTop: "10em", marginLeft: "3%" }}>
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -83,9 +86,6 @@ export default function AccountChange({ me }) {
           </h1>
         </div>
       </div>
-      <div className="two-column-layout">
-        {<Sidebar />}
-        <div className="right" style={{ marginTop: "10em", marginLeft: "3%" }}>
           {myData && (
             <>
               <h3 className="text">Email</h3>

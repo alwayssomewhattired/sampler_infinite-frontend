@@ -135,6 +135,12 @@ export default function SingleUser({ me, setAudioId }) {
 
   return (
     <>
+      <div className="two-column-layout">
+        {<Sidebar />}
+        <div
+          className="right"
+          style={{ marginRight: "12.5%", marginTop: "6.5%" }}
+        >
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -142,12 +148,6 @@ export default function SingleUser({ me, setAudioId }) {
           </h1>
         </div>
       </div>
-      <div className="two-column-layout">
-        {<Sidebar />}
-        <div
-          className="right"
-          style={{ marginRight: "12.5%", marginTop: "6.5%" }}
-        >
           <h1 className="text">Your Account</h1>
           <ProfilePhoto />
           {enrichedUser && user && (

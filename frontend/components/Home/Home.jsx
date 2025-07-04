@@ -8,15 +8,15 @@ import "./../../styles/styles.css";
 export default function Home({ me }) {
   return (
     <>
+      <div className="three-column-layout">
+        {<Sidebar me={me} />}
+
+        <div className="center-content">
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text">SAMPLERINFINITE</h1>
         </div>
       </div>
-      <div className="three-column-layout">
-        {<Sidebar me={me} />}
-
-        <div className="center-content">
           <main>
             <ul>
               <div className="center">

@@ -160,6 +160,9 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
 
   return (
     <>
+      <div className="three-column-layout">
+        {<Sidebar />}
+        <div className="center-content">
       <div className="logo-container">
         <div className="logo">
           <h1 className="logo-text" onClick={() => navigate("/")}>
@@ -167,9 +170,6 @@ export default function AudioCreator({ setNewAudio, newAudio, me }) {
           </h1>
         </div>
       </div>
-      <div className="three-column-layout">
-        {<Sidebar />}
-        <div className="center-content">
           <h1 className="page-header">Sampler Infinite</h1>
 
           <h2 className="text">Press Start button to begin processor</h2>

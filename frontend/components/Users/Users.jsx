@@ -30,16 +30,16 @@ export default function Users({ profileId, setAudioId, me }) {
   const enrichedUser = useEnrichedUser(user);
   return (
     <>
-      <div className="logo-container">
-        <div className="logo">
-          <h1 className="logo-text" onClick={() => navigate("/")}>
-            SAMPLERINFINITE
-          </h1>
-        </div>
-      </div>
       <div className="two-column-layout">
         {<Sidebar />}
         <div className="right" style={{ marginLeft: "8%", marginTop: "6.5%" }}>
+          <div className="logo-container">
+            <div className="logo">
+              <h1 className="logo-text" onClick={() => navigate("/")}>
+                SAMPLERINFINITE
+              </h1>
+            </div>
+          </div>
           {user && enrichedUser && (
             <li key={enrichedUser.id}>
               <div style={{ display: "flex", gap: "1em" }}>

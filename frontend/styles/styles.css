@@ -112,7 +112,7 @@ body {
   flex-direction: column;
   max-width: 500px;
   width: 100%;
-  margin: 6em;
+  /* margin: 6em; */
   text-align: center;
 }
 
@@ -202,18 +202,21 @@ body {
 }
 
 .logo-container {
-  width: 50%;
-  justify-content: center;
-  margin-left: 30em;
+  /* display: flex; */
+  /* width: 10%; */
+  /* justify-content: center; */
+  flex-direction: column;
+  /* margin-left: 46em; */
 }
 
 .logo {
-  position: absolute;
+  /* position: absolute; */
   top: 0;
-  text-align: center;
-  width: 50%;
+  /* text-align: center; */
+  /* width: 50%; */
   font-family: "myLogo", sans-serif;
   font-size: xx-large;
+  /* display: flex */
 }
 
 .logo-text {

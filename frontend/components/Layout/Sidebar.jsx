@@ -27,11 +27,6 @@ export default function Sidebar() {
           </Link>
         </li>
         <li>
-          <Link className="neu" to="/granularSynth">
-            Granular Synth
-          </Link>
-        </li>
-        <li>
           <Link to="/aboutAuthor" className="neu">
             About The Author
           </Link>

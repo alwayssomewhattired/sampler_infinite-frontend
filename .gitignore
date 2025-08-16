@@ -4,3 +4,6 @@ git-auto-pull.service
 README.md
 frontend/dist/assets/index-*.css
 frontend/dist/assets/index-*.js
+frontend/src/target
+frontend/src/pkg
+frontend/src/rust/target

@@ -17,13 +17,23 @@ export default function Sidebar() {
           </Link>
         </li>
         <li>
+          <Link className="neu" to="/audios">
+            sampledinfinite-packs
+          </Link>
+        </li>
+        <li>
           <Link className="neu" to="/audio">
-            Published Audio
+            sampledinfinites
           </Link>
         </li>
         <li>
           <Link className="neu" to="/granularInfinite">
             granularinfinite
+          </Link>
+        </li>
+        <li>
+          <Link className="neu" to="/granularInfiniteNew">
+            granularinfinite-NEW
           </Link>
         </li>
         <li>

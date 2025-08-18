@@ -1,5 +1,6 @@
 import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
+import { useKeyToNote } from "../../hooks/useKeyToNote.js";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import useThrottledCallback from "../../hooks/useThrottledCallback.js";
@@ -17,28 +18,7 @@ const GranularInfinite = ({ me, packId }) => {
   const [maxGrains, setMaxGrains] = useState(32);
   const [octave, setOctave] = useState(4);
 
-  const keyToNote = useMemo(() => {
-    return {
-      a: "C" + octave,
-      w: "C#" + octave,
-      s: "D" + octave,
-      e: "D#" + octave,
-      d: "E" + octave,
-      f: "F" + octave,
-      t: "F#" + octave,
-      g: "G" + octave,
-      y: "G#" + octave,
-      h: "A" + octave,
-      u: "A#" + octave,
-      j: "B" + octave,
-      k: "C" + (octave + 1),
-      o: "C#" + (octave + 1),
-      l: "D" + (octave + 1),
-      p: "D#" + (octave + 1),
-      ";": "E" + (octave + 1),
-      "'": "F" + (octave + 1),
-    };
-  }, [octave]);
+  const keyToNote = useKeyToNote(octave);
 
   const updateEngineParam = useCallback((key, value) => {
     if (nodeRef.current) {
@@ -49,6 +29,9 @@ const GranularInfinite = ({ me, packId }) => {
   const throttledUpdateParam = useThrottledCallback(updateEngineParam, 50);
 
   const handleFileDrop = async (key, file) => {
+    console.log("key", key);
+    console.log("file", file);
+    console.log("octavio", octave);
     setFiles((prev) => ({
       ...prev,
       [key]: file,
@@ -63,7 +46,6 @@ const GranularInfinite = ({ me, packId }) => {
     const arrayBuffer = await file.arrayBuffer();
 
     if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
-
     const audioBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
     const samples = audioBuffer.getChannelData(0);
 
@@ -72,21 +54,19 @@ const GranularInfinite = ({ me, packId }) => {
         .addModule("/granular-worklet.js", { type: "module" })
         .then(() => console.log("Worklet loaded"))
         .catch((err) => console.error("Worklet failed", err));
-
       nodeRef.current = new AudioWorkletNode(
         audioCtxRef.current,
         "granular-processor",
         {
           numberOfOutputs: 1,
           outputChannelCount: [2],
+          note: keyToNote[key],
         }
       );
       nodeRef.current.connect(audioCtxRef.current.destination);
       // try calling init in here
       const wasmResponse = await fetch(wasmURL);
-      console.log(wasmResponse);
       const wasmBytes = await wasmResponse.arrayBuffer();
-      console.log(wasmBytes);
       await init({ bytes: wasmBytes });
       nodeRef.current.port.postMessage({ type: "wasm", bytes: wasmBytes });
       await new Promise((resolve) => {
@@ -99,17 +79,17 @@ const GranularInfinite = ({ me, packId }) => {
       });
     }
 
-    //   nodeRef.current.port.onmessage = (e) => {
-    //     if (e.data?.type === "ready")
-    //       console.log("Grain engine ready in worklet");
-    //   };
-    // }
     const bufferCopy = samples.slice().buffer;
+
     nodeRef.current.port.postMessage(
-      { type: "samples", key, samples: bufferCopy },
+      {
+        type: "samples",
+        key: key,
+        note: keyToNote[key],
+        samples: bufferCopy,
+      },
       [bufferCopy]
     );
-
     setKeySamples((prev) => ({ ...prev, [key]: samples }));
 
     if (audioCtxRef.current.state === "suspended")
@@ -128,18 +108,21 @@ const GranularInfinite = ({ me, packId }) => {
 
     const handleKeyDown = (e) => {
       const key = e.key.toLowerCase();
-      if (!keySamples[key] || activeKeys.has(key)) return;
-      activeKeys.add(key);
+      let octaveKey = key + octave;
 
-      nodeRef.current?.port.postMessage({ type: "play", key: key });
+      if (!keySamples[octaveKey] || activeKeys.has(octaveKey)) return;
+      activeKeys.add(octaveKey);
+
+      nodeRef.current?.port.postMessage({ type: "play", key: octaveKey });
     };
 
     const handleKeyUp = (e) => {
       const key = e.key.toLowerCase();
-      if (!activeKeys.has(key)) return;
-      activeKeys.delete(key);
+      const octaveKey = key + octave;
+      if (!activeKeys.has(octaveKey)) return;
+      activeKeys.delete(octaveKey);
 
-      nodeRef.current?.port.postMessage({ type: "stop", key: key });
+      nodeRef.current?.port.postMessage({ type: "stop", key: octaveKey });
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -149,7 +132,7 @@ const GranularInfinite = ({ me, packId }) => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [keySamples]);
+  }, [keySamples, octave]);
 
   return (
     <>
@@ -157,6 +140,7 @@ const GranularInfinite = ({ me, packId }) => {
         keyToNote={keyToNote}
         files={files}
         handleFileDrop={handleFileDrop}
+        octave={octave}
       />
 
       <div style={{ marginTop: 400 }}>

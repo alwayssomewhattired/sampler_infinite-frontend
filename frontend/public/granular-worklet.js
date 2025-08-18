@@ -1,4 +1,5 @@
 import init, { GranularEngine } from "../src/rust/pkg/grain.js";
+import { keyToNoteUtils } from "../utils/keyToNoteUtils.js";
 
 class GranularProcessor extends AudioWorkletProcessor {
   constructor() {
@@ -16,7 +17,7 @@ class GranularProcessor extends AudioWorkletProcessor {
         this.port.postMessage({ type: "wasm-ready" });
         console.log("WASM initialized with sample bytes");
       } else if (msg.type === "samples") {
-        console.log("Got samples", msg.key, msg.samples.byteLength);
+        console.log("Got samples", msg.key, msg.samples.byteLength, msg.note);
         if (!this.ready) {
           console.error("WASM not initialized yet!");
           return;
@@ -28,7 +29,8 @@ class GranularProcessor extends AudioWorkletProcessor {
         }
         this.engines[msg.key] = new GranularEngine(Array.from(floatSamples));
         console.log("Engine created", this.engines[msg.key]);
-        this.port.postMessage({ type: "ready", key: msg.key });
+        // unused for some reason
+        // this.port.postMessage({ type: "ready", key: msg.key });
       } else if (msg.type === "play") {
         if (this.engines[msg.key]) {
           this.activeKeys.add(msg.key);
@@ -46,10 +48,10 @@ class GranularProcessor extends AudioWorkletProcessor {
     };
   }
 
-  process(inputs, outputs, parameters) {
+  process(inputs, outputs, note, parameters) {
     const output = outputs[0];
-
-    if (!this.ready || this.activeKeys.size === 0) {
+    //check note
+    if (!this.ready || this.activeKeys.size === 0 || !note) {
       // output silence
       for (let ch = 0; ch < output.length; ++ch) {
         output[ch].fill(0);

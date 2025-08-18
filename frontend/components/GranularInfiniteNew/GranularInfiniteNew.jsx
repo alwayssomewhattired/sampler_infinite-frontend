@@ -1,6 +1,7 @@
 import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
 import { useKeyToNote } from "../../hooks/useKeyToNote.js";
+import { keyToNoteUtils } from "../../utils/keyToNoteUtils.js";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import useThrottledCallback from "../../hooks/useThrottledCallback.js";
@@ -32,17 +33,35 @@ const GranularInfinite = ({ me, packId }) => {
     console.log("key", key);
     console.log("file", file);
     console.log("octavio", octave);
-    setFiles((prev) => ({
-      ...prev,
-      [key]: file,
-    }));
+    if (file.length > 1) {
+      for (let f of file) {
+        const parts = f.path.split("/");
+        const note = parts[2].toUpperCase();
+        console.log("here it is friend, ", note);
 
-    await handleFile(key, file);
+        const producedKey = Object.keys(keyToNoteUtils).find(
+          (k) => keyToNoteUtils[k] === note
+        );
+        console.log("my produced key: ", producedKey);
+        setFiles((prev) => ({
+          ...prev,
+          [producedKey]: f,
+        }));
+        await handleFile(producedKey, f);
+      }
+    } else {
+      setFiles((prev) => ({
+        ...prev,
+        [key]: file,
+      }));
+      await handleFile(key, file);
+    }
   };
 
-  // for playing audio
-
   const handleFile = useCallback(async (key, file) => {
+    // support folder drop /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // for (let f of file) {
+    console.log("my file", file);
     const arrayBuffer = await file.arrayBuffer();
 
     if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
@@ -60,11 +79,10 @@ const GranularInfinite = ({ me, packId }) => {
         {
           numberOfOutputs: 1,
           outputChannelCount: [2],
-          note: keyToNote[key],
+          note: keyToNoteUtils[key],
         }
       );
       nodeRef.current.connect(audioCtxRef.current.destination);
-      // try calling init in here
       const wasmResponse = await fetch(wasmURL);
       const wasmBytes = await wasmResponse.arrayBuffer();
       await init({ bytes: wasmBytes });
@@ -85,12 +103,13 @@ const GranularInfinite = ({ me, packId }) => {
       {
         type: "samples",
         key: key,
-        note: keyToNote[key],
+        note: keyToNoteUtils[key],
         samples: bufferCopy,
       },
       [bufferCopy]
     );
     setKeySamples((prev) => ({ ...prev, [key]: samples }));
+    // }
 
     if (audioCtxRef.current.state === "suspended")
       await audioCtxRef.current.resume();

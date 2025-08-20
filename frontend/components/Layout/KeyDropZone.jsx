@@ -1,16 +1,20 @@
 import { useDropzone } from "react-dropzone";
 
-export const KeyDropZone = ({ keyName, file, files, onFileDrop, octave }) => {
+export const KeyDropZone = ({
+  keyName,
+  file,
+  files,
+  onFileDrop,
+  octave,
+  fileName,
+}) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
-      console.log("acceptedFiles: ", acceptedFiles);
       if (acceptedFiles.length > 0) {
         onFileDrop(acceptedFiles);
       }
     },
   });
-  console.log("the files: ", files);
-  console.log("dis da file: ", file);
 
   return (
     <div
@@ -23,11 +27,7 @@ export const KeyDropZone = ({ keyName, file, files, onFileDrop, octave }) => {
         cursor: "pointer",
       }}
     >
-      <input
-        {...getInputProps({
-          webkitdirectory: "true",
-        })}
-      />
+      <input {...getInputProps()} />
       <div>{keyName.slice(0, 1).toUpperCase()}</div>
       {file && (
         <div
@@ -41,6 +41,7 @@ export const KeyDropZone = ({ keyName, file, files, onFileDrop, octave }) => {
           }}
         >
           {file.name}
+          {fileName}
         </div>
       )}
     </div>

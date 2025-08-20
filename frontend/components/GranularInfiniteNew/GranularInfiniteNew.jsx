@@ -1,7 +1,10 @@
 import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
+import { useGetPackQuery } from "./GranularInfiniteNewSlice.js";
 import { useKeyToNote } from "../../hooks/useKeyToNote.js";
+import { noteToFreq } from "../../utils/noteToFreq.js";
 import { keyToNoteUtils } from "../../utils/keyToNoteUtils.js";
+import { fetchArrayBufferFromS3 } from "../../utils/s3Utils.js";
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import useThrottledCallback from "../../hooks/useThrottledCallback.js";
@@ -9,10 +12,36 @@ import { VisualKeyboard } from "../Layout/VisualKeyboard.jsx";
 import "./Keyboard.css";
 import "../../styles/styles.css";
 const GranularInfinite = ({ me, packId }) => {
+  console.log("packId: ", packId);
+  const { data, isSuccess, refetch } = useGetPackQuery({ packId });
+  const [fileName, setFileName] = useState("");
+
+  useEffect(() => {
+    if (isSuccess) {
+      setFileName(data.name);
+      const regex = /^(?:[^/]+\/){3}(\d+)(?=-)/;
+
+      const newItemIDS = {};
+      for (let file of data.itemIDS) {
+        const match = file.match(regex);
+        console.log("reg file: ", file);
+        console.log("match: ", match);
+        if (match) {
+          const freq = match[1]; // the captured number
+          const url = `https://websocket-root-dev-audioprocessorapista-mys3bucket-c2dgmekg2772.s3.us-east-2.amazonaws.com/${file}`;
+          newItemIDS[freq] = url;
+        }
+      }
+
+      setItemIDS(newItemIDS);
+      handleFileDrop(null, newItemIDS);
+    }
+  }, [isSuccess, data]);
   const audioCtxRef = useRef(null);
   const nodeRef = useRef(null);
   const [files, setFiles] = useState({});
   const [keySamples, setKeySamples] = useState({});
+  const [itemIDS, setItemIDS] = useState({});
 
   const [grainSize, setGrainSize] = useState(512);
   const [spawnProb, setSpawnProb] = useState(0.08);
@@ -33,7 +62,7 @@ const GranularInfinite = ({ me, packId }) => {
     console.log("key", key);
     console.log("file", file);
     console.log("octavio", octave);
-    if (file.length > 1) {
+    if (file.length > 1 && key) {
       for (let f of file) {
         const parts = f.path.split("/");
         const note = parts[2].toUpperCase();
@@ -49,6 +78,28 @@ const GranularInfinite = ({ me, packId }) => {
         }));
         await handleFile(producedKey, f);
       }
+    } else if (file && !key) {
+      const newFiles = {};
+      for (let f of Object.keys(file)) {
+        const closestMatch = Object.entries(noteToFreq).reduce((a, c) => {
+          const [currNote, currFreq] = c;
+          const [bestNote, bestFreq] = a;
+
+          return Math.abs(currFreq - f) < Math.abs(bestFreq - f) ? c : a;
+        });
+
+        const refinedKey = Object.keys(keyToNoteUtils).find(
+          (key) => keyToNoteUtils[key] === closestMatch[0]
+        );
+        const arrayBuffer = await fetchArrayBufferFromS3(file[f]);
+        newFiles[refinedKey] = new Uint8Array(arrayBuffer);
+      }
+
+      setFiles((prev) => ({ ...prev, ...newFiles }));
+
+      for (let key of Object.keys(newFiles)) {
+        await handleFile(key, newFiles[key]);
+      }
     } else {
       setFiles((prev) => ({
         ...prev,
@@ -59,12 +110,19 @@ const GranularInfinite = ({ me, packId }) => {
   };
 
   const handleFile = useCallback(async (key, file) => {
-    // support folder drop /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // for (let f of file) {
-    console.log("my file", file);
-    const arrayBuffer = await file.arrayBuffer();
+    let arrayBuffer;
+    if (file instanceof Uint8Array) {
+      arrayBuffer = file.buffer.slice(
+        file.byteOffset,
+        file.byteOffset + file.byteLength
+      );
+      console.log("received buffer converted: ", arrayBuffer);
+    } else {
+      arrayBuffer = await file.arrayBuffer();
+    }
 
     if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
+
     const audioBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
     const samples = audioBuffer.getChannelData(0);
 
@@ -153,6 +211,10 @@ const GranularInfinite = ({ me, packId }) => {
     };
   }, [keySamples, octave]);
 
+  useEffect(() => {
+    console.log("files : ", files);
+  }, [files]);
+
   return (
     <>
       <VisualKeyboard
@@ -160,7 +222,9 @@ const GranularInfinite = ({ me, packId }) => {
         files={files}
         handleFileDrop={handleFileDrop}
         octave={octave}
+        fileName={fileName}
       />
+      <h3 className="text">Drag & drop sampledinfinite-packs!</h3>
 
       <div style={{ marginTop: 400 }}>
         <div>

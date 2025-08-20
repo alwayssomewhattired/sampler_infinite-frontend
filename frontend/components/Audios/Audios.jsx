@@ -89,12 +89,12 @@ export default function Audios({ setAudioId, me, setProfileId, setPackId }) {
 
   const granularHandle = (id) => {
     try {
-      setPackId(id)
-      navigate("/granularInfinite")
+      setPackId(id);
+      navigate("/granularInfiniteNew");
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <>
@@ -110,7 +110,8 @@ export default function Audios({ setAudioId, me, setProfileId, setPackId }) {
           </div>
           <h1 className="page-header">Sampled Infinites</h1>
           <div>
-            {data && data.length > 0 &&
+            {data &&
+              data.length > 0 &&
               // Object.keys(songsAndReact).map((song) => (
               data.map((song) => (
                 <ul key={song.id}>
@@ -224,7 +225,12 @@ export default function Audios({ setAudioId, me, setProfileId, setPackId }) {
                         <h3 className="text">{song.description}</h3>
                       </div>
                     </div>
-                    <button className="button" onClick={() => granularHandle(song.id)}>granularInfinite </button>
+                    <button
+                      className="button"
+                      onClick={() => granularHandle(song.id)}
+                    >
+                      granularInfinite{" "}
+                    </button>
                   </div>
                 </ul>
               ))}

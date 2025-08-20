@@ -7,6 +7,7 @@ export const VisualKeyboard = ({
   files,
   handleFileDrop,
   octave,
+  fileName
 }) => {
   return (
     <div className="keyboard">
@@ -18,6 +19,7 @@ export const VisualKeyboard = ({
           files={files}
           onFileDrop={(file) => handleFileDrop(key, file)} // update parent state
           octave={octave}
+          fileName={fileName}
         />
       ))}
     </div>

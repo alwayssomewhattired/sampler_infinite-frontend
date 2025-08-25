@@ -81,16 +81,18 @@ const GranularInfinite = ({ me, packId }) => {
     } else if (file && !key) {
       const newFiles = {};
       for (let f of Object.keys(file)) {
-        const closestMatch = Object.entries(noteToFreq).reduce((a, c) => {
-          const [currNote, currFreq] = c;
-          const [bestNote, bestFreq] = a;
-
-          return Math.abs(currFreq - f) < Math.abs(bestFreq - f) ? c : a;
-        });
-
+        const closestMatch = Object.entries(noteToFreq)
+          .filter(([_, v]) => !Array.isArray(v))
+          .reduce((a, c) => {
+            const [currNote, currFreq] = c;
+            const [bestNote, bestFreq] = a;
+            return Math.abs(currFreq - f) < Math.abs(bestFreq - f) ? c : a;
+          });
+        console.log("closest match: ", closestMatch);
         const refinedKey = Object.keys(keyToNoteUtils).find(
           (key) => keyToNoteUtils[key] === closestMatch[0]
         );
+        console.log("refined key: ", refinedKey);
         const arrayBuffer = await fetchArrayBufferFromS3(file[f]);
         newFiles[refinedKey] = new Uint8Array(arrayBuffer);
       }
@@ -217,6 +219,48 @@ const GranularInfinite = ({ me, packId }) => {
 
   return (
     <>
+      <div className="top-menu">
+        <div>
+          <Link className="neu" to="/">
+            Home
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/audio">
+            Published Audio
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/audioCreator">
+            samplerinfinite
+          </Link>
+        </div>
+        <div>
+          <Link className="neu" to="/granularSynth">
+            Granular Synth
+          </Link>
+        </div>
+        {me ? (
+          <li>
+            <Link className="neu" to="/singleUser">
+              My Account
+            </Link>
+          </li>
+        ) : (
+          <>
+            <li>
+              <Link className="neu" to="/login">
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link className="neu" to="/register">
+                Register
+              </Link>
+            </li>
+          </>
+        )}
+      </div>
       <VisualKeyboard
         keyToNote={keyToNote}
         files={files}

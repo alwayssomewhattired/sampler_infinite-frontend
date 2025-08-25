@@ -28,6 +28,8 @@ export default function AudioCreator({
   const [audioFile, setAudioFile] = useState([]);
   const audioFileRef = useRef(null);
 
+  const [isLength, setIsLength] = useState(false);
+
   const [selectNote, setSelectNote] = useState([]);
   const [controlSource, setControlSource] = useState("");
   const [whileLoading, setWhileLoading] = useState(false);
@@ -61,7 +63,7 @@ export default function AudioCreator({
   const PackUpload = () => {
     return (
       <>
-        {sampledinfinite && loggedIn && (
+        {Object.keys(sampledinfinite).length > 0 && loggedIn && (
           <button
             onClick={() => navigate("/audiosUploader")}
             style={{
@@ -98,6 +100,17 @@ export default function AudioCreator({
         )}
       </>
     );
+  };
+
+  const handleLength = () => {
+    setIsLength(!isLength);
+    console.log(isLength);
+  };
+
+  const handleRemove = (key) => {
+    console.log(key)
+    const { [key]: _, ...newSampledinfinite } = sampledinfinite;
+    setSampledinfinite(newSampledinfinite);
   };
 
   const { socket, connected: connectedState } = useWebSocket(apiUrl, {
@@ -142,6 +155,7 @@ export default function AudioCreator({
         } else if (message.source_ready) {
           const presignedUrl = message.upload_url;
           const s3Key = message.s3_key;
+          console.log("presigned url: ", presignedUrl);
 
           await s3Upload(presignedUrl, audioFileRef.current);
 
@@ -242,6 +256,7 @@ export default function AudioCreator({
       user_id: defaultUser,
       note: selectNote,
       source: controlSource,
+      length: isLength,
     });
     socketRef.current.send(jsonMessage);
   };
@@ -297,6 +312,9 @@ export default function AudioCreator({
               login to upload
             </button>
           )}
+          <button className="button" onClick={() => handleRemove(name)}>
+            remove
+          </button>
         </div>
         ;
       </>
@@ -408,17 +426,34 @@ export default function AudioCreator({
             <option value="random_source">Random</option>
           </select>
           {controlSource == "user_source" && (
-            <input
-              style={{
-                margin: "0 auto",
-                marginBottom: "10px",
-                width: "70%",
-                color: "green",
-              }}
-              type="file"
-              accept="audio/*"
-              onChange={handleSourceUpload}
-            />
+            <>
+              <input
+                style={{
+                  margin: "0 auto",
+                  marginBottom: "10px",
+                  width: "70%",
+                  color: "green",
+                }}
+                type="file"
+                accept="audio/*"
+                onChange={handleSourceUpload}
+              />
+              <button
+                style={{
+                  margin: "0 auto",
+                  marginBottom: "10px",
+                  width: "20%",
+                  height: "2em",
+                  backgroundColor: isLength ? "green" : "gray",
+                  color: "white",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+                onClick={handleLength}
+              >
+                infinite
+              </button>
+            </>
           )}
           <Select
             options={options}

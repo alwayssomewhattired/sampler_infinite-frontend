@@ -44,10 +44,11 @@ export default function AudioCreator({
   }));
 
   const s3Upload = async (presignedUrl, audioBlob) => {
+    console.log("presigned url: ", presignedUrl);
     try {
       const response = await fetch(presignedUrl, {
         method: "PUT",
-        headers: { "Content-Type": "audio/mp3" },
+        headers: { "Content-Type": "audio/mpeg" },
         body: audioBlob,
       });
 
@@ -108,7 +109,7 @@ export default function AudioCreator({
   };
 
   const handleRemove = (key) => {
-    console.log(key)
+    console.log(key);
     const { [key]: _, ...newSampledinfinite } = sampledinfinite;
     setSampledinfinite(newSampledinfinite);
   };

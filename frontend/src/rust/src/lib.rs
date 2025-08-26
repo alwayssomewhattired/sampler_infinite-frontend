@@ -5,6 +5,15 @@ use rand::rngs::SmallRng;
 use rand::SeedableRng;
 use rand::Rng;
 use std::f32::consts::PI;
+use log::info;
+use console_error_panic_hook::set_once;
+
+#[wasm_bindgen(start)]
+pub fn main() {
+set_once();
+console_log::init_with_level(log::Level::Debug).expect("error initializing log");
+info!("THIS IS A TEST BRUV")
+}
 
 fn hann_window(size: usize) -> Vec<f32> {
     (0..size).map(|n| {

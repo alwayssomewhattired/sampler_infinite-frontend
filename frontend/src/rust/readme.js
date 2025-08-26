@@ -1,6 +1,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
+//
+// THIS IS COMMAND TO BUILD
+wasm-pack build --target web --dev
+//
+//
+
 // IN ORDER FOR THE ENGINE .JS HELPER TO WORK, WE NEED TO REPLACE SOME CODE IN THE BUILT "grain.js" PKG.
+
 
 // REPLACE THIS
 async function __wbg_init(module_or_path) {

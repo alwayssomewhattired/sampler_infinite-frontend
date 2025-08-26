@@ -1,3 +1,4 @@
+
 import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
 import { useGetPackQuery } from "./GranularInfiniteNewSlice.js";
@@ -46,6 +47,7 @@ const GranularInfinite = ({ me, packId }) => {
   const [grainSize, setGrainSize] = useState(512);
   const [spawnProb, setSpawnProb] = useState(0.08);
   const [maxGrains, setMaxGrains] = useState(32);
+
   const [octave, setOctave] = useState(4);
 
   const keyToNote = useKeyToNote(octave);
@@ -268,9 +270,11 @@ const GranularInfinite = ({ me, packId }) => {
         octave={octave}
         fileName={fileName}
       />
-      <h3 className="text">Drag & drop sampledinfinite-packs!</h3>
+      <div style={{ marginTop: 100 }}>
+        <h3 className="text">Drag & drop sampledinfinite-packs!</h3>
+      </div>
 
-      <div style={{ marginTop: 400 }}>
+      <div style={{ marginTop: 200 }}>
         <div>
           <h3 className="text">Octave {octave}</h3>
         </div>
@@ -290,20 +294,21 @@ const GranularInfinite = ({ me, packId }) => {
             octave+
           </button>
         </div>
-        <div className="controls">
+        <div className="controls" style={{ marginTop: "5em" }}>
+          <h2 style={{ color: "grey" }}>coming soon</h2>
           <div className="control-group">
             <label>Max Grains:</label>
             <input
               type="range"
-              min="10"
-              max="32"
+              min="1"
+              max="64"
               step="1"
               value={maxGrains}
-              onChange={(e) => {
-                const v = parseInt(e.target.value, 10);
-                setMaxGrains(v);
-                throttledUpdateParam("max_grains", v);
-              }}
+              // onChange={(e) => {
+              //   const v = parseInt(e.target.value, 10);
+              //   setMaxGrains(v);
+              //   throttledUpdateParam("max_grains", v);
+              // }}
             />
             <span>{maxGrains}</span>
           </div>
@@ -315,7 +320,7 @@ const GranularInfinite = ({ me, packId }) => {
               max="512"
               step="1"
               value={grainSize}
-              onChange={(e) => setGrainSize(parseInt(e.target.value))}
+              // onChange={(e) => setGrainSize(parseInt(e.target.value))}
             />
             <span>{grainSize}</span>
           </div>
@@ -327,11 +332,11 @@ const GranularInfinite = ({ me, packId }) => {
               max="3"
               step="0.01"
               value={spawnProb}
-              onChange={(e) => {
-                const v = parseFloat(e.target.value);
-                setSpawnProb(v);
-                throttledUpdateParam("spawn_prob", v);
-              }}
+              // onChange={(e) => {
+              //   const v = parseFloat(e.target.value);
+              //   setSpawnProb(v);
+              //   throttledUpdateParam("spawn_prob", v);
+              // }}
             />
             <span>{spawnProb.toFixed(2)}</span>
           </div>

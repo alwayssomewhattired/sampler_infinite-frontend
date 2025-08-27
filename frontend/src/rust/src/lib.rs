@@ -54,7 +54,6 @@ pub fn next_into(&mut self, out: &mut [f32]) {
             *v = 0.0;
             continue;
         }
-
         let input_index = self.start_pos_in_input + self.pos_in_grain;
         let sample = if input_index < self.input_samples.len() {
             self.input_samples[input_index] * self.window[self.pos_in_grain]
@@ -113,14 +112,12 @@ impl GranularEngine {
     // The worklet calls this with a Float32Array of length `renderQuantum` (usually 128).
 pub fn fill_buffer(&mut self, out: &mut [f32]) {
     if self.samples.len() < self.grain_size || self.grain_size == 0 {
-        eprintln!("fill_buffer: not enough samples ({} < {})",
+        info!("fill_buffer: not enough samples ({} < {})",
             self.samples.len(), self.grain_size);
         return;
     }
     // clear
     for v in out.iter_mut() { *v = 0.0; }
-
-
 
     // maybe spawn a new random grain
     if self.grains.len() < self.max_grains {
@@ -134,7 +131,7 @@ pub fn fill_buffer(&mut self, out: &mut [f32]) {
             } else {
                 self.rng.gen_range(0..=max_start)
             };
-             eprintln!("Spawning grain at start {} with size {}", start, self.grain_size);
+             info!("Spawning grain at start {} with size {}", start, self.grain_size);
             let grain = Grain::new(self.samples.clone(), self.grain_size, start);
             self.grains.push(grain);
         }

@@ -1,4 +1,5 @@
-// import init from "../../src/rust/pkg/grain.js";
+
+import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
 import { useGetPackQuery } from "./GranularInfiniteNewSlice.js";
 import { useKeyToNote } from "../../hooks/useKeyToNote.js";
@@ -12,7 +13,8 @@ import { VisualKeyboard } from "../Layout/VisualKeyboard.jsx";
 import "./Keyboard.css";
 import "../../styles/styles.css";
 const GranularInfinite = ({ me, packId }) => {
-  const { data, isSuccess } = useGetPackQuery({ packId });
+  console.log("packId: ", packId);
+  const { data, isSuccess, refetch } = useGetPackQuery({ packId });
   const [fileName, setFileName] = useState("");
 
   useEffect(() => {
@@ -23,10 +25,10 @@ const GranularInfinite = ({ me, packId }) => {
       const newItemIDS = {};
       for (let file of data.itemIDS) {
         const match = file.match(regex);
-
+        console.log("reg file: ", file);
+        console.log("match: ", match);
         if (match) {
           const freq = match[1]; // the captured number
-          // make the bucket name a variable
           const url = `https://websocket-root-dev-audioprocessorapista-mys3bucket-c2dgmekg2772.s3.us-east-2.amazonaws.com/${file}`;
           newItemIDS[freq] = url;
         }
@@ -50,71 +52,28 @@ const GranularInfinite = ({ me, packId }) => {
 
   const keyToNote = useKeyToNote(octave);
 
-  const workerRef = useRef(null);
-
-  useEffect(() => {
-    if (!audioCtxRef.current) audioCtxRef.current = new AudioContext();
-
-    // Add the AudioWorklet module
-    audioCtxRef.current.audioWorklet
-      .addModule("/granular-worklet.js")
-      .then(() => {
-        nodeRef.current = new AudioWorkletNode(
-          audioCtxRef.current,
-          "granular-processor"
-        );
-        nodeRef.current.connect(audioCtxRef.current.destination);
-
-        // Initialize Worker
-        workerRef.current = new Worker("/granular-worker.js", {
-          type: "module",
-        });
-        workerRef.current.onmessage = (e) => {
-          if (e.data.buffer) {
-            // dropping reference for now.... add later to avoid copying
-            nodeRef.current.port.postMessage({ buffer: e.data.buffer });
-            // request next buffer
-            workerRef.current.postMessage({
-              type: "generate",
-              bufferLength: 128,
-            });
-          } else if (e.data.type === "wasm-ready") {
-            console.log("Worker WASM ready");
-            // kick off the first buffer-request
-            workerRef.current.postMessage({
-              type: "generate",
-              bufferLength: 128,
-            });
-          }
-        };
-
-        // Send WASM bytes to worker
-        fetch(wasmURL)
-          .then((r) => r.arrayBuffer())
-          .then((bytes) =>
-            workerRef.current.postMessage({ type: "wasm", bytes }, [bytes])
-          );
-      });
-  }, []);
-
   const updateEngineParam = useCallback((key, value) => {
     if (nodeRef.current) {
-      workerRef.current.postMessage({ type: "set", key: key, value: value });
+      nodeRef.current.port.postMessage({ type: "set", key: key, value: value });
     }
   }, []);
 
-  // USE THIS!!!
   const throttledUpdateParam = useThrottledCallback(updateEngineParam, 50);
 
   const handleFileDrop = async (key, file) => {
+    console.log("key", key);
+    console.log("file", file);
+    console.log("octavio", octave);
     if (file.length > 1 && key) {
       for (let f of file) {
         const parts = f.path.split("/");
         const note = parts[2].toUpperCase();
+        console.log("here it is friend, ", note);
 
         const producedKey = Object.keys(keyToNoteUtils).find(
           (k) => keyToNoteUtils[k] === note
         );
+        console.log("my produced key: ", producedKey);
         setFiles((prev) => ({
           ...prev,
           [producedKey]: f,
@@ -131,9 +90,11 @@ const GranularInfinite = ({ me, packId }) => {
             const [bestNote, bestFreq] = a;
             return Math.abs(currFreq - f) < Math.abs(bestFreq - f) ? c : a;
           });
+        console.log("closest match: ", closestMatch);
         const refinedKey = Object.keys(keyToNoteUtils).find(
           (key) => keyToNoteUtils[key] === closestMatch[0]
         );
+        console.log("refined key: ", refinedKey);
         const arrayBuffer = await fetchArrayBufferFromS3(file[f]);
         newFiles[refinedKey] = new Uint8Array(arrayBuffer);
       }
@@ -159,6 +120,7 @@ const GranularInfinite = ({ me, packId }) => {
         file.byteOffset,
         file.byteOffset + file.byteLength
       );
+      console.log("received buffer converted: ", arrayBuffer);
     } else {
       arrayBuffer = await file.arrayBuffer();
     }
@@ -168,9 +130,38 @@ const GranularInfinite = ({ me, packId }) => {
     const audioBuffer = await audioCtxRef.current.decodeAudioData(arrayBuffer);
     const samples = audioBuffer.getChannelData(0);
 
+    if (!nodeRef.current) {
+      await audioCtxRef.current.audioWorklet
+        .addModule("/granular-worklet.js", { type: "module" })
+        .then(() => console.log("Worklet loaded"))
+        .catch((err) => console.error("Worklet failed", err));
+      nodeRef.current = new AudioWorkletNode(
+        audioCtxRef.current,
+        "granular-processor",
+        {
+          numberOfOutputs: 1,
+          outputChannelCount: [2],
+          note: keyToNoteUtils[key],
+        }
+      );
+      nodeRef.current.connect(audioCtxRef.current.destination);
+      const wasmResponse = await fetch(wasmURL);
+      const wasmBytes = await wasmResponse.arrayBuffer();
+      await init({ bytes: wasmBytes });
+      nodeRef.current.port.postMessage({ type: "wasm", bytes: wasmBytes });
+      await new Promise((resolve) => {
+        nodeRef.current.port.onmessage = (e) => {
+          if (e.data?.type === "wasm-ready") {
+            console.log("WASM loaded in worklet");
+            resolve();
+          }
+        };
+      });
+    }
+
     const bufferCopy = samples.slice().buffer;
 
-    workerRef.current.postMessage(
+    nodeRef.current.port.postMessage(
       {
         type: "samples",
         key: key,
@@ -180,6 +171,7 @@ const GranularInfinite = ({ me, packId }) => {
       [bufferCopy]
     );
     setKeySamples((prev) => ({ ...prev, [key]: samples }));
+    // }
 
     if (audioCtxRef.current.state === "suspended")
       await audioCtxRef.current.resume();
@@ -198,10 +190,11 @@ const GranularInfinite = ({ me, packId }) => {
     const handleKeyDown = (e) => {
       const key = e.key.toLowerCase();
       let octaveKey = key + octave;
+
       if (!keySamples[octaveKey] || activeKeys.has(octaveKey)) return;
       activeKeys.add(octaveKey);
 
-      workerRef.current.postMessage({ type: "play", key: octaveKey });
+      nodeRef.current?.port.postMessage({ type: "play", key: octaveKey });
     };
 
     const handleKeyUp = (e) => {
@@ -209,7 +202,8 @@ const GranularInfinite = ({ me, packId }) => {
       const octaveKey = key + octave;
       if (!activeKeys.has(octaveKey)) return;
       activeKeys.delete(octaveKey);
-      workerRef.current.postMessage({ type: "stop", key: octaveKey });
+
+      nodeRef.current?.port.postMessage({ type: "stop", key: octaveKey });
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -220,6 +214,10 @@ const GranularInfinite = ({ me, packId }) => {
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [keySamples, octave]);
+
+  useEffect(() => {
+    console.log("files : ", files);
+  }, [files]);
 
   return (
     <>

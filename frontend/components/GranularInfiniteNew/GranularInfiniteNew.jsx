@@ -42,7 +42,7 @@ const GranularInfinite = ({ me, packId }) => {
   const [keySamples, setKeySamples] = useState({});
   const [itemIDS, setItemIDS] = useState({});
 
-  const [grainSize, setGrainSize] = useState(512);
+  const [grainSize, setGrainSize] = useState(128);
   const [spawnProb, setSpawnProb] = useState(0.08);
   const [maxGrains, setMaxGrains] = useState(32);
 
@@ -323,6 +323,7 @@ const GranularInfinite = ({ me, packId }) => {
               step="1"
               value={grainSize}
               // onChange={(e) => setGrainSize(parseInt(e.target.value))}
+              // above, make sure to throttleupdateparam like the others
             />
             <span>{grainSize}</span>
           </div>

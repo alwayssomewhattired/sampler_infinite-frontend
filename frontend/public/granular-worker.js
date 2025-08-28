@@ -22,7 +22,6 @@ self.onmessagegenerate = (bufferLength) => {
 
 self.onmessage = async (e) => {
   const msg = e.data;
-
   if (msg.type === "wasm") {
     await init({ bytes: msg.bytes });
     ready = true;
@@ -51,6 +50,6 @@ self.onmessage = async (e) => {
   } else if (msg.type == "generate") {
     const renderBuffer = self.onmessagegenerate(msg.bufferLength);
     // dropping reference for now... fix later to avoid copying
-    self.postMessage({ buffer: renderBuffer.buffer });
+    self.postMessage({ buffer: renderBuffer });
   }
 };

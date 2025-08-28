@@ -12,9 +12,11 @@ class GranularProcessor extends AudioWorkletProcessor {
       const msg = e.data;
 
       if (msg.type === "wasm") {
+        console.log("wasm");
         await init({ bytes: msg.bytes });
         this.ready = true;
         this.port.postMessage({ type: "wasm-ready" });
+        console.log("wasm-ready");
         console.log("WASM initialized with sample bytes");
       } else if (msg.type === "samples") {
         console.log("Got samples", msg.key, msg.samples.byteLength, msg.note);
@@ -33,11 +35,14 @@ class GranularProcessor extends AudioWorkletProcessor {
         // this.port.postMessage({ type: "ready", key: msg.key });
       } else if (msg.type === "play") {
         if (this.engines[msg.key]) {
+          console.log("play");
           this.activeKeys.add(msg.key);
         }
       } else if (msg.type === "stop") {
+        console.log("stop");
         this.activeKeys.delete(msg.key);
       } else if (msg.type === "set") {
+        console.log("set");
         // Apply param to ALL engines for now
         Object.values(this.engines).forEach((engine) => {
           if (msg.key === "grain_size") engine.set_grain_size(msg.value);

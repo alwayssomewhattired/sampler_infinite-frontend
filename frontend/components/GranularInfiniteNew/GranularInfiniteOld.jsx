@@ -1,4 +1,3 @@
-
 import init from "../../src/rust/pkg/grain.js";
 import wasmURL from "../../src/rust/pkg/grain_bg.wasm?url";
 import { useGetPackQuery } from "./GranularInfiniteNewSlice.js";

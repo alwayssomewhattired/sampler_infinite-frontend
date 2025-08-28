@@ -90,7 +90,7 @@ impl GranularEngine {
         GranularEngine {
             samples,
             grains: Vec::new(),
-            grain_size: 512,
+            grain_size: 128,
             spawn_prob: 0.08, // tune this
             max_grains: 32,
             rng,
@@ -131,7 +131,7 @@ pub fn fill_buffer(&mut self, out: &mut [f32]) {
             } else {
                 self.rng.gen_range(0..=max_start)
             };
-             info!("Spawning grain at start {} with size {}", start, self.grain_size);
+            //  info!("Spawning grain at start {} with size {}", start, self.grain_size);
             let grain = Grain::new(self.samples.clone(), self.grain_size, start);
             self.grains.push(grain);
         }

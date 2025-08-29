@@ -43,13 +43,15 @@ self.onmessage = async (e) => {
     if (engines[msg.key]) engines[msg.key].active = false;
   } else if (msg.type === "set") {
     Object.values(engines).forEach((engine) => {
-      if (msg.key === "grain_size") engine.set_grain_size(msg.value);
+      if (msg.key === "grain_size") {
+        engine.set_grain_size(msg.value);
+      }
       if (msg.key === "spawn_prob") engine.set_spawn_probability(msg.value);
       if (msg.key === "max_grains") engine.set_max_grains(msg.value);
     });
   } else if (msg.type == "generate") {
     const renderBuffer = self.onmessagegenerate(msg.bufferLength);
     // dropping reference for now... fix later to avoid copying
-    self.postMessage({ buffer: renderBuffer });
+    self.postMessage({ buffer: renderBuffer }, [renderBuffer.buffer]);
   }
 };

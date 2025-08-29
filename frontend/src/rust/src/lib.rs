@@ -23,7 +23,9 @@ fn hann_window(size: usize) -> Vec<f32> {
 
 #[wasm_bindgen]
 pub struct Grain {
+// pub struct Grain<'a> {
     input_samples: Vec<f32>,
+    // input_samples: &'a [f32],
     window: Vec<f32>,
     grain_size: usize,
     pos_in_grain: usize,
@@ -46,7 +48,6 @@ impl Grain {
         }
     }
 
-    // Fill the provided out slice with the next samples (in-place)
 pub fn next_into(&mut self, out: &mut [f32]) {
     for v in out.iter_mut() {
         if self.pos_in_grain >= self.grain_size || self.pos_in_grain >= self.window.len() {
@@ -97,19 +98,20 @@ impl GranularEngine {
         }
     }
 
-    // setters exposed to JS so you can tweak in real-time
     pub fn set_grain_size(&mut self, size: usize) {
+        info!("grain size: {}", size);
         self.grain_size = size;
     }
     pub fn set_spawn_probability(&mut self, p: f32) {
+        info!("spawn prob: {}", p);
         self.spawn_prob = p;
     }
     pub fn set_max_grains(&mut self, m: usize) {
+        info!("max grains: {}", m);
         self.max_grains = m;
     }
 
-    // Fill the provided output slice (interleaved mono). 
-    // The worklet calls this with a Float32Array of length `renderQuantum` (usually 128).
+
 pub fn fill_buffer(&mut self, out: &mut [f32]) {
     if self.samples.len() < self.grain_size || self.grain_size == 0 {
         info!("fill_buffer: not enough samples ({} < {})",
@@ -131,8 +133,9 @@ pub fn fill_buffer(&mut self, out: &mut [f32]) {
             } else {
                 self.rng.gen_range(0..=max_start)
             };
-            //  info!("Spawning grain at start {} with size {}", start, self.grain_size);
             let grain = Grain::new(self.samples.clone(), self.grain_size, start);
+            // let grain = Grain::new(&self.samples[start..start+self.grain_size], self.grain_size);
+
             self.grains.push(grain);
         }
     }
@@ -155,3 +158,5 @@ pub fn fill_buffer(&mut self, out: &mut [f32]) {
 }
 
 }
+
+

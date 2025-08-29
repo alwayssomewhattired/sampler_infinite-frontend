@@ -72,7 +72,9 @@ const GranularInfinite = ({ me, packId }) => {
         workerRef.current.onmessage = (e) => {
           if (e.data.buffer) {
             // dropping reference for now.... add later to avoid copying
-            nodeRef.current.port.postMessage({ buffer: e.data.buffer });
+            nodeRef.current.port.postMessage({ buffer: e.data.buffer }, [
+              e.data.buffer.buffer,
+            ]);
             // request next buffer
             workerRef.current.postMessage({
               type: "generate",
@@ -306,11 +308,11 @@ const GranularInfinite = ({ me, packId }) => {
               max="64"
               step="1"
               value={maxGrains}
-              // onChange={(e) => {
-              //   const v = parseInt(e.target.value, 10);
-              //   setMaxGrains(v);
-              //   throttledUpdateParam("max_grains", v);
-              // }}
+              onChange={(e) => {
+                const v = parseInt(e.target.value, 10);
+                setMaxGrains(v);
+                throttledUpdateParam("max_grains", v);
+              }}
             />
             <span>{maxGrains}</span>
           </div>
@@ -319,11 +321,14 @@ const GranularInfinite = ({ me, packId }) => {
             <input
               type="range"
               min="1"
-              max="512"
+              max="44100"
               step="1"
               value={grainSize}
-              // onChange={(e) => setGrainSize(parseInt(e.target.value))}
-              // above, make sure to throttleupdateparam like the others
+              onChange={(e) => {
+                const v = parseInt(e.target.value, 10);
+                setGrainSize(v);
+                throttledUpdateParam("grain_size", v);
+              }}
             />
             <span>{grainSize}</span>
           </div>
@@ -335,11 +340,11 @@ const GranularInfinite = ({ me, packId }) => {
               max="3"
               step="0.01"
               value={spawnProb}
-              // onChange={(e) => {
-              //   const v = parseFloat(e.target.value);
-              //   setSpawnProb(v);
-              //   throttledUpdateParam("spawn_prob", v);
-              // }}
+              onChange={(e) => {
+                const v = parseFloat(e.target.value);
+                setSpawnProb(v);
+                throttledUpdateParam("spawn_prob", v);
+              }}
             />
             <span>{spawnProb.toFixed(2)}</span>
           </div>

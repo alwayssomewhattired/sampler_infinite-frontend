@@ -1,9 +1,8 @@
 import init, { GranularEngine } from "../src/rust/pkg/grain.js";
 
-const engines = {}; // { key: GranularEngine }
+const engines = {};
 let ready = false;
 
-// Generate a buffer for the worklet to consume
 self.onmessagegenerate = (bufferLength) => {
   const renderBuffer = new Float32Array(bufferLength).fill(0);
 
@@ -48,10 +47,11 @@ self.onmessage = async (e) => {
       }
       if (msg.key === "spawn_prob") engine.set_spawn_probability(msg.value);
       if (msg.key === "max_grains") engine.set_max_grains(msg.value);
+      if (msg.key === "smooth_radius") engine.set_smooth_radius(msg.value);
+      if (msg.key === "smooth_envelope") engine.set_smooth_envelope(msg.value);
     });
   } else if (msg.type == "generate") {
     const renderBuffer = self.onmessagegenerate(msg.bufferLength);
-    // dropping reference for now... fix later to avoid copying
     self.postMessage({ buffer: renderBuffer }, [renderBuffer.buffer]);
   }
 };

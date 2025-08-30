@@ -45,6 +45,8 @@ const GranularInfinite = ({ me, packId }) => {
   const [grainSize, setGrainSize] = useState(128);
   const [spawnProb, setSpawnProb] = useState(0.08);
   const [maxGrains, setMaxGrains] = useState(32);
+  const [smoothRadius, setSmoothRadius] = useState(2);
+  const [smoothEnvelope, setSmoothEnvelope] = useState(0);
 
   const [octave, setOctave] = useState(4);
 
@@ -336,9 +338,9 @@ const GranularInfinite = ({ me, packId }) => {
             <label>Spawn Probability:</label>
             <input
               type="range"
-              min="0.1"
+              min="0.001"
               max="3"
-              step="0.01"
+              step="0.001"
               value={spawnProb}
               onChange={(e) => {
                 const v = parseFloat(e.target.value);
@@ -346,7 +348,39 @@ const GranularInfinite = ({ me, packId }) => {
                 throttledUpdateParam("spawn_prob", v);
               }}
             />
-            <span>{spawnProb.toFixed(2)}</span>
+            <span>{spawnProb.toFixed(3)}</span>
+          </div>
+          <div className="control-group">
+            <label>Smooth Radius:</label>
+            <input
+              type="range"
+              min="0"
+              max="5"
+              step="1"
+              value={smoothRadius}
+              onChange={(e) => {
+                const v = parseInt(e.target.value);
+                setSmoothRadius(v);
+                throttledUpdateParam("smooth_radius", v);
+              }}
+            />
+            <span>{smoothRadius}</span>
+          </div>
+          <div className="control-group">
+            <label>Smooth Envelope:</label>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="1"
+              value={smoothEnvelope}
+              onChange={(e) => {
+                const v = parseInt(e.target.value);
+                setSmoothEnvelope(v);
+                throttledUpdateParam("smooth_envelope", v);
+              }}
+            />
+            <span>{smoothEnvelope}</span>
           </div>
         </div>
       </div>

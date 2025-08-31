@@ -26,8 +26,27 @@ const GranularInfinite = ({ me, packId }) => {
 
         if (match) {
           const freq = match[1]; // the captured number
-          // make the bucket name a variable
+          //
+          //
+          //
+          //
+          //
+          //
+          //
+          // todo- make the bucket name a variable instead of hardcoded
+          //
+          //
+          //
           const url = `https://websocket-root-dev-audioprocessorapista-mys3bucket-c2dgmekg2772.s3.us-east-2.amazonaws.com/${file}`;
+          //
+          //
+          //
+          //
+          //
+          //
+          //
+          //
+          //
           newItemIDS[freq] = url;
         }
       }
